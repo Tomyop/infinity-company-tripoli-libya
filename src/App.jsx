@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import './index.css'
+import welcomeImg from './assets/welcome.jpg'
+import confirmImg from './assets/10.jpg'
 
 // Fixed data
 const bankData = {
@@ -35,6 +37,7 @@ function App() {
   const [confirming, setConfirming] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
   const [showWhatsApp, setShowWhatsApp] = useState(true);
+  const [showConfirmImage, setShowConfirmImage] = useState(false);
 
   // User form data
   const [formData, setFormData] = useState({
@@ -112,6 +115,8 @@ ${operation === 'buy' ?
 الشبكة: ${walletData.network}
     `.trim();
 
+    setShowConfirmImage(true);
+
     setTimeout(() => {
       setConfirming(false);
       setConfirmed(true);
@@ -124,32 +129,52 @@ ${operation === 'buy' ?
   // Welcome Screen
   if (showWelcome) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-900 via-purple-800 to-purple-950">
-        <div className="text-center px-8 animate-fade-in">
-          <h1 className="text-3xl font-bold text-white mb-4">
-            مرحباً بك في أول منصة ليبية لشراء العملة الرقمية
-          </h1>
-          <div className="text-gradient text-2xl font-bold">
-            Infinity Company Tripoli Libya
-          </div>
-        </div>
+      <div style={{
+        width: "100vw",
+        height: "100vh",
+        overflow: "hidden"
+      }}>
+        <img 
+          src={welcomeImg}
+          alt="Welcome"
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover"
+          }}
+        />
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-purple-950">
-      <div className="max-w-mobile mx-auto px-4 py-6 pb-20">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-gradient mb-2">
-            Infinity Company
-          </h1>
-          <p className="text-white/70 text-sm">
-            Tripoli Libya
-          </p>
+      {showConfirmImage && (
+        <div style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          backgroundColor: "#000",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          zIndex: 9999
+        }}>
+          <img 
+            src={confirmImg}
+            alt="Confirmed"
+            style={{
+              width: "80%",
+              maxWidth: "350px",
+              borderRadius: "20px"
+            }}
+          />
         </div>
-
+      )}
+      
+      <div className="max-w-mobile mx-auto px-4 py-6 pb-20">
         {/* Operation Selection */}
         <div className="card-primary mb-6">
           <h2 className="text-xl font-bold text-white mb-4">اختر العملية</h2>
