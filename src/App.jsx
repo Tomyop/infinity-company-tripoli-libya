@@ -38,6 +38,7 @@ function App() {
   const [confirmed, setConfirmed] = useState(false);
   const [showWhatsApp, setShowWhatsApp] = useState(true);
   const [showConfirmImage, setShowConfirmImage] = useState(false);
+  const [copiedField, setCopiedField] = useState(null);
 
   // User form data
   const [formData, setFormData] = useState({
@@ -52,6 +53,32 @@ function App() {
     }, 3000);
     return () => clearTimeout(timer);
   }, []);
+
+  const handleCopy = (text, field) => {
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        // modern way
+        navigator.clipboard.writeText(text);
+      } else {
+        // fallback for mobile
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+      }
+
+      setCopiedField(field);
+      setTimeout(() => setCopiedField(null), 1200);
+
+    } catch (err) {
+      console.error("Copy failed", err);
+    }
+  };
 
   const getCurrentPrice = () => {
     return prices[operation][paymentMethod];
@@ -291,48 +318,36 @@ ${operation === 'buy' ?
                     <span className="text-white/70 text-xs">البنك:</span>
                     <div className="flex items-center gap-2">
                       <span className="text-white text-xs">{bankData.bank}</span>
-                      <button
-                        onClick={() => copyToClipboard(bankData.bank, 'bank')}
-                        className="text-purple-400 hover:text-purple-300 text-xs"
-                      >
-                        {copied.bank ? '✔' : '📋'}
-                      </button>
+                      <span onClick={() => handleCopy(bankData.bank, 'bank')} style={{ cursor: 'pointer' }} className="text-purple-400 hover:text-purple-300 text-xs">
+                        {copiedField === 'bank' ? '✔' : '📋'}
+                      </span>
                     </div>
                   </div>
                   <div className="flex items-center justify-between bg-white/5 p-2 rounded-lg">
                     <span className="text-white/70 text-xs">الفرع:</span>
                     <div className="flex items-center gap-2">
                       <span className="text-white text-xs">{bankData.branch}</span>
-                      <button
-                        onClick={() => copyToClipboard(bankData.branch, 'branch')}
-                        className="text-purple-400 hover:text-purple-300 text-xs"
-                      >
-                        {copied.branch ? '✔' : '📋'}
-                      </button>
+                      <span onClick={() => handleCopy(bankData.branch, 'branch')} style={{ cursor: 'pointer' }} className="text-purple-400 hover:text-purple-300 text-xs">
+                        {copiedField === 'branch' ? '✔' : '📋'}
+                      </span>
                     </div>
                   </div>
                   <div className="flex items-center justify-between bg-white/5 p-2 rounded-lg">
                     <span className="text-white/70 text-xs">الحساب:</span>
                     <div className="flex items-center gap-2">
                       <span className="text-white text-xs">{bankData.account}</span>
-                      <button
-                        onClick={() => copyToClipboard(bankData.account, 'account')}
-                        className="text-purple-400 hover:text-purple-300 text-xs"
-                      >
-                        {copied.account ? '✔' : '📋'}
-                      </button>
+                      <span onClick={() => handleCopy(bankData.account, 'account')} style={{ cursor: 'pointer' }} className="text-purple-400 hover:text-purple-300 text-xs">
+                        {copiedField === 'account' ? '✔' : '📋'}
+                      </span>
                     </div>
                   </div>
                   <div className="flex items-center justify-between bg-white/5 p-2 rounded-lg">
                     <span className="text-white/70 text-xs">الآيبان:</span>
                     <div className="flex items-center gap-2">
                       <span className="text-white text-xs">{bankData.iban}</span>
-                      <button
-                        onClick={() => copyToClipboard(bankData.iban, 'iban')}
-                        className="text-purple-400 hover:text-purple-300 text-xs"
-                      >
-                        {copied.iban ? '✔' : '📋'}
-                      </button>
+                      <span onClick={() => handleCopy(bankData.iban, 'iban')} style={{ cursor: 'pointer' }} className="text-purple-400 hover:text-purple-300 text-xs">
+                        {copiedField === 'iban' ? '✔' : '📋'}
+                      </span>
                     </div>
                   </div>
                 </div>
