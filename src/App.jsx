@@ -93,6 +93,21 @@ function App() {
     return subtotal + commission;
   };
 
+  function sendToGoogleSheet(phone, usdt, total) {
+    const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSfrpv4L0GwMM3zQC8OWKv9-iq8Uz0VwHY-l9TcMJdC9AHY5sQ/formResponse";
+
+    const formData = new FormData();
+    formData.append("entry.1487754017", phone);
+    formData.append("entry.446288420", usdt);
+    formData.append("entry.1134418766", total);
+
+    fetch(formUrl, {
+      method: "POST",
+      mode: "no-cors",
+      body: formData
+    });
+  }
+
   const copyToClipboard = (text, field) => {
     navigator.clipboard.writeText(text);
     setCopied(prev => ({ ...prev, [field]: true }));
@@ -145,8 +160,14 @@ ${formData.phone}
       setConfirming(false);
       setConfirmed(true);
       
-      // Send WhatsApp message
-      window.open(`https://wa.me/393895724547?text=${encodeURIComponent(message)}`, '_blank');
+      // Submit to Google Form
+      sendToGoogleSheet(formData.phone, amount, calculateTotal().toFixed(2));
+      
+      // Delay to ensure fetch completes before redirect
+      setTimeout(() => {
+        // Send WhatsApp message
+        window.open(`https://wa.me/393895724547?text=${encodeURIComponent(message)}`, '_blank');
+      }, 500);
     }, 2000);
   };
 
