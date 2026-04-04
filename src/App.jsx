@@ -42,6 +42,7 @@ function App() {
 
   // User form data
   const [formData, setFormData] = useState({
+    phone: '',
     walletAddress: '',
     bankAccount: '',
     iban: ''
@@ -111,36 +112,32 @@ function App() {
     setConfirming(true);
     
     // Prepare WhatsApp message
-    const message = `
-طلب جديد 🚀
+    const message = `🚀 طلب جديد
 
-العملية: ${operation === 'buy' ? 'شراء' : 'بيع'}
-العملة: USDT
-طريقة الدفع: ${paymentMethod === 'bank' ? 'تحويل بنكي' : 'نقدي'}
-المبلغ: ${amount} USDT
-السعر: ${getCurrentPrice()} د.ل
-الإجمالي: ${calculateTotal().toFixed(2)} د.ل
+📊 تفاصيل العملية:
+• العملية: ${operation}
+• العملة: USDT
+• المبلغ: ${amount} USDT
+• السعر: ${getCurrentPrice()} د.ل
+• الإجمالي: ${calculateTotal().toFixed(2)} د.ل
+• طريقة الدفع: ${paymentMethod}
 
----
+📞 رقم الهاتف:
+${formData.phone}
 
-بيانات الزبون:
-${operation === 'buy' ? 
-  `عنوان المحفظة: ${formData.walletAddress || walletData.address}
-الشبكة: BEP20` : 
-  `الحساب البنكي: ${formData.bankAccount || bankData.account}
-الآيبان: ${formData.iban || bankData.iban}`}
+👤 بيانات الزبون:
+• عنوان المحفظة: ${formData.walletAddress || walletData.address}
+• الشبكة: ${walletData.network}
 
----
+🏦 بياناتنا:
+• البنك: مصرف الجمهورية
+• الفرع: وكالة البرج
+• رقم الحساب: 1042020000002722
+• الآيبان: LY950021041042020000002722
 
-بياناتنا:
-البنك: ${bankData.bank}
-الفرع: ${bankData.branch}
-الحساب: ${bankData.account}
-الآيبان: ${bankData.iban}
-
-محفظتنا: ${walletData.address}
-الشبكة: ${walletData.network}
-    `.trim();
+💼 محفظتنا:
+• العنوان: ${walletData.address}
+• الشبكة: ${walletData.network}`;
 
     setShowConfirmImage(true);
 
@@ -370,6 +367,18 @@ ${operation === 'buy' ?
                   BEP20
                 </div>
               </div>
+              <div className="mb-4">
+                <label className="block text-white/70 text-sm mb-2">ادخل رقمك لاستلام تأكيد الطلب</label>
+                <input
+                  type="tel"
+                  value={formData.phone}
+                  onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
+                  placeholder="09XXXXXXXX"
+                  className="input-field w-full"
+                  style={{ textAlign: 'right', direction: 'rtl' }}
+                  required
+                />
+              </div>
             </>
           ) : (
             <>
@@ -380,24 +389,26 @@ ${operation === 'buy' ?
                   <div className="bg-white/5 p-2 rounded-lg">
                     <div className="flex items-center justify-between">
                       <span className="text-white text-xs break-all max-w-[70%]">{walletData.address}</span>
-                      <button
-                        onClick={() => copyToClipboard(walletData.address, 'walletAddress')}
+                      <span
+                        onClick={() => handleCopy(walletData.address, 'walletAddress')}
+                        style={{ cursor: 'pointer' }}
                         className="text-purple-400 hover:text-purple-300 text-xs"
                       >
-                        {copied.walletAddress ? '✔' : '📋'}
-                      </button>
+                        {copiedField === 'walletAddress' ? '✔' : '📋'}
+                      </span>
                     </div>
                   </div>
                   <div className="flex items-center justify-between bg-white/5 p-2 rounded-lg">
                     <span className="text-white/70 text-xs">الشبكة:</span>
                     <div className="flex items-center gap-2">
                       <span className="text-white text-xs">{walletData.network}</span>
-                      <button
-                        onClick={() => copyToClipboard(walletData.network, 'walletNetwork')}
+                      <span
+                        onClick={() => handleCopy(walletData.network, 'walletNetwork')}
+                        style={{ cursor: 'pointer' }}
                         className="text-purple-400 hover:text-purple-300 text-xs"
                       >
-                        {copied.walletNetwork ? '✔' : '📋'}
-                      </button>
+                        {copiedField === 'walletNetwork' ? '✔' : '📋'}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -422,6 +433,18 @@ ${operation === 'buy' ?
                   onChange={(e) => setFormData(prev => ({ ...prev, iban: e.target.value }))}
                   placeholder="أدخل الآيبان"
                   className="input-field w-full"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-white/70 text-sm mb-2">ادخل رقمك لاستلام تأكيد الطلب</label>
+                <input
+                  type="tel"
+                  value={formData.phone}
+                  onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
+                  placeholder="09XXXXXXXX"
+                  className="input-field w-full"
+                  style={{ textAlign: 'right', direction: 'rtl' }}
+                  required
                 />
               </div>
             </>
