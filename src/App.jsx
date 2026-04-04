@@ -192,7 +192,16 @@ ${formData.phone}
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-purple-950">
+    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-purple-950"
+      onClick={(e) => {
+        if (e.target.tagName !== "INPUT") {
+          document.activeElement.blur();
+        }
+      }}
+      onTouchMove={() => {
+        document.activeElement.blur();
+      }}
+    >
       {showConfirmImage && (
         <div style={{
           position: "fixed",
