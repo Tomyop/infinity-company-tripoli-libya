@@ -40,6 +40,13 @@ function App() {
   const [showConfirmImage, setShowConfirmImage] = useState(false);
   const [copiedField, setCopiedField] = useState(null);
   const [whatsappUrl, setWhatsappUrl] = useState('');
+  const [prices, setPrices] = useState({
+    buy_cash: 11,
+    buy_bank: 12,
+    sell_cash: 9,
+    sell_bank: 10,
+    fee: 0.02
+  });
 
   // User form data
   const [formData, setFormData] = useState({
@@ -54,6 +61,44 @@ function App() {
       setShowWelcome(false);
     }, 3000);
     return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    const fetchPrices = async () => {
+      try {
+        const response = await fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vSy4Evf9vffihdOQ6rNWSaIstjIl02IZNnXlDeMcvAo4KhqdqzxRl_aThwjcKwZ71S99WZ4We-ueM3-/pub?gid=2014693807&single=true&output=csv&t=' + Date.now(), { cache: "no-store" });
+        const csvText = await response.text();
+        const lines = csvText.split('\n').filter(line => line.trim());
+        
+        const prices = {}
+        
+        // Skip first header row, process each data row
+        for (let i = 1; i < lines.length; i++) {
+          const row = lines[i];
+          const [key, value] = row.split(',')
+          if (key && value) {
+            prices[key.trim()] = Number(value.trim())
+          }
+        }
+        
+        console.log("PRICES:", prices)
+        
+        setPrices({
+          buy_cash: prices.buy_cash || 11,
+          buy_bank: prices.buy_bank || 12,
+          sell_cash: prices.sell_cash || 9,
+          sell_bank: prices.sell_bank || 10,
+          fee: prices.fee || 0.02
+        });
+      } catch (error) {
+        console.error('Failed to fetch prices:', error);
+      }
+    };
+
+    fetchPrices();
+    const interval = setInterval(fetchPrices, 60000); // Update every minute
+    
+    return () => clearInterval(interval);
   }, []);
 
   const handleCopy = (text, field) => {
@@ -83,14 +128,18 @@ function App() {
   };
 
   const getCurrentPrice = () => {
-    return prices[operation][paymentMethod];
+    if (operation === 'buy') {
+      return paymentMethod === 'bank' ? prices.buy_bank : prices.buy_cash;
+    } else {
+      return paymentMethod === 'bank' ? prices.sell_bank : prices.sell_cash;
+    }
   };
 
   const calculateTotal = () => {
     if (!amount) return 0;
     const price = getCurrentPrice();
     const subtotal = parseFloat(amount) * price;
-    const commission = subtotal * 0.02;
+    const commission = subtotal * prices.fee;
     return subtotal + commission;
   };
 
