@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react'
 import './index.css'
 import welcomeImg from './assets/welcome.jpg'
 import confirmImg from './assets/10.jpg'
+import usdtOfficialLogo from './assets/usdt-official-logo.png'
+import buyIcon from './assets/buy-icon.png'
+import sellIcon from './assets/sell-icon.png'
 
 // Fixed data
 const bankData = {
@@ -223,35 +226,26 @@ ${formData.phone}
   if (showWelcome) {
     return (
       <div style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
+        width: "100vw",
         height: "100vh",
-        width: "100%",
         overflow: "hidden",
-        position: "relative"
+        position: "relative",
+        margin: 0,
+        padding: 0
       }}>
-        <div style={{
-          maxWidth: "450px",
-          width: "100%",
-          height: "100vh",
-          margin: "auto",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center"
-        }}>
-          <img 
-            src={welcomeImg}
-            alt="Welcome"
-            style={{
-              maxWidth: "100%",
-              maxHeight: "100vh",
-              width: "auto",
-              height: "auto",
-              objectFit: "contain"
-            }}
-          />
-        </div>
+        <img 
+          src={welcomeImg}
+          alt="Welcome"
+          style={{
+            width: "100vw",
+            height: "100vh",
+            objectFit: "cover",
+            objectPosition: "center",
+            position: "absolute",
+            top: 0,
+            left: 0
+          }}
+        />
       </div>
     );
   }
@@ -362,23 +356,31 @@ ${formData.phone}
           <div className="grid grid-cols-2 gap-3">
             <button
               onClick={() => setOperation('buy')}
-              className={`py-3 px-4 rounded-xl font-bold transition-all duration-200 ${
+              className={`py-3 px-4 rounded-xl font-bold transition-all duration-200 flex flex-col items-center justify-center ${
                 operation === 'buy'
                   ? 'bg-green-600 text-white'
                   : 'bg-white/20 text-white/70 hover:bg-white/30'
               }`}
             >
-              🟢 شراء
+              <div className="flex items-center gap-2 mb-1">
+                <img src={buyIcon} alt="Buy" width="16" height="16" />
+                <span>شراء</span>
+              </div>
+              <span className="text-xs opacity-75">BUY</span>
             </button>
             <button
               onClick={() => setOperation('sell')}
-              className={`py-3 px-4 rounded-xl font-bold transition-all duration-200 ${
+              className={`py-3 px-4 rounded-xl font-bold transition-all duration-200 flex flex-col items-center justify-center ${
                 operation === 'sell'
                   ? 'bg-red-600 text-white'
                   : 'bg-white/20 text-white/70 hover:bg-white/30'
               }`}
             >
-              🔴 بيع
+              <div className="flex items-center gap-2 mb-1">
+                <img src={sellIcon} alt="Sell" width="16" height="16" />
+                <span>بيع</span>
+              </div>
+              <span className="text-xs opacity-75">SELL</span>
             </button>
           </div>
         </div>
@@ -389,7 +391,13 @@ ${formData.phone}
             <span className="text-white/70">العملة</span>
             <div className="flex flex-col items-end">
               <div className="flex items-center gap-2">
-                <span className="text-2xl">₮</span>
+                <img 
+                  src={usdtOfficialLogo} 
+                  alt="USDT" 
+                  width="30" 
+                  height="30" 
+                  style={{ borderRadius: '50%' }}
+                />
                 <span className="text-white font-bold">USDT</span>
               </div>
               <span className="text-white/50 text-xs mt-1">1 USDT = 1 USD</span>
