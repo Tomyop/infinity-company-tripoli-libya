@@ -223,19 +223,35 @@ ${formData.phone}
   if (showWelcome) {
     return (
       <div style={{
-        width: "100vw",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
         height: "100vh",
-        overflow: "hidden"
+        width: "100%",
+        overflow: "hidden",
+        position: "relative"
       }}>
-        <img 
-          src={welcomeImg}
-          alt="Welcome"
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "cover"
-          }}
-        />
+        <div style={{
+          maxWidth: "450px",
+          width: "100%",
+          height: "100vh",
+          margin: "auto",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center"
+        }}>
+          <img 
+            src={welcomeImg}
+            alt="Welcome"
+            style={{
+              maxWidth: "100%",
+              maxHeight: "100vh",
+              width: "auto",
+              height: "auto",
+              objectFit: "contain"
+            }}
+          />
+        </div>
       </div>
     );
   }
