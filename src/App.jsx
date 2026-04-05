@@ -31,6 +31,12 @@ const prices = {
 };
 
 function App() {
+  const vibrate = () => {
+    if (typeof navigator !== "undefined" && navigator.vibrate) {
+      navigator.vibrate(30);
+    }
+  };
+
   const [showWelcome, setShowWelcome] = useState(true);
   const [operation, setOperation] = useState('buy');
   const [paymentMethod, setPaymentMethod] = useState('bank');
@@ -355,7 +361,10 @@ ${formData.phone}
           <h2 className="text-xl font-bold text-white mb-4">اختر العملية</h2>
           <div className="grid grid-cols-2 gap-3">
             <button
-              onClick={() => setOperation('buy')}
+              onClick={() => {
+                vibrate();
+                setOperation('buy');
+              }}
               className={`py-3 px-4 rounded-xl font-bold transition-all duration-200 flex flex-col items-center justify-center ${
                 operation === 'buy'
                   ? 'bg-green-600 text-white'
@@ -369,7 +378,10 @@ ${formData.phone}
               <span className="text-xs opacity-75">BUY</span>
             </button>
             <button
-              onClick={() => setOperation('sell')}
+              onClick={() => {
+                vibrate();
+                setOperation('sell');
+              }}
               className={`py-3 px-4 rounded-xl font-bold transition-all duration-200 flex flex-col items-center justify-center ${
                 operation === 'sell'
                   ? 'bg-red-600 text-white'
@@ -377,7 +389,9 @@ ${formData.phone}
               }`}
             >
               <div className="flex items-center gap-2 mb-1">
-                <img src={sellIcon} alt="Sell" width="16" height="16" />
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{ transform: 'scaleX(-1)' }}>
+                  <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+                </svg>
                 <span>بيع</span>
               </div>
               <span className="text-xs opacity-75">SELL</span>
@@ -408,26 +422,61 @@ ${formData.phone}
         {/* Payment Method */}
         <div className="card-primary mb-6">
           <h3 className="text-lg font-bold text-white mb-3">طريقة الدفع</h3>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-2">
             <button
-              onClick={() => setPaymentMethod('bank')}
-              className={`py-2 px-4 rounded-xl font-medium transition-all duration-200 ${
+              onClick={() => {
+                vibrate();
+                setPaymentMethod('bank');
+              }}
+              className={`py-3 px-3 rounded-xl font-medium transition-all duration-300 flex flex-col items-center justify-center ${
                 paymentMethod === 'bank'
-                  ? 'bg-purple-600 text-white'
-                  : 'bg-white/20 text-white/70 hover:bg-white/30'
+                  ? 'bg-gradient-to-br from-purple-700 to-purple-800 text-white shadow-lg'
+                  : 'bg-white/20 text-white/70 hover:bg-white/30 opacity-60'
               }`}
+              style={{
+                boxShadow: paymentMethod === 'bank' ? '0 4px 15px rgba(147, 51, 234, 0.4), 0 0 15px rgba(147, 51, 234, 0.2)' : '0 2px 8px rgba(0,0,0,0.1)',
+                transform: paymentMethod === 'bank' ? 'scale(1.01)' : 'scale(1)'
+              }}
             >
-              تحويل بنكي
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none" style={{ marginBottom: '4px' }}>
+                <rect x="6" y="14" width="20" height="12" stroke="#FFD700" strokeWidth="1.2" fill="none"/>
+                <line x1="8" y1="16" x2="8" y2="24" stroke="#FFD700" strokeWidth="0.8"/>
+                <line x1="11" y1="16" x2="11" y2="24" stroke="#FFD700" strokeWidth="0.8"/>
+                <line x1="14" y1="16" x2="14" y2="24" stroke="#FFD700" strokeWidth="0.8"/>
+                <line x1="17" y1="16" x2="17" y2="24" stroke="#FFD700" strokeWidth="0.8"/>
+                <line x1="20" y1="16" x2="20" y2="24" stroke="#FFD700" strokeWidth="0.8"/>
+                <line x1="24" y1="16" x2="24" y2="24" stroke="#FFD700" strokeWidth="0.8"/>
+                <polygon points="6,14 16,8 26,14" stroke="#FFD700" strokeWidth="1.2" fill="none"/>
+              </svg>
+              <span className="text-xs font-bold">تحويل بنكي</span>
+              <span className="text-xs opacity-75 mt-0.5">BANK</span>
             </button>
             <button
-              onClick={() => setPaymentMethod('cash')}
-              className={`py-2 px-4 rounded-xl font-medium transition-all duration-200 ${
+              onClick={() => {
+                vibrate();
+                setPaymentMethod('cash');
+              }}
+              className={`py-3 px-3 rounded-xl font-medium transition-all duration-300 flex flex-col items-center justify-center ${
                 paymentMethod === 'cash'
-                  ? 'bg-purple-600 text-white'
-                  : 'bg-white/20 text-white/70 hover:bg-white/30'
+                  ? 'bg-gradient-to-br from-purple-700 to-purple-800 text-white shadow-lg'
+                  : 'bg-white/20 text-white/70 hover:bg-white/30 opacity-60'
               }`}
+              style={{
+                boxShadow: paymentMethod === 'cash' ? '0 4px 15px rgba(147, 51, 234, 0.4), 0 0 15px rgba(147, 51, 234, 0.2)' : '0 2px 8px rgba(0,0,0,0.1)',
+                transform: paymentMethod === 'cash' ? 'scale(1.01)' : 'scale(1)'
+              }}
             >
-              نقدي
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none" style={{ marginBottom: '4px' }}>
+                <rect x="5" y="10" width="22" height="16" rx="2" stroke="#FFD700" strokeWidth="1.2" fill="none"/>
+                <line x1="7" y1="13" x2="25" y2="13" stroke="#FFD700" strokeWidth="0.8"/>
+                <line x1="7" y1="16" x2="25" y2="16" stroke="#FFD700" strokeWidth="0.8"/>
+                <line x1="7" y1="19" x2="25" y2="19" stroke="#FFD700" strokeWidth="0.8"/>
+                <line x1="7" y1="22" x2="19" y2="22" stroke="#FFD700" strokeWidth="0.8"/>
+                <circle cx="22" cy="22" r="1.2" stroke="#FFD700" strokeWidth="0.8" fill="none"/>
+                <path d="M5 10 L5 7 L27 7 L27 10" stroke="#FFD700" strokeWidth="1.2" fill="none"/>
+              </svg>
+              <span className="text-xs font-bold">نقدي</span>
+              <span className="text-xs opacity-75 mt-0.5">CASH</span>
             </button>
           </div>
           <div className="mt-3 text-center">
