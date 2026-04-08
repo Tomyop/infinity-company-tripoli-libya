@@ -6,6 +6,7 @@ import usdtOfficialLogo from './assets/usdt-official-logo.png'
 import buyIcon from './assets/buy-icon.png'
 import sellIcon from './assets/sell-icon.png'
 import AdBanner from './AdBanner'
+import InstallPrompt from './InstallPrompt'
 
 // Fixed data
 const bankData = {
@@ -268,6 +269,7 @@ ${formData.phone}
         document.activeElement.blur();
       }}
     >
+      <InstallPrompt />
       {showConfirmImage && (
         <div style={{
           position: "fixed",
