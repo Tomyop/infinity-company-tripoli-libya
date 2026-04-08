@@ -5,6 +5,7 @@ import confirmImg from './assets/10.jpg'
 import usdtOfficialLogo from './assets/usdt-official-logo.png'
 import buyIcon from './assets/buy-icon.png'
 import sellIcon from './assets/sell-icon.png'
+import AdBanner from './AdBanner'
 
 // Fixed data
 const bankData = {
@@ -356,6 +357,9 @@ ${formData.phone}
       )}
       
       <div className="max-w-mobile mx-auto px-4 py-6 pb-20">
+        {/* Ad Banner */}
+        <AdBanner />
+        
         {/* Operation Selection */}
         <div className="card-primary mb-6">
           <h2 className="text-xl font-bold text-white mb-4">اختر العملية</h2>
