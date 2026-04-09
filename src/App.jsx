@@ -7,6 +7,7 @@ import buyIcon from './assets/buy-icon.png'
 import sellIcon from './assets/sell-icon.png'
 import AdBanner from './AdBanner'
 import InstallPrompt from './InstallPrompt'
+import Draw from './Draw'
 
 // Fixed data
 const bankData = {
@@ -51,6 +52,7 @@ function App() {
   const [showConfirmImage, setShowConfirmImage] = useState(false);
   const [copiedField, setCopiedField] = useState(null);
   const [whatsappUrl, setWhatsappUrl] = useState('');
+  const [showDraw, setShowDraw] = useState(false);
   const [prices, setPrices] = useState({
     buy_cash: 11,
     buy_bank: 12,
@@ -233,7 +235,16 @@ ${formData.phone}
   };
 
   return (
-    <>
+    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-purple-950"
+      onClick={(e) => {
+        if (e.target.tagName !== "INPUT") {
+          document.activeElement.blur();
+        }
+      }}
+      onTouchMove={() => {
+        document.activeElement.blur();
+      }}
+    >
       {/* Welcome Screen */}
       {showWelcome && (
         <div id="welcome-screen">
@@ -244,18 +255,11 @@ ${formData.phone}
         </div>
       )}
       
-      {/* Main App */}
-      <div id="app">
-        <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-purple-950"
-      onClick={(e) => {
-        if (e.target.tagName !== "INPUT") {
-          document.activeElement.blur();
-        }
-      }}
-      onTouchMove={() => {
-        document.activeElement.blur();
-      }}
-    >
+      {/* Draw Page */}
+      {showDraw ? (
+        <Draw />
+      ) : (
+        <div id="app">
       <InstallPrompt />
       {showConfirmImage && (
         <div style={{
@@ -518,30 +522,40 @@ ${formData.phone}
               <div className="mb-4">
                 <label className="block text-white/70 text-sm mb-2">بياناتنا البنكية</label>
                 <div className="space-y-2">
-                  <div className="flex items-center justify-between bg-white/5 p-2 rounded-lg">
-                    <span className="text-white/70 text-xs">البنك:</span>
-                    <div className="flex items-center gap-2">
+                  <div className="bg-white/5 p-2 rounded-lg">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-white/70 text-xs">البنك:</span>
                       <span className="text-white text-xs">{bankData.bank}</span>
-                      <span onClick={() => handleCopy(bankData.bank, 'bank')} style={{ cursor: 'pointer' }} className="text-purple-400 hover:text-purple-300 text-xs">
-                        {copiedField === 'bank' ? '✔' : '📋'}
-                      </span>
+                    </div>
+                    <div className="text-left">
+                      <span className="text-white text-xs block">ONEPAY / LYPAY</span>
                     </div>
                   </div>
-                  <div className="flex items-center justify-between bg-white/5 p-2 rounded-lg">
-                    <span className="text-white/70 text-xs">الفرع:</span>
-                    <div className="flex items-center gap-2">
-                      <span className="text-white text-xs">{bankData.branch}</span>
-                      <span onClick={() => handleCopy(bankData.branch, 'branch')} style={{ cursor: 'pointer' }} className="text-purple-400 hover:text-purple-300 text-xs">
-                        {copiedField === 'branch' ? '✔' : '📋'}
-                      </span>
-                    </div>
+                  <div className="bg-white/5 p-2 rounded-lg overflow-hidden">
+                    <span 
+                      className="text-white text-xs block whitespace-nowrap"
+                      style={{
+                        animation: 'slideRightToLeft 3s linear infinite',
+                        display: 'inline-block'
+                      }}
+                    >
+                      يدعم جميع المصارف
+                    </span>
                   </div>
                   <div className="flex items-center justify-between bg-white/5 p-2 rounded-lg">
                     <span className="text-white/70 text-xs">الحساب:</span>
                     <div className="flex items-center gap-2">
                       <span className="text-white text-xs">{bankData.account}</span>
-                      <span onClick={() => handleCopy(bankData.account, 'account')} style={{ cursor: 'pointer' }} className="text-purple-400 hover:text-purple-300 text-xs">
-                        {copiedField === 'account' ? '✔' : '📋'}
+                      <span
+                        onClick={() => {
+                          navigator.clipboard.writeText(bankData.account);
+                          setCopiedField('account');
+                          setTimeout(() => setCopiedField(null), 1200);
+                        }}
+                        style={{ cursor: 'pointer' }}
+                        className="text-purple-400 hover:text-purple-300 text-xs"
+                      >
+                        {copiedField === 'account' ? '✅' : '📋'}
                       </span>
                     </div>
                   </div>
@@ -549,8 +563,16 @@ ${formData.phone}
                     <span className="text-white/70 text-xs">الآيبان:</span>
                     <div className="flex items-center gap-2">
                       <span className="text-white text-xs">{bankData.iban}</span>
-                      <span onClick={() => handleCopy(bankData.iban, 'iban')} style={{ cursor: 'pointer' }} className="text-purple-400 hover:text-purple-300 text-xs">
-                        {copiedField === 'iban' ? '✔' : '📋'}
+                      <span
+                        onClick={() => {
+                          navigator.clipboard.writeText(bankData.iban);
+                          setCopiedField('iban');
+                          setTimeout(() => setCopiedField(null), 1200);
+                        }}
+                        style={{ cursor: 'pointer' }}
+                        className="text-purple-400 hover:text-purple-300 text-xs"
+                      >
+                        {copiedField === 'iban' ? '✅' : '📋'}
                       </span>
                     </div>
                   </div>
@@ -561,12 +583,12 @@ ${formData.phone}
               <div className="mb-4">
                 <label className="block text-white/70 text-sm mb-2">عنوان المحفظة</label>
                 <input
-                  type="text"
-                  value={formData.walletAddress}
-                  onChange={(e) => setFormData(prev => ({ ...prev, walletAddress: e.target.value }))}
-                  placeholder={walletData.address}
-                  className="input-field w-full"
-                />
+                    type="text"
+                    value={formData.walletAddress}
+                    onChange={(e) => setFormData(prev => ({ ...prev, walletAddress: e.target.value }))}
+                    placeholder={walletData.address}
+                    className="input-field w-full"
+                  />
               </div>
               <div className="mb-4">
                 <label className="block text-white/70 text-sm mb-2">الشبكة</label>
@@ -597,26 +619,21 @@ ${formData.phone}
                     <div className="flex items-center justify-between">
                       <span className="text-white text-xs break-all max-w-[70%]">{walletData.address}</span>
                       <span
-                        onClick={() => handleCopy(walletData.address, 'walletAddress')}
+                        onClick={() => {
+                          navigator.clipboard.writeText(walletData.address);
+                          setCopiedField('wallet');
+                          setTimeout(() => setCopiedField(null), 1200);
+                        }}
                         style={{ cursor: 'pointer' }}
                         className="text-purple-400 hover:text-purple-300 text-xs"
                       >
-                        {copiedField === 'walletAddress' ? '✔' : '📋'}
+                        {copiedField === 'wallet' ? '✅' : '📋'}
                       </span>
                     </div>
                   </div>
                   <div className="flex items-center justify-between bg-white/5 p-2 rounded-lg">
                     <span className="text-white/70 text-xs">الشبكة:</span>
-                    <div className="flex items-center gap-2">
-                      <span className="text-white text-xs">{walletData.network}</span>
-                      <span
-                        onClick={() => handleCopy(walletData.network, 'walletNetwork')}
-                        style={{ cursor: 'pointer' }}
-                        className="text-purple-400 hover:text-purple-300 text-xs"
-                      >
-                        {copiedField === 'walletNetwork' ? '✔' : '📋'}
-                      </span>
-                    </div>
+                    <span className="text-white text-xs">{walletData.network}</span>
                   </div>
                 </div>
               </div>
@@ -771,40 +788,48 @@ ${formData.phone}
               </a>
             </div>
           </div>
-        </div>
-
       </div>
-
-      <style jsx>{`
-        @keyframes fade-in {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
+    </div>
         
-        @keyframes fadeInScale {
-          from {
-            opacity: 0;
-            transform: scale(0.9);
-          }
-          to {
-            opacity: 1;
-            transform: scale(1);
-          }
-        }
-        
-        .animate-fade-in {
-          animation: fade-in 0.5s ease-out;
-        }
-      `}</style>
+        {/* Floating Draw Button */}
+        <button
+        onClick={() => setShowDraw(true)}
+        style={{
+          position: 'fixed',
+          bottom: '90px',
+          left: '20px',
+          width: '65px',
+          height: '65px',
+          borderRadius: '50%',
+          background: 'linear-gradient(135deg, #9333ea 0%, #7c3aed 50%, #6d28d9 100%)',
+          border: 'none',
+          boxShadow: '0 8px 32px rgba(147, 51, 234, 0.4), 0 4px 12px rgba(147, 51, 234, 0.2)',
+          cursor: 'pointer',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '2px',
+          zIndex: 9999,
+          transition: 'all 0.3s ease',
+          animation: 'shake 1.2s infinite'
+        }}
+        onMouseOver={(e) => {
+          e.target.style.transform = 'scale(1.1)';
+          e.target.style.boxShadow = '0 12px 40px rgba(147, 51, 234, 0.6), 0 6px 16px rgba(147, 51, 234, 0.3)';
+        }}
+        onMouseOut={(e) => {
+          e.target.style.transform = 'scale(1)';
+          e.target.style.boxShadow = '0 8px 32px rgba(147, 51, 234, 0.4), 0 4px 12px rgba(147, 51, 234, 0.2)';
+        }}
+      >
+        <div style={{ fontSize: '20px' }}>{"\ud83c\udf81"}</div>
+        <div style={{ fontSize: '8px', color: 'white', fontWeight: 'bold', lineHeight: '1' }}>{"\u0633\u062d\u0628 \u0623\u0633\u0628\u0648\u0639\u064a"}</div>
+        <div style={{ fontSize: '8px', color: 'white', fontWeight: 'bold' }}>1 USDT</div>
+      </button>
         </div>
-      </div>
-    </>
+      )}
+    </div>
   );
 }
 

@@ -68,7 +68,8 @@ const AdBanner = () => {
           />
         ))}
       </div>
-    </div>
+      
+          </div>
   );
 };
 
