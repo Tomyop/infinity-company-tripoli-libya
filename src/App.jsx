@@ -68,10 +68,12 @@ function App() {
   });
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowWelcome(false);
-    }, 3000);
-    return () => clearTimeout(timer);
+    setTimeout(() => {
+      const el = document.getElementById("welcome-screen");
+      if (el) {
+        el.classList.add("hidden");
+      }
+    }, 2000);
   }, []);
 
   useEffect(() => {
@@ -230,36 +232,21 @@ ${formData.phone}
     }, 2000);
   };
 
-  // Welcome Screen
-  if (showWelcome) {
-    return (
-      <div style={{
-        width: "100vw",
-        height: "100vh",
-        overflow: "hidden",
-        position: "relative",
-        margin: 0,
-        padding: 0
-      }}>
-        <img 
-          src={welcomeImg}
-          alt="Welcome"
-          style={{
-            width: "100vw",
-            height: "100vh",
-            objectFit: "cover",
-            objectPosition: "center",
-            position: "absolute",
-            top: 0,
-            left: 0
-          }}
-        />
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-purple-950"
+    <>
+      {/* Welcome Screen */}
+      {showWelcome && (
+        <div id="welcome-screen">
+          <img 
+            src={welcomeImg}
+            alt="Welcome"
+          />
+        </div>
+      )}
+      
+      {/* Main App */}
+      <div id="app">
+        <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-purple-950"
       onClick={(e) => {
         if (e.target.tagName !== "INPUT") {
           document.activeElement.blur();
@@ -792,7 +779,9 @@ ${formData.phone}
           animation: fade-in 0.5s ease-out;
         }
       `}</style>
-    </div>
+        </div>
+      </div>
+    </>
   );
 }
 
