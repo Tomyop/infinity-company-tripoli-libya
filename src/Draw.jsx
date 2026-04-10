@@ -40,6 +40,37 @@ const Draw = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-purple-950">
+      {/* Back Button */}
+      <button
+        onClick={() => window.parent.postMessage({ type: 'HIDE_DRAW' }, '*')}
+        style={{
+          position: 'fixed',
+          top: '20px',
+          right: '20px',
+          zIndex: 9999,
+          background: 'rgba(255, 255, 255, 0.1)',
+          backdropFilter: 'blur(10px)',
+          border: '1px solid rgba(255, 255, 255, 0.2)',
+          borderRadius: '50%',
+          width: '32px',
+          height: '32px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          cursor: 'pointer',
+          transition: 'all 0.3s ease'
+        }}
+        onMouseEnter={(e) => {
+          e.target.style.background = 'rgba(255, 255, 255, 0.2)';
+        }}
+        onMouseLeave={(e) => {
+          e.target.style.background = 'rgba(255, 255, 255, 0.1)';
+        }}
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="white" style={{ transform: 'rotate(180deg)' }}>
+          <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+        </svg>
+      </button>
       <div className="max-w-mobile mx-auto px-4 py-6 pb-20">
         {/* Form Fields */}
         <div className="card-primary mb-6">

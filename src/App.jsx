@@ -79,6 +79,17 @@ function App() {
   }, []);
 
   useEffect(() => {
+    const handleMessage = (event) => {
+      if (event.data.type === 'HIDE_DRAW') {
+        setShowDraw(false);
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, []);
+
+  useEffect(() => {
     const fetchPrices = async () => {
       try {
         const response = await fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vSy4Evf9vffihdOQ6rNWSaIstjIl02IZNnXlDeMcvAo4KhqdqzxRl_aThwjcKwZ71S99WZ4We-ueM3-/pub?gid=2014693807&single=true&output=csv&t=' + Date.now(), { cache: "no-store" });
@@ -411,7 +422,20 @@ ${formData.phone}
                 />
                 <span className="text-white font-bold">USDT</span>
               </div>
-              <span className="text-white/50 text-xs mt-1">1 USDT = 1 USD</span>
+              <span 
+                className="text-white/50 text-xs mt-1 usdt-price-display"
+                style={{
+                  animation: 'pulse 2s ease-in-out infinite, shimmer 3s ease-in-out infinite, colorFlash 4s ease-in-out infinite',
+                  background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.1) 50%, transparent 100%)',
+                  backgroundSize: '200% 100%',
+                  textShadow: '0 0 8px rgba(255,255,255,0.3)',
+                  borderRadius: '4px',
+                  padding: '2px 6px',
+                  position: 'relative'
+                }}
+              >
+                1 USDT = 1 USD
+              </span>
             </div>
           </div>
         </div>
@@ -476,9 +500,67 @@ ${formData.phone}
               <span className="text-xs opacity-75 mt-0.5">CASH</span>
             </button>
           </div>
-          <div className="mt-3 text-center">
-            <span className="text-white/70 text-sm">السعر الحالي: </span>
-            <span className="text-white font-bold">{getCurrentPrice()} د.ل</span>
+          <div className="mt-3">
+            <div 
+              className="financial-price-display"
+              style={{
+                background: 'rgba(255, 255, 255, 0.08)',
+                backdropFilter: 'blur(12px)',
+                border: '1px solid rgba(255, 255, 255, 0.15)',
+                borderRadius: '12px',
+                padding: '16px 20px',
+                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+                position: 'relative',
+                overflow: 'hidden'
+              }}
+            >
+              <div 
+                style={{
+                  fontSize: '11px',
+                  color: 'rgba(255, 255, 255, 0.6)',
+                  fontWeight: '500',
+                  marginBottom: '4px',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px'
+                }}
+              >
+                السعر الحالي
+              </div>
+              <div 
+                style={{
+                  display: 'flex',
+                  alignItems: 'baseline',
+                  justifyContent: 'center',
+                  gap: '6px',
+                  flexDirection: 'row-reverse',
+                  direction: 'rtl'
+                }}
+              >
+                <span 
+                  style={{
+                    fontSize: '16px',
+                    color: 'rgba(255, 255, 255, 0.7)',
+                    fontWeight: '400',
+                    alignSelf: 'flex-end',
+                    marginBottom: '4px'
+                  }}
+                >
+                  دينار
+                </span>
+                <span 
+                  style={{
+                    fontSize: '32px',
+                    color: '#10b981',
+                    fontWeight: '700',
+                    lineHeight: '1',
+                    textShadow: '0 0 20px rgba(16, 185, 129, 0.3)',
+                    fontFamily: 'system-ui, -apple-system, sans-serif'
+                  }}
+                >
+                  {getCurrentPrice()}
+                </span>
+              </div>
+            </div>
           </div>
         </div>
 
