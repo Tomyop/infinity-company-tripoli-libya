@@ -13,8 +13,8 @@ import Draw from './Draw'
 const bankData = {
   bank: "مصرف الجمهورية",
   branch: "وكالة البرج",
-  account: "1042020000002722",
-  iban: "LY950021041042020000002722"
+  account: "104202000002722",
+  iban: "LY95002104104202000002722"
 };
 
 const walletData = {
@@ -43,6 +43,7 @@ function App() {
   const [showWelcome, setShowWelcome] = useState(true);
   const [operation, setOperation] = useState('buy');
   const [paymentMethod, setPaymentMethod] = useState('bank');
+  const [currency, setCurrency] = useState('usdt');
   const [amount, setAmount] = useState('');
   const [copied, setCopied] = useState({});
   const [imageSelected, setImageSelected] = useState(false);
@@ -63,10 +64,13 @@ function App() {
 
   // User form data
   const [formData, setFormData] = useState({
+    fullName: '',
     phone: '',
     walletAddress: '',
     bankAccount: '',
-    iban: ''
+    iban: '',
+    transferDate: '',
+    transferTime: ''
   });
 
   useEffect(() => {
@@ -110,10 +114,22 @@ function App() {
         console.log("PRICES:", prices)
         
         setPrices({
+          // USDT prices (original)
           buy_cash: prices.buy_cash || 11,
           buy_bank: prices.buy_bank || 12,
           sell_cash: prices.sell_cash || 9,
           sell_bank: prices.sell_bank || 10,
+          // USD prices
+          usd_buy_cash: prices.usd_buy_cash || 5.1,
+          usd_buy_bank: prices.usd_buy_bank || 5.2,
+          usd_sell_cash: prices.usd_sell_cash || 4.9,
+          usd_sell_bank: prices.usd_sell_bank || 5.0,
+          // EUR prices
+          eur_buy_cash: prices.eur_buy_cash || 5.5,
+          eur_buy_bank: prices.eur_buy_bank || 5.6,
+          eur_sell_cash: prices.eur_sell_cash || 5.3,
+          eur_sell_bank: prices.eur_sell_bank || 5.4,
+          // Fee
           fee: prices.fee || 0.02
         });
       } catch (error) {
@@ -154,11 +170,12 @@ function App() {
   };
 
   const getCurrentPrice = () => {
-    if (operation === 'buy') {
-      return paymentMethod === 'bank' ? prices.buy_bank : prices.buy_cash;
-    } else {
-      return paymentMethod === 'bank' ? prices.sell_bank : prices.sell_cash;
-    }
+    const currencyPrefix = currency === 'usdt' ? '' : `${currency}_`;
+    const paymentSuffix = paymentMethod === 'bank' ? 'bank' : 'cash';
+    const operationPrefix = operation === 'buy' ? 'buy' : 'sell';
+    
+    const priceKey = `${currencyPrefix}${operationPrefix}_${paymentSuffix}`;
+    return prices[priceKey] || 0;
   };
 
   const calculateTotal = () => {
@@ -202,15 +219,50 @@ function App() {
   const handleConfirm = () => {
     setConfirming(true);
     
-    // Prepare WhatsApp message
-    const message = `🚀 طلب جديد
+    // Prepare WhatsApp message based on currency and operation
+    let message = `🚀 طلب جديد
 
 📊 تفاصيل العملية:
-• العملية: ${operation}
-• العملة: USDT
-• المبلغ: ${amount} USDT
+• العملية: ${operation === 'buy' ? 'شراء' : 'بيع'}
+• العملة: ${currency.toUpperCase()}
+• المبلغ: ${amount} ${currency.toUpperCase()}
 • السعر: ${getCurrentPrice()} د.ل
-• الإجمالي: ${calculateTotal().toFixed(2)} د.ل
+• الإجمالي: ${calculateTotal().toFixed(2)} د.ل`;
+
+    if (operation === 'buy' && currency !== 'usdt') {
+      message += `
+• طريقة الدفع: تحويل بنكي
+• التاريخ: ${formData.transferDate}
+• الوقت: ${formData.transferTime}
+
+📞 رقم الهاتف:
+${formData.phone}
+
+👤 بيانات الزبون:
+• الاسم بالكامل: ${formData.fullName}
+
+🏦 بياناتنا:
+• البنك: مصرف الجمهورية
+• الفرع: وكالة البرج
+• رقم الحساب: ${bankData.account}
+• الآيبان: ${bankData.iban}
+
+✅ لقد قمت بالتحويل`;
+    } else if (operation === 'sell' && currency !== 'usdt') {
+      message += `
+
+📞 رقم الهاتف:
+${formData.phone}
+
+👤 بيانات الزبون:
+• الاسم بالكامل: ${formData.fullName}
+• الوقت: ${formData.transferTime}
+
+📍 ملاحظة:
+يرجى الحضور إلى المكتب لإتمام عملية البيع`;
+    } else {
+      // USDT logic (original)
+      message += `
 • طريقة الدفع: ${paymentMethod}
 
 📞 رقم الهاتف:
@@ -223,12 +275,13 @@ ${formData.phone}
 🏦 بياناتنا:
 • البنك: مصرف الجمهورية
 • الفرع: وكالة البرج
-• رقم الحساب: 1042020000002722
-• الآيبان: LY950021041042020000002722
+• رقم الحساب: ${bankData.account}
+• الآيبان: ${bankData.iban}
 
 💼 محفظتنا:
 • العنوان: ${walletData.address}
 • الشبكة: ${walletData.network}`;
+    }
 
     setShowConfirmImage(true);
 
@@ -407,36 +460,67 @@ ${formData.phone}
           </div>
         </div>
 
-        {/* Currency Info */}
+        {/* Currency Selector */}
         <div className="card-primary mb-6">
-          <div className="flex justify-between items-center">
-            <span className="text-white/70">العملة</span>
-            <div className="flex flex-col items-end">
-              <div className="flex items-center gap-2">
-                <img 
-                  src={usdtOfficialLogo} 
-                  alt="USDT" 
-                  width="30" 
-                  height="30" 
-                  style={{ borderRadius: '50%' }}
-                />
-                <span className="text-white font-bold">USDT</span>
-              </div>
-              <span 
-                className="text-white/50 text-xs mt-1 usdt-price-display"
-                style={{
-                  animation: 'pulse 2s ease-in-out infinite, shimmer 3s ease-in-out infinite, colorFlash 4s ease-in-out infinite',
-                  background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.1) 50%, transparent 100%)',
-                  backgroundSize: '200% 100%',
-                  textShadow: '0 0 8px rgba(255,255,255,0.3)',
-                  borderRadius: '4px',
-                  padding: '2px 6px',
-                  position: 'relative'
-                }}
-              >
-                1 USDT = 1 USD
-              </span>
-            </div>
+          <h3 className="text-lg font-bold text-white mb-4">العملة</h3>
+          <div className="grid grid-cols-3 gap-3">
+            <button
+              onClick={() => {
+                vibrate();
+                setCurrency('usdt');
+              }}
+              className={`py-4 px-3 rounded-xl font-bold transition-all duration-200 flex flex-col items-center justify-center ${
+                currency === 'usdt'
+                  ? 'bg-gradient-to-br from-purple-700 to-purple-800 text-white shadow-lg'
+                  : 'bg-white/20 text-white/70 hover:bg-white/30'
+              }`}
+              style={{
+                boxShadow: currency === 'usdt' ? '0 4px 15px rgba(147, 51, 234, 0.4), 0 0 15px rgba(147, 51, 234, 0.2)' : '0 2px 8px rgba(0,0,0,0.1)',
+                transform: currency === 'usdt' ? 'scale(1.02)' : 'scale(1)'
+              }}
+            >
+              <img 
+                src={usdtOfficialLogo} 
+                alt="USDT" 
+                width="32" 
+                height="32" 
+                style={{ borderRadius: '50%', marginBottom: '4px' }}
+              />
+            </button>
+            <button
+              onClick={() => {
+                vibrate();
+                setCurrency('usd');
+              }}
+              className={`py-4 px-3 rounded-xl font-bold transition-all duration-200 flex flex-col items-center justify-center ${
+                currency === 'usd'
+                  ? 'bg-gradient-to-br from-purple-700 to-purple-800 text-white shadow-lg'
+                  : 'bg-white/20 text-white/70 hover:bg-white/30'
+              }`}
+              style={{
+                boxShadow: currency === 'usd' ? '0 4px 15px rgba(147, 51, 234, 0.4), 0 0 15px rgba(147, 51, 234, 0.2)' : '0 2px 8px rgba(0,0,0,0.1)',
+                transform: currency === 'usd' ? 'scale(1.02)' : 'scale(1)'
+              }}
+            >
+              <span style={{ fontSize: '28px', fontWeight: 'bold', marginBottom: '4px' }}>$</span>
+            </button>
+            <button
+              onClick={() => {
+                vibrate();
+                setCurrency('eur');
+              }}
+              className={`py-4 px-3 rounded-xl font-bold transition-all duration-200 flex flex-col items-center justify-center ${
+                currency === 'eur'
+                  ? 'bg-gradient-to-br from-purple-700 to-purple-800 text-white shadow-lg'
+                  : 'bg-white/20 text-white/70 hover:bg-white/30'
+              }`}
+              style={{
+                boxShadow: currency === 'eur' ? '0 4px 15px rgba(147, 51, 234, 0.4), 0 0 15px rgba(147, 51, 234, 0.2)' : '0 2px 8px rgba(0,0,0,0.1)',
+                transform: currency === 'eur' ? 'scale(1.02)' : 'scale(1)'
+              }}
+            >
+              <span style={{ fontSize: '28px', fontWeight: 'bold', marginBottom: '4px' }}>€</span>
+            </button>
           </div>
         </div>
 
@@ -564,19 +648,21 @@ ${formData.phone}
           </div>
         </div>
 
-        {/* Amount Input */}
-        <div className="card-primary mb-6">
-          <label className="block text-white font-medium mb-2">
-            المبلغ (USDT)
-          </label>
-          <input
-            type="number"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            placeholder="أدخل المبلغ"
-            className="input-field w-full"
-          />
-        </div>
+        {/* Amount Input - Only show for USDT */}
+        {currency === 'usdt' && (
+          <div className="card-primary mb-6">
+            <label className="block text-white font-medium mb-2">
+              المبلغ (USDT)
+            </label>
+            <input
+              type="number"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              placeholder="أدخل المبلغ"
+              className="input-field w-full"
+            />
+          </div>
+        )}
 
         {/* Total Card */}
         {amount && (
@@ -596,90 +682,196 @@ ${formData.phone}
           <h3 className="text-lg font-bold text-white mb-4">
             {operation === 'buy' ? 'بيانات الشراء' : 'بيانات البيع'}
           </h3>
-          
 
           {operation === 'buy' ? (
             <>
-              {/* Bank Data (for buy) */}
-              <div className="mb-4">
-                <label className="block text-white/70 text-sm mb-2">بياناتنا البنكية</label>
-                <div className="space-y-2">
-                  <div className="bg-white/5 p-2 rounded-lg">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-white/70 text-xs">البنك:</span>
-                      <span className="text-white text-xs">{bankData.bank}</span>
-                    </div>
-                    <div className="text-left">
-                      <span className="text-white text-xs block">ONEPAY / LYPAY</span>
+              {currency === 'usdt' ? (
+                <>
+                  {/* Bank Data (for USDT buy) */}
+                  <div className="mb-4">
+                    <label className="block text-white/70 text-sm mb-2">بياناتنا البنكية</label>
+                    <div className="space-y-2">
+                      <div className="bg-white/5 p-2 rounded-lg">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-white/70 text-xs">البنك:</span>
+                          <span className="text-white text-xs">{bankData.bank}</span>
+                        </div>
+                        <div className="text-left">
+                          <span className="text-white text-xs block">ONEPAY / LYPAY</span>
+                        </div>
+                      </div>
+                      <div className="bg-white/5 p-2 rounded-lg overflow-hidden">
+                        <span 
+                          className="text-white text-xs block whitespace-nowrap"
+                          style={{
+                            animation: 'slideRightToLeft 3s linear infinite',
+                            display: 'inline-block'
+                          }}
+                        >
+                          يدعم جميع المصارف
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between bg-white/5 p-2 rounded-lg">
+                        <span className="text-white/70 text-xs">الحساب:</span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-white text-xs">{bankData.account}</span>
+                          <span
+                            onClick={() => {
+                              navigator.clipboard.writeText(bankData.account);
+                              setCopiedField('account');
+                              setTimeout(() => setCopiedField(null), 1200);
+                            }}
+                            style={{ cursor: 'pointer' }}
+                            className="text-purple-400 hover:text-purple-300 text-xs"
+                          >
+                            {copiedField === 'account' ? '✅' : '📋'}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between bg-white/5 p-2 rounded-lg">
+                        <span className="text-white/70 text-xs">الآيبان:</span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-white text-xs">{bankData.iban}</span>
+                          <span
+                            onClick={() => {
+                              navigator.clipboard.writeText(bankData.iban);
+                              setCopiedField('iban');
+                              setTimeout(() => setCopiedField(null), 1200);
+                            }}
+                            style={{ cursor: 'pointer' }}
+                            className="text-purple-400 hover:text-purple-300 text-xs"
+                          >
+                            {copiedField === 'iban' ? '✅' : '📋'}
+                          </span>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <div className="bg-white/5 p-2 rounded-lg overflow-hidden">
-                    <span 
-                      className="text-white text-xs block whitespace-nowrap"
-                      style={{
-                        animation: 'slideRightToLeft 3s linear infinite',
-                        display: 'inline-block'
-                      }}
-                    >
-                      يدعم جميع المصارف
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between bg-white/5 p-2 rounded-lg">
-                    <span className="text-white/70 text-xs">الحساب:</span>
-                    <div className="flex items-center gap-2">
-                      <span className="text-white text-xs">{bankData.account}</span>
-                      <span
-                        onClick={() => {
-                          navigator.clipboard.writeText(bankData.account);
-                          setCopiedField('account');
-                          setTimeout(() => setCopiedField(null), 1200);
-                        }}
-                        style={{ cursor: 'pointer' }}
-                        className="text-purple-400 hover:text-purple-300 text-xs"
-                      >
-                        {copiedField === 'account' ? '✅' : '📋'}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between bg-white/5 p-2 rounded-lg">
-                    <span className="text-white/70 text-xs">الآيبان:</span>
-                    <div className="flex items-center gap-2">
-                      <span className="text-white text-xs">{bankData.iban}</span>
-                      <span
-                        onClick={() => {
-                          navigator.clipboard.writeText(bankData.iban);
-                          setCopiedField('iban');
-                          setTimeout(() => setCopiedField(null), 1200);
-                        }}
-                        style={{ cursor: 'pointer' }}
-                        className="text-purple-400 hover:text-purple-300 text-xs"
-                      >
-                        {copiedField === 'iban' ? '✅' : '📋'}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
 
-              {/* User Wallet Data */}
+                  {/* User Wallet Data */}
+                  <div className="mb-4">
+                    <label className="block text-white/70 text-sm mb-2">عنوان المحفظة</label>
+                    <input
+                        type="text"
+                        value={formData.walletAddress}
+                        onChange={(e) => setFormData(prev => ({ ...prev, walletAddress: e.target.value }))}
+                        placeholder={walletData.address}
+                        className="input-field w-full"
+                      />
+                  </div>
+                  <div className="mb-4">
+                    <label className="block text-white/70 text-sm mb-2">الشبكة</label>
+                    <div className="bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white">
+                      BEP20
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  {/* Bank Data (for USD/EUR buy) */}
+                  <div className="mb-4">
+                    <label className="block text-white/70 text-sm mb-2">بياناتنا البنكية</label>
+                    <div className="space-y-2">
+                      <div className="bg-white/5 p-2 rounded-lg">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-white/70 text-xs">البنك:</span>
+                          <span className="text-white text-xs">{bankData.bank}</span>
+                        </div>
+                        <div className="text-left">
+                          <span className="text-white text-xs block">LYPAY-ONEPAY</span>
+                        </div>
+                      </div>
+                      <div className="bg-white/5 p-2 rounded-lg overflow-hidden">
+                        <span 
+                          className="text-white text-xs block whitespace-nowrap"
+                          style={{
+                            animation: 'slideRightToLeft 3s linear infinite',
+                            display: 'inline-block'
+                          }}
+                        >
+                          يدعم جميع المصارف
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between bg-white/5 p-2 rounded-lg">
+                        <span className="text-white/70 text-xs">رقم الحساب:</span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-white text-xs">{bankData.account}</span>
+                          <span
+                            onClick={() => {
+                              navigator.clipboard.writeText(bankData.account);
+                              setCopiedField('account');
+                              setTimeout(() => setCopiedField(null), 1200);
+                            }}
+                            style={{ cursor: 'pointer' }}
+                            className="text-purple-400 hover:text-purple-300 text-xs"
+                          >
+                            {copiedField === 'account' ? '✅' : '📋'}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between bg-white/5 p-2 rounded-lg">
+                        <span className="text-white/70 text-xs">IBAN:</span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-white text-xs">{bankData.iban}</span>
+                          <span
+                            onClick={() => {
+                              navigator.clipboard.writeText(bankData.iban);
+                              setCopiedField('iban');
+                              setTimeout(() => setCopiedField(null), 1200);
+                            }}
+                            style={{ cursor: 'pointer' }}
+                            className="text-purple-400 hover:text-purple-300 text-xs"
+                          >
+                            {copiedField === 'iban' ? '✅' : '📋'}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* User Full Name */}
+                  <div className="mb-4">
+                    <label className="block text-white/70 text-sm mb-2">الاسم بالكامل</label>
+                    <input
+                      type="text"
+                      value={formData.fullName}
+                      onChange={(e) => setFormData(prev => ({ ...prev, fullName: e.target.value }))}
+                      placeholder="أدخل اسمك الكامل"
+                      className="input-field w-full"
+                      style={{ textAlign: 'right', direction: 'rtl' }}
+                      required
+                    />
+                  </div>
+
+                  {/* Transfer Date */}
+                  <div className="mb-4">
+                    <label className="block text-white/70 text-sm mb-2">حدد التاريخ</label>
+                    <input
+                      type="date"
+                      value={formData.transferDate}
+                      onChange={(e) => setFormData(prev => ({ ...prev, transferDate: e.target.value }))}
+                      className="input-field w-full"
+                      required
+                    />
+                  </div>
+
+                  {/* Transfer Time */}
+                  <div className="mb-4">
+                    <label className="block text-white/70 text-sm mb-2">حدد الوقت</label>
+                    <input
+                      type="time"
+                      value={formData.transferTime}
+                      onChange={(e) => setFormData(prev => ({ ...prev, transferTime: e.target.value }))}
+                      className="input-field w-full"
+                      required
+                    />
+                  </div>
+                </>
+              )}
+
+              {/* Phone Number (common for all currencies) */}
               <div className="mb-4">
-                <label className="block text-white/70 text-sm mb-2">عنوان المحفظة</label>
-                <input
-                    type="text"
-                    value={formData.walletAddress}
-                    onChange={(e) => setFormData(prev => ({ ...prev, walletAddress: e.target.value }))}
-                    placeholder={walletData.address}
-                    className="input-field w-full"
-                  />
-              </div>
-              <div className="mb-4">
-                <label className="block text-white/70 text-sm mb-2">الشبكة</label>
-                <div className="bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white">
-                  BEP20
-                </div>
-              </div>
-              <div className="mb-4">
-                <label className="block text-white/70 text-sm mb-2">ادخل رقمك لاستلام تأكيد الطلب</label>
+                <label className="block text-white/70 text-sm mb-2">رقم الهاتف</label>
                 <input
                   type="tel"
                   value={formData.phone}
@@ -690,59 +882,111 @@ ${formData.phone}
                   required
                 />
               </div>
+
+              {/* Amount Input */}
+              <div className="mb-4">
+                <label className="block text-white/70 text-sm mb-2">المبلغ</label>
+                <input
+                  type="number"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  placeholder={`أدخل المبلغ (${currency.toUpperCase()})`}
+                  className="input-field w-full"
+                  required
+                />
+              </div>
             </>
           ) : (
             <>
-              {/* Wallet Data (for sell) */}
-              <div className="mb-4">
-                <label className="block text-white/70 text-sm mb-2">محفظتنا</label>
-                <div className="space-y-2">
-                  <div className="bg-white/5 p-2 rounded-lg">
-                    <div className="flex items-center justify-between">
-                      <span className="text-white text-xs break-all max-w-[70%]">{walletData.address}</span>
-                      <span
-                        onClick={() => {
-                          navigator.clipboard.writeText(walletData.address);
-                          setCopiedField('wallet');
-                          setTimeout(() => setCopiedField(null), 1200);
-                        }}
-                        style={{ cursor: 'pointer' }}
-                        className="text-purple-400 hover:text-purple-300 text-xs"
-                      >
-                        {copiedField === 'wallet' ? '✅' : '📋'}
-                      </span>
+              {currency === 'usdt' ? (
+                <>
+                  {/* Wallet Data (for USDT sell) */}
+                  <div className="mb-4">
+                    <label className="block text-white/70 text-sm mb-2">محفظتنا</label>
+                    <div className="space-y-2">
+                      <div className="bg-white/5 p-2 rounded-lg">
+                        <div className="flex items-center justify-between">
+                          <span className="text-white text-xs break-all max-w-[70%]">{walletData.address}</span>
+                          <span
+                            onClick={() => {
+                              navigator.clipboard.writeText(walletData.address);
+                              setCopiedField('wallet');
+                              setTimeout(() => setCopiedField(null), 1200);
+                            }}
+                            style={{ cursor: 'pointer' }}
+                            className="text-purple-400 hover:text-purple-300 text-xs"
+                          >
+                            {copiedField === 'wallet' ? '✅' : '📋'}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between bg-white/5 p-2 rounded-lg">
+                        <span className="text-white/70 text-xs">الشبكة:</span>
+                        <span className="text-white text-xs">{walletData.network}</span>
+                      </div>
                     </div>
                   </div>
-                  <div className="flex items-center justify-between bg-white/5 p-2 rounded-lg">
-                    <span className="text-white/70 text-xs">الشبكة:</span>
-                    <span className="text-white text-xs">{walletData.network}</span>
-                  </div>
-                </div>
-              </div>
 
-              {/* User Bank Data */}
+                  {/* User Bank Data */}
+                  <div className="mb-4">
+                    <label className="block text-white/70 text-sm mb-2">الحساب البنكي</label>
+                    <input
+                      type="text"
+                      value={formData.bankAccount}
+                      onChange={(e) => setFormData(prev => ({ ...prev, bankAccount: e.target.value }))}
+                      placeholder="أدخل رقم الحساب"
+                      className="input-field w-full"
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label className="block text-white/70 text-sm mb-2">الآيبان</label>
+                    <input
+                      type="text"
+                      value={formData.iban}
+                      onChange={(e) => setFormData(prev => ({ ...prev, iban: e.target.value }))}
+                      placeholder="أدخل الآيبان"
+                      className="input-field w-full"
+                    />
+                  </div>
+                </>
+              ) : (
+                <>
+                  {/* Office Message for USD/EUR sell */}
+                  <div className="bg-blue-600/20 border border-blue-600/50 rounded-xl p-4 text-center mb-6">
+                    <p className="text-blue-400 font-medium">يرجى الحضور إلى المكتب لإتمام عملية البيع</p>
+                  </div>
+
+                  {/* User Full Name */}
+                  <div className="mb-4">
+                    <label className="block text-white/70 text-sm mb-2">الاسم بالكامل</label>
+                    <input
+                      type="text"
+                      value={formData.fullName}
+                      onChange={(e) => setFormData(prev => ({ ...prev, fullName: e.target.value }))}
+                      placeholder="أدخل اسمك الكامل"
+                      className="input-field w-full"
+                      style={{ textAlign: 'right', direction: 'rtl' }}
+                      required
+                    />
+                  </div>
+
+                  {/* Transfer Time */}
+                  <div className="mb-4">
+                    <label className="block text-white/70 text-sm mb-2">حدد الوقت</label>
+                    <input
+                      type="time"
+                      value={formData.transferTime}
+                      onChange={(e) => setFormData(prev => ({ ...prev, transferTime: e.target.value }))}
+                      className="input-field w-full"
+                      required
+                    />
+                  </div>
+                </>
+              )}
+
+              {/* Phone Number (common for all currencies) */}
               <div className="mb-4">
-                <label className="block text-white/70 text-sm mb-2">الحساب البنكي</label>
-                <input
-                  type="text"
-                  value={formData.bankAccount}
-                  onChange={(e) => setFormData(prev => ({ ...prev, bankAccount: e.target.value }))}
-                  placeholder="أدخل رقم الحساب"
-                  className="input-field w-full"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-white/70 text-sm mb-2">الآيبان</label>
-                <input
-                  type="text"
-                  value={formData.iban}
-                  onChange={(e) => setFormData(prev => ({ ...prev, iban: e.target.value }))}
-                  placeholder="أدخل الآيبان"
-                  className="input-field w-full"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-white/70 text-sm mb-2">ادخل رقمك لاستلام تأكيد الطلب</label>
+                <label className="block text-white/70 text-sm mb-2">رقم الهاتف</label>
                 <input
                   type="tel"
                   value={formData.phone}
@@ -757,45 +1001,51 @@ ${formData.phone}
           )}
         </div>
 
-        {/* Payment Proof */}
-        <div className="card-primary mb-6">
-          <label className="block text-white font-medium mb-3">
-            إثبات الدفع
-          </label>
-          <div className="border-2 border-dashed border-white/30 rounded-xl p-6 text-center">
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-              className="hidden"
-              id="payment-proof"
-            />
-            <label
-              htmlFor="payment-proof"
-              className="cursor-pointer block"
-            >
-              {imageSelected ? (
-                <div className="text-green-400">
-                  <span className="text-2xl mb-2">📷</span>
-                  <p className="text-sm">تم اختيار الصورة ✔</p>
-                </div>
-              ) : (
-                <div>
-                  <span className="text-2xl mb-2">📤</span>
-                  <p className="text-white/70 text-sm">اضغط لرفع الصورة</p>
-                </div>
-              )}
+        {/* Payment Proof - Only show for USDT */}
+        {currency === 'usdt' && (
+          <div className="card-primary mb-6">
+            <label className="block text-white font-medium mb-3">
+              إثبات الدفع
             </label>
+            <div className="border-2 border-dashed border-white/30 rounded-xl p-6 text-center">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="hidden"
+                id="payment-proof"
+              />
+              <label
+                htmlFor="payment-proof"
+                className="cursor-pointer block"
+              >
+                {imageSelected ? (
+                  <div className="text-green-400">
+                    <span className="text-2xl mb-2">📷</span>
+                    <p className="text-sm">تم اختيار الصورة ✔</p>
+                  </div>
+                ) : (
+                  <div>
+                    <span className="text-2xl mb-2">📤</span>
+                    <p className="text-white/70 text-sm">اضغط لرفع الصورة</p>
+                  </div>
+                )}
+              </label>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Confirm Button */}
         <button
           onClick={handleConfirm}
-          disabled={!amount || !imageSelected || confirming || confirmed}
+          disabled={
+            (currency === 'usdt' ? (!amount || !imageSelected) : !amount) || 
+            confirming || 
+            confirmed
+          }
           className="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed mb-8"
         >
-          {confirming ? 'جاري التأكيد...' : confirmed ? 'تمت العملية بنجاح ✅' : 'تأكيد الدفع'}
+          {confirming ? 'جاري التأكيد...' : confirmed ? 'تمت العملية بنجاح ✅' : (operation === 'buy' ? 'تأكيد الدفع' : 'تأكيد البيع')}
         </button>
 
         {/* Success Message */}
