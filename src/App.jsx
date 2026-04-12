@@ -187,13 +187,14 @@ function App() {
     return subtotal + commission;
   };
 
-  function sendToGoogleSheet(phone, usdt, total) {
+  function sendToGoogleSheet(phone, amount, total, currency) {
     const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSfrpv4L0GwMM3zQC8OWKv9-iq8Uz0VwHY-l9TcMJdC9AHY5sQ/formResponse";
 
     const formData = new FormData();
     formData.append("entry.1487754017", phone);
-    formData.append("entry.446288420", usdt);
+    formData.append("entry.446288420", amount);
     formData.append("entry.1134418766", total);
+    formData.append("entry.1134418767", currency.toUpperCase());
 
     fetch(formUrl, {
       method: "POST",
@@ -291,7 +292,7 @@ ${formData.phone}
       setConfirmed(true);
       
       // Submit to Google Form
-      sendToGoogleSheet(formData.phone, amount, calculateTotal().toFixed(2));
+      sendToGoogleSheet(formData.phone, amount, calculateTotal().toFixed(2), currency);
       
       // Store WhatsApp URL for manual button
       const url = `https://wa.me/393895724547?text=${encodeURIComponent(message)}`;
@@ -560,8 +561,12 @@ ${formData.phone}
                 alt="USDT" 
                 width="32" 
                 height="32" 
-                style={{ borderRadius: '50%', marginBottom: '4px' }}
+                style={{ borderRadius: '50%', marginBottom: '8px' }}
               />
+              <div className="currency-label" style={{ textAlign: 'center', animation: 'fadeInUp 0.3s ease-out' }}>
+                <div className="title" style={{ fontSize: '16px', fontWeight: 'bold', color: '#fff', marginBottom: '2px' }}>USDT</div>
+                <div className="subtitle" style={{ fontSize: '12px', opacity: 0.7, color: '#ddd' }}>Tether</div>
+              </div>
             </button>
             <button
               onClick={() => {
@@ -578,7 +583,11 @@ ${formData.phone}
                 transform: currency === 'usd' ? 'scale(1.02)' : 'scale(1)'
               }}
             >
-              <span style={{ fontSize: '28px', fontWeight: 'bold', marginBottom: '4px' }}>$</span>
+              <span style={{ fontSize: '28px', fontWeight: 'bold', marginBottom: '8px' }}>$</span>
+              <div className="currency-label" style={{ textAlign: 'center', animation: 'fadeInUp 0.3s ease-out' }}>
+                <div className="title" style={{ fontSize: '16px', fontWeight: 'bold', color: '#fff', marginBottom: '2px' }}>USD</div>
+                <div className="subtitle" style={{ fontSize: '12px', opacity: 0.7, color: '#ddd' }}>US Dollar</div>
+              </div>
             </button>
             <button
               onClick={() => {
@@ -595,7 +604,11 @@ ${formData.phone}
                 transform: currency === 'eur' ? 'scale(1.02)' : 'scale(1)'
               }}
             >
-              <span style={{ fontSize: '28px', fontWeight: 'bold', marginBottom: '4px' }}>€</span>
+              <span style={{ fontSize: '28px', fontWeight: 'bold', marginBottom: '8px' }}>€</span>
+              <div className="currency-label" style={{ textAlign: 'center', animation: 'fadeInUp 0.3s ease-out' }}>
+                <div className="title" style={{ fontSize: '16px', fontWeight: 'bold', color: '#fff', marginBottom: '2px' }}>EUR</div>
+                <div className="subtitle" style={{ fontSize: '12px', opacity: 0.7, color: '#ddd' }}>Euro</div>
+              </div>
             </button>
           </div>
         </div>
