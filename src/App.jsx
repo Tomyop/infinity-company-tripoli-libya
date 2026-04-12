@@ -54,6 +54,7 @@ function App() {
   const [copiedField, setCopiedField] = useState(null);
   const [whatsappUrl, setWhatsappUrl] = useState('');
   const [showDraw, setShowDraw] = useState(false);
+  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   const [prices, setPrices] = useState({
     buy_cash: 11,
     buy_bank: 12,
@@ -409,6 +410,81 @@ ${formData.phone}
                 marginTop: "25px"
               }}
             />
+          </div>
+        </div>
+      )}
+
+      {/* Privacy Policy Modal */}
+      {showPrivacyModal && (
+        <div style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          backgroundColor: "rgba(0, 0, 0, 0.8)",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          zIndex: 9999
+        }}>
+          <div style={{
+            backgroundColor: "#1F2937",
+            borderRadius: "16px",
+            padding: "32px",
+            margin: "20px",
+            maxWidth: "400px",
+            width: "100%",
+            textAlign: "center",
+            animation: "fadeInScale 0.3s ease-out"
+          }}>
+            <div style={{
+              fontSize: "48px",
+              marginBottom: "16px"
+            }}>
+              {"\ud83d\udd10"}
+            </div>
+            <h2 style={{
+              fontSize: "24px",
+              fontWeight: "bold",
+              color: "white",
+              marginBottom: "16px"
+            }}>
+              Privacy Policy
+            </h2>
+            <p style={{
+              fontSize: "16px",
+              color: "#D1D5DB",
+              lineHeight: "1.6",
+              marginBottom: "24px",
+              textAlign: "right",
+              direction: "rtl"
+            }}>
+              {"\u0646\u062d\u062a\u0631\u0645 \u062e\u0635\u0648\u0635\u064a\u062a\u0643\u0621 \u064a\u062a\u0645 \u062a\u062e\u0632\u064a\u0646 \u0628\u064a\u0627\u0646\u0627\u062a\u0643 \u0628\u0634\u0643\u0644 \u0622\u0645\u0646\u0621 \u0644\u0627 \u064a\u062a\u0645 \u062a\u0646\u0641\u064a\u0630 \u0623\u064a \u0639\u0645\u0644\u064a\u0629 \u0625\u0644\u0627 \u0628\u0639\u062f \u0627\u0644\u062a\u062d\u0642\u0642 \u0645\u0646 \u0625\u064a\u0635\u0627\u0644 \u0627\u0644\u062a\u062d\u0648\u064a\u0644 \u0648\u0631\u0628\u0637\u0647 \u0628\u0631\u0642\u0645 \u0639\u0645\u0644\u064a\u0629\u0621 \u0646\u0633\u062a\u062e\u062f\u0645 \u0627\u0644\u0628\u064a\u0627\u0646\u0627\u062a \u0641\u0642\u0637 \u0644\u062a\u0623\u0645\u064a\u0646 \u0627\u0644\u0639\u0645\u0644\u064a\u0627\u062a \u0648\u0645\u0646\u0639 \u0627\u0644\u0627\u062d\u062a\u064a\u0627\u0644\u0622"}
+            </p>
+            <button
+              onClick={() => setShowPrivacyModal(false)}
+              style={{
+                backgroundColor: "#9333EA",
+                color: "white",
+                border: "none",
+                borderRadius: "12px",
+                padding: "12px 24px",
+                fontSize: "16px",
+                fontWeight: "bold",
+                cursor: "pointer",
+                transition: "all 0.2s ease",
+                width: "100%"
+              }}
+              onMouseOver={(e) => {
+                e.target.style.backgroundColor = "#7C3AED";
+              }}
+              onMouseOut={(e) => {
+                e.target.style.backgroundColor = "#9333EA";
+              }}
+            >
+              Close
+            </button>
           </div>
         </div>
       )}
@@ -1106,6 +1182,15 @@ ${formData.phone}
                 </svg>
                 <span className="text-xs font-medium">Facebook</span>
               </a>
+
+              {/* Privacy */}
+              <button
+                onClick={() => setShowPrivacyModal(true)}
+                className="flex flex-col items-center gap-1 py-2 px-3 rounded-xl transition-all duration-200 hover:scale-105 active:scale-95 text-gray-400 hover:text-white"
+              >
+                <span className="text-xl">🔐</span>
+                <span className="text-xs font-medium">Privacy</span>
+              </button>
 
               {/* Mail */}
               <a
