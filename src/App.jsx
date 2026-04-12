@@ -1070,6 +1070,19 @@ ${formData.phone}
                       required
                     />
                   </div>
+
+                  {/* Amount Input */}
+                  <div className="mb-4">
+                    <label className="block text-white/70 text-sm mb-2">المبلغ</label>
+                    <input
+                      type="number"
+                      value={amount}
+                      onChange={(e) => setAmount(e.target.value)}
+                      placeholder={`أدخل المبلغ (${currency.toUpperCase()})`}
+                      className="input-field w-full"
+                      required
+                    />
+                  </div>
                 </>
               )}
 
