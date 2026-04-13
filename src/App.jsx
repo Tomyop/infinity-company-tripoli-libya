@@ -313,10 +313,18 @@ ${formData.phone}
     >
       {/* Welcome Screen */}
       {showWelcome && (
-        <div id="welcome-screen">
+        <div id="welcome-screen" style={{ margin: 0, padding: 0, width: '100%', height: '100vh', overflow: 'hidden' }}>
           <img 
             src={welcomeImg}
             alt="Welcome"
+            style={{
+              width: '100%',
+              height: '100vh',
+              objectFit: 'cover',
+              display: 'block',
+              margin: 0,
+              padding: 0
+            }}
           />
         </div>
       )}
@@ -753,6 +761,38 @@ ${formData.phone}
           </div>
         )}
 
+        {/* Amount Input - Only show for USD */}
+        {currency === 'usd' && (
+          <div className="card-primary mb-6">
+            <label className="block text-white font-medium mb-2">
+              المبلغ (USD)
+            </label>
+            <input
+              type="number"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              placeholder="أدخل المبلغ (USD)"
+              className="input-field w-full"
+            />
+          </div>
+        )}
+
+        {/* Amount Input - Only show for EUR */}
+        {currency === 'eur' && (
+          <div className="card-primary mb-6">
+            <label className="block text-white font-medium mb-2">
+              المبلغ (EUR)
+            </label>
+            <input
+              type="number"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              placeholder="أدخل المبلغ (EUR)"
+              className="input-field w-full"
+            />
+          </div>
+        )}
+
         {/* Total Card */}
         {amount && (
           <div className="bg-gradient-to-r from-green-600 to-green-700 rounded-xl p-6 mb-6 shadow-xl">
@@ -972,19 +1012,7 @@ ${formData.phone}
                 />
               </div>
 
-              {/* Amount Input */}
-              <div className="mb-4">
-                <label className="block text-white/70 text-sm mb-2">المبلغ</label>
-                <input
-                  type="number"
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                  placeholder={`أدخل المبلغ (${currency.toUpperCase()})`}
-                  className="input-field w-full"
-                  required
-                />
-              </div>
-            </>
+                          </>
           ) : (
             <>
               {currency === 'usdt' ? (
