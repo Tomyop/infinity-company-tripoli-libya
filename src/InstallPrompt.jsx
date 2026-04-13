@@ -13,8 +13,10 @@ const InstallPrompt = () => {
       setHasBeenShown(true);
     }
 
-    // Detect iOS
+    // Detect mobile devices
     const isAppleDevice = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    const isAndroid = /Android/.test(navigator.userAgent);
+    const isMobile = isAppleDevice || isAndroid;
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
     setIsIOS(isAppleDevice && !isStandalone);
 
@@ -23,8 +25,8 @@ const InstallPrompt = () => {
       e.preventDefault();
       setDeferredPrompt(e);
       
-      // Show prompt only if not already shown
-      if (!hasBeenShown && !sessionShown) {
+      // Show prompt for mobile if not already shown
+      if (!hasBeenShown && !sessionShown && isMobile) {
         setTimeout(() => {
           setShowPrompt(true);
           sessionStorage.setItem('installPromptShown', 'true');
@@ -34,12 +36,20 @@ const InstallPrompt = () => {
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
 
-    // For iOS, show instructions after delay if not standalone
+    // For iOS mobile, show instructions after delay if not standalone
     if (isAppleDevice && !isStandalone && !hasBeenShown && !sessionShown) {
       setTimeout(() => {
         setShowPrompt(true);
         sessionStorage.setItem('installPromptShown', 'true');
       }, 5000); // Show after 5 seconds for iOS
+    }
+
+    // For Android mobile, always show prompt if not standalone and not already shown
+    if (isAndroid && !isStandalone && !hasBeenShown && !sessionShown) {
+      setTimeout(() => {
+        setShowPrompt(true);
+        sessionStorage.setItem('installPromptShown', 'true');
+      }, 4000); // Show after 4 seconds for Android
     }
 
     return () => {
@@ -84,10 +94,10 @@ const InstallPrompt = () => {
           {isIOS ? (
             <>
               <div style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '8px' }}>
-                Install Infinity App
+                تثبيت تطبيق إنفينيتي
               </div>
               <div style={{ marginBottom: '12px', lineHeight: '1.4' }}>
-                Tap <strong>Share</strong> button below, then <strong>Add to Home Screen</strong>
+                اضغط على زر <strong>مشاركة</strong> بالأسفل، ثم <strong>إضافة إلى الشاشة الرئيسية</strong>
               </div>
               <div style={{ 
                 display: 'flex', 
@@ -101,16 +111,16 @@ const InstallPrompt = () => {
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
                   <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/>
                 </svg>
-                Share icon is at the bottom of your screen
+                أيقونة المشاركة في أسفل الشاشتك
               </div>
             </>
           ) : (
             <>
               <div style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '8px' }}>
-                Install Infinity App
+                تثبيت تطبيق إنفينيتي
               </div>
               <div style={{ marginBottom: '12px', lineHeight: '1.4' }}>
-                Get instant access to USDT exchange rates
+                احصل على وصول فوري لأسعار صرف USDT
               </div>
             </>
           )}
@@ -141,7 +151,7 @@ const InstallPrompt = () => {
                 e.target.style.boxShadow = '0 4px 12px rgba(16, 185, 129, 0.3)';
               }}
             >
-              Install App
+              تثبيت التطبيق
             </button>
           )}
           
@@ -165,7 +175,7 @@ const InstallPrompt = () => {
               e.target.style.background = 'rgba(255, 255, 255, 0.1)';
             }}
           >
-            Maybe Later
+            ربما لاحقاً
           </button>
         </div>
       </div>
