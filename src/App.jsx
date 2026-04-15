@@ -55,6 +55,7 @@ function App() {
   const [whatsappUrl, setWhatsappUrl] = useState('');
   const [showDraw, setShowDraw] = useState(false);
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
+  const [showPriceNotification, setShowPriceNotification] = useState(true);
   const [prices, setPrices] = useState({
     buy_cash: 11,
     buy_bank: 12,
@@ -92,6 +93,12 @@ function App() {
 
     window.addEventListener('message', handleMessage);
     return () => window.removeEventListener('message', handleMessage);
+  }, []);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setShowPriceNotification(false);
+    }, 5000);
   }, []);
 
   useEffect(() => {
@@ -469,7 +476,7 @@ ${formData.phone}
               textAlign: "right",
               direction: "rtl"
             }}>
-              {"\u0646\u062d\u062a\u0631\u0645 \u062e\u0635\u0648\u0635\u064a\u062a\u0643\u0621 \u064a\u062a\u0645 \u062a\u062e\u0632\u064a\u0646 \u0628\u064a\u0627\u0646\u0627\u062a\u0643 \u0628\u0634\u0643\u0644 \u0622\u0645\u0646\u0621 \u0644\u0627 \u064a\u062a\u0645 \u062a\u0646\u0641\u064a\u0630 \u0623\u064a \u0639\u0645\u0644\u064a\u0629 \u0625\u0644\u0627 \u0628\u0639\u062f \u0627\u0644\u062a\u062d\u0642\u0642 \u0645\u0646 \u0625\u064a\u0635\u0627\u0644 \u0627\u0644\u062a\u062d\u0648\u064a\u0644 \u0648\u0631\u0628\u0637\u0647 \u0628\u0631\u0642\u0645 \u0639\u0645\u0644\u064a\u0629\u0621 \u0646\u0633\u062a\u062e\u062f\u0645 \u0627\u0644\u0628\u064a\u0627\u0646\u0627\u062a \u0641\u0642\u0637 \u0644\u062a\u0623\u0645\u064a\u0646 \u0627\u0644\u0639\u0645\u0644\u064a\u0627\u062a \u0648\u0645\u0646\u0639 \u0627\u0644\u0627\u062d\u062a\u064a\u0627\u0644\u0622"}
+              {"\u0646\u062d\u062a\u0631\u0645 \u062e\u0635\u0648\u0635\u064a\u062a\u0643\u0621 \u064a\ud83d\udd25 \ud83d\udd25 \ud83d\udd25 \ud83d\udd25 \ud83d\udd25 \u062a\u0645 \u062a\u062d\u062f\u064a\u062b \u0627\u0644\u0623\u0633\u0639\u0627\u0631 \u062d\u0633\u0628 \u0627\u0644\u0633\u0648\u06421 \u0644\u0627 \u064a\u062a\u0645 \u062a\u0646\u0641\u064a\u0630 \u0623\u064a \u0639\u0645\u0644\u064a\u0629 \u0625\u0644\u0627 \u0628\u0639\u062f \u0627\u0644\u062a\u062d\u0642\u0642 \u0645\u0646 \u0625\u064a\u0635\u0627\u0644 \u0627\u0644\u062a\u062d\u0648\u064a\u0644 \u0648\u0631\u0628\u0637\u0647 \u0628\u0631\u0642\u0645 \u0639\u0645\u0644\u064a\u0629\u0621 \u0646\u0633\u062a\u062e\u062f\u0645 \u0627\u0644\u0628\u064a\u0627\u0646\u0627\u062a \u0641\u0642\u0637 \u0644\u062a\u0623\u0645\u064a\u0646 \u0627\u0644\u0639\u0645\u0644\u064a\u0627\u062a \u0648\u0645\u0646\u0639 \u0627\u0644\u0627\u062d\u062a\u064a\u0627\u0644\u0622"}
             </p>
             <button
               onClick={() => setShowPrivacyModal(false)}
@@ -547,7 +554,22 @@ ${formData.phone}
 
         {/* Currency Selector */}
         <div className="card-primary mb-6">
-          <h3 className="text-lg font-bold text-white mb-4">العملة</h3>
+          <div className="flex items-center gap-2 mb-4">
+            <h3 className="text-lg font-bold text-white">العملة</h3>
+            {showPriceNotification && (
+              <span 
+                className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium text-white"
+                style={{
+                  background: 'linear-gradient(135deg, #6d28d9, #9333ea)',
+                  boxShadow: '0 0 12px rgba(147, 51, 234, 0.4)',
+                  animation: 'fadeInScale 0.4s ease-in-out',
+                  transition: 'opacity 0.6s ease-in-out, transform 0.6s ease-in-out'
+                }}
+              >
+                تم تحديث الأسعار حسب السوق 🔥
+              </span>
+            )}
+          </div>
           <div className="grid grid-cols-3 gap-3">
             <button
               onClick={() => {
