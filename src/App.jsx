@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import './index.css'
-import welcomeImg from './assets/welcome.jpg'
 import confirmImg from './assets/10.jpg'
 import usdtOfficialLogo from './assets/usdt-official-logo.png'
 import buyIcon from './assets/buy-icon.png'
@@ -40,7 +39,6 @@ function App() {
     }
   };
 
-  const [showWelcome, setShowWelcome] = useState(true);
   const [operation, setOperation] = useState('buy');
   const [paymentMethod, setPaymentMethod] = useState('bank');
   const [currency, setCurrency] = useState('usdt');
@@ -75,14 +73,6 @@ function App() {
     transferTime: ''
   });
 
-  useEffect(() => {
-    setTimeout(() => {
-      const el = document.getElementById("welcome-screen");
-      if (el) {
-        el.classList.add("hidden");
-      }
-    }, 2000);
-  }, []);
 
   useEffect(() => {
     const handleMessage = (event) => {
@@ -96,9 +86,14 @@ function App() {
   }, []);
 
   useEffect(() => {
-    setTimeout(() => {
-      setShowPriceNotification(false);
-    }, 5000);
+    const interval = setInterval(() => {
+      setShowPriceNotification(true);
+      setTimeout(() => {
+        setShowPriceNotification(false);
+      }, 3000);
+    }, 6000);
+    
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
@@ -324,23 +319,6 @@ ${formData.phone}
         document.activeElement.blur();
       }}
     >
-      {/* Welcome Screen */}
-      {showWelcome && (
-        <div id="welcome-screen" style={{ margin: 0, padding: 0, width: '100%', height: '100vh', overflow: 'hidden' }}>
-          <img 
-            src={welcomeImg}
-            alt="Welcome"
-            style={{
-              width: '100%',
-              height: '100vh',
-              objectFit: 'cover',
-              display: 'block',
-              margin: 0,
-              padding: 0
-            }}
-          />
-        </div>
-      )}
       
       {/* Draw Page */}
       {showDraw ? (
@@ -482,7 +460,12 @@ ${formData.phone}
               textAlign: "right",
               direction: "rtl"
             }}>
-              {"\u0646\u062d\u062a\u0631\u0645 \u062e\u0635\u0648\u0635\u064a\u062a\u0643\u0621 \u064a\ud83d\udd25 \ud83d\udd25 \ud83d\udd25 \ud83d\udd25 \ud83d\udd25 \u062a\u0645 \u062a\u062d\u062f\u064a\u062b \u0627\u0644\u0623\u0633\u0639\u0627\u0631 \u062d\u0633\u0628 \u0627\u0644\u0633\u0648\u06421 \u0644\u0627 \u064a\u062a\u0645 \u062a\u0646\u0641\u064a\u0630 \u0623\u064a \u0639\u0645\u0644\u064a\u0629 \u0625\u0644\u0627 \u0628\u0639\u062f \u0627\u0644\u062a\u062d\u0642\u0642 \u0645\u0646 \u0625\u064a\u0635\u0627\u0644 \u0627\u0644\u062a\u062d\u0648\u064a\u0644 \u0648\u0631\u0628\u0637\u0647 \u0628\u0631\u0642\u0645 \u0639\u0645\u0644\u064a\u0629\u0621 \u0646\u0633\u062a\u062e\u062f\u0645 \u0627\u0644\u0628\u064a\u0627\u0646\u0627\u062a \u0641\u0642\u0637 \u0644\u062a\u0623\u0645\u064a\u0646 \u0627\u0644\u0639\u0645\u0644\u064a\u0627\u062a \u0648\u0645\u0646\u0639 \u0627\u0644\u0627\u062d\u062a\u064a\u0627\u0644\u0622"}
+              نحترم خصوصيتك  
+يتم تحديث الأسعار حسب الأسواق  
+لا يتم تنفيذ أي عملية إلا بعد التحقق من إيصال التحويل وربطه برقم العملية داخل التطبيق  
+نستخدم البيانات فقط لتأمين العمليات ومنع الاحتيال  
+
+اتصال مباشر: 0920859434
             </p>
             <button
               onClick={() => setShowPrivacyModal(false)}
