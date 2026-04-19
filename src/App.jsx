@@ -226,8 +226,33 @@ function App() {
     }
   };
 
+  const sendTelegramNotification = () => {
+    try {
+      fetch('https://api.telegram.org/bot8699917719:AAGF7CMMjsHtBK-ISlbCHbs3PRTGHq2Im70/sendMessage', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+          chat_id: '8624852792',
+          text: '🔔 Infinity Support: New Payment Confirmed'
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Telegram notification sent successfully:', data);
+      })
+      .catch(error => {
+        console.error('Telegram notification failed:', error);
+      });
+    } catch (error) {
+      console.error('Failed to send Telegram notification:', error);
+    }
+  };
+
   const handleConfirm = () => {
     setConfirming(true);
+    
     
     // Prepare WhatsApp message based on currency and operation
     let message = `🚀 طلب جديد
@@ -291,6 +316,20 @@ ${formData.phone}
 💼 محفظتنا:
 • العنوان: ${walletData.address}
 • الشبكة: ${walletData.network}`;
+    }
+
+    // Send Telegram notification with full order details
+    try {
+      fetch('https://api.telegram.org/bot8699917719:AAGF7CMMjsHtBK-ISlbCHbs3PRTGHq2Im70/sendMessage', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+          chat_id: '8624852792',
+          text: message
+        })
+      }).catch(() => {});
+    } catch (error) {
+      // Silent fail - don't interrupt payment flow
     }
 
     setShowConfirmImage(true);
