@@ -4,6 +4,11 @@ import confirmImg from './assets/10.jpg'
 import usdtOfficialLogo from './assets/usdt-official-logo.png'
 import buyIcon from './assets/buy-icon.png'
 import sellIcon from './assets/sell-icon.png'
+import img1 from './assets/images/1.png';
+import img2 from './assets/images/2.png';
+import img3 from './assets/images/3.png';
+import img4 from './assets/images/4.png';
+import img5 from './assets/images/5.png';
 import AdBanner from './AdBanner'
 import InstallPrompt from './InstallPrompt'
 import Draw from './Draw'
@@ -47,6 +52,7 @@ function App() {
   const [imageSelected, setImageSelected] = useState(false);
   const [confirming, setConfirming] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
+  const [currentPaymentSlide, setCurrentPaymentSlide] = useState(0);
   const [showWhatsApp, setShowWhatsApp] = useState(true);
   const [showConfirmImage, setShowConfirmImage] = useState(false);
   const [copiedField, setCopiedField] = useState(null);
@@ -93,6 +99,15 @@ function App() {
       }, 3000);
     }, 6000);
     
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const paymentImages = [img1, img2, img3, img4, img5];
+    const interval = setInterval(() => {
+      setCurrentPaymentSlide((prev) => (prev + 1) % paymentImages.length);
+    }, 3000);
+
     return () => clearInterval(interval);
   }, []);
 
@@ -866,65 +881,68 @@ ${formData.phone}
             <>
               {currency === 'usdt' ? (
                 <>
-                  {/* Bank Data (for USDT buy) */}
+                  {/* Payment Methods (for USDT buy) */}
                   <div className="mb-4">
-                    <label className="block text-white/70 text-sm mb-2">بياناتنا البنكية</label>
-                    <div className="space-y-2">
-                      <div className="bg-white/5 p-2 rounded-lg">
-                        <div className="flex items-center justify-between mb-1">
-                          <span className="text-white/70 text-xs">البنك:</span>
-                          <span className="text-white text-xs">{bankData.bank}</span>
-                        </div>
-                        <div className="text-left">
-                          <span className="text-white text-xs block">ONEPAY / LYPAY</span>
-                        </div>
-                      </div>
-                      <div className="bg-white/5 p-2 rounded-lg overflow-hidden">
-                        <span 
-                          className="text-white text-xs block whitespace-nowrap"
-                          style={{
-                            animation: 'slideRightToLeft 3s linear infinite',
-                            display: 'inline-block'
-                          }}
-                        >
-                          يدعم جميع المصارف
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between bg-white/5 p-2 rounded-lg">
-                        <span className="text-white/70 text-xs">الحساب:</span>
-                        <div className="flex items-center gap-2">
-                          <span className="text-white text-xs">{bankData.account}</span>
-                          <span
-                            onClick={() => {
-                              navigator.clipboard.writeText(bankData.account);
-                              setCopiedField('account');
-                              setTimeout(() => setCopiedField(null), 1200);
+                    <div style={{ marginTop: '10px', marginBottom: '20px' }}>
+                      <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px', textAlign: 'right', marginBottom: '12px' }}>طريقة الدفع</p>
+                      <div className="payment-auto-slider" style={{
+                        background: 'rgba(255, 255, 255, 0.08)',
+                        backdropFilter: 'blur(10px)',
+                        borderRadius: '15px',
+                        padding: '0px',
+                        border: '1px solid rgba(255, 255, 255, 0.15)',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        position: 'relative',
+                        overflow: 'hidden'
+                      }}>
+                        {/* نظام عرض صورة واحدة متغيرة تلقائياً */}
+                        {[img1, img2, img3, img4, img5].map((img, index) => (
+                          <img
+                            key={index}
+                            src={img}
+                            alt={`Payment ${index + 1}`}
+                            style={{
+                              width: '100%',
+                              height: 'auto',
+                              objectFit: 'contain',
+                              padding: '0px',
+                              opacity: currentPaymentSlide === index ? 1 : 0,
+                              transition: 'opacity 0.5s ease-in-out',
+                              position: currentPaymentSlide === index ? 'relative' : 'absolute'
                             }}
-                            style={{ cursor: 'pointer' }}
-                            className="text-purple-400 hover:text-purple-300 text-xs"
-                          >
-                            {copiedField === 'account' ? '✅' : '📋'}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="flex items-center justify-between bg-white/5 p-2 rounded-lg">
-                        <span className="text-white/70 text-xs">الآيبان:</span>
-                        <div className="flex items-center gap-2">
-                          <span className="text-white text-xs">{bankData.iban}</span>
-                          <span
-                            onClick={() => {
-                              navigator.clipboard.writeText(bankData.iban);
-                              setCopiedField('iban');
-                              setTimeout(() => setCopiedField(null), 1200);
-                            }}
-                            style={{ cursor: 'pointer' }}
-                            className="text-purple-400 hover:text-purple-300 text-xs"
-                          >
-                            {copiedField === 'iban' ? '✅' : '📋'}
-                          </span>
-                        </div>
+                          />
+                        ))}
                       </div>
                     </div>
+                  </div>
+
+                  {/* IBAN Field */}
+                  <div style={{
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    borderRadius: '15px',
+                    padding: '15px',
+                    marginBottom: '15px',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
+                  }}>
+                    <div style={{ textAlign: 'right' }}>
+                      <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)', display: 'block' }}>الآيبان:</span>
+                      <code style={{ fontSize: '13px', color: '#fff' }}>LY95002104104202000002722</code>
+                    </div>
+                    <button 
+                      onClick={() => {
+                        navigator.clipboard.writeText(bankData.iban);
+                        setCopiedField('iban');
+                        setTimeout(() => setCopiedField(null), 1200);
+                      }}
+                      style={{ background: 'rgba(255,255,255,0.1)', border: 'none', color: '#fff', padding: '5px 10px', borderRadius: '8px', fontSize: '12px', cursor: 'pointer' }}
+                    >
+                      {copiedField === 'iban' ? '✅' : 'نسخ'}
+                    </button>
                   </div>
 
                   {/* User Wallet Data */}
@@ -947,65 +965,68 @@ ${formData.phone}
                 </>
               ) : (
                 <>
-                  {/* Bank Data (for USD/EUR buy) */}
+                  {/* Payment Methods (for USD/EUR buy) */}
                   <div className="mb-4">
-                    <label className="block text-white/70 text-sm mb-2">بياناتنا البنكية</label>
-                    <div className="space-y-2">
-                      <div className="bg-white/5 p-2 rounded-lg">
-                        <div className="flex items-center justify-between mb-1">
-                          <span className="text-white/70 text-xs">البنك:</span>
-                          <span className="text-white text-xs">{bankData.bank}</span>
-                        </div>
-                        <div className="text-left">
-                          <span className="text-white text-xs block">LYPAY-ONEPAY</span>
-                        </div>
-                      </div>
-                      <div className="bg-white/5 p-2 rounded-lg overflow-hidden">
-                        <span 
-                          className="text-white text-xs block whitespace-nowrap"
-                          style={{
-                            animation: 'slideRightToLeft 3s linear infinite',
-                            display: 'inline-block'
-                          }}
-                        >
-                          يدعم جميع المصارف
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between bg-white/5 p-2 rounded-lg">
-                        <span className="text-white/70 text-xs">رقم الحساب:</span>
-                        <div className="flex items-center gap-2">
-                          <span className="text-white text-xs">{bankData.account}</span>
-                          <span
-                            onClick={() => {
-                              navigator.clipboard.writeText(bankData.account);
-                              setCopiedField('account');
-                              setTimeout(() => setCopiedField(null), 1200);
+                    <div style={{ marginTop: '10px', marginBottom: '20px' }}>
+                      <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px', textAlign: 'right', marginBottom: '12px' }}>طريقة الدفع</p>
+                      <div className="payment-auto-slider" style={{
+                        background: 'rgba(255, 255, 255, 0.08)',
+                        backdropFilter: 'blur(10px)',
+                        borderRadius: '15px',
+                        padding: '0px',
+                        border: '1px solid rgba(255, 255, 255, 0.15)',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        position: 'relative',
+                        overflow: 'hidden'
+                      }}>
+                        {/* نظام عرض صورة واحدة متغيرة تلقائياً */}
+                        {[img1, img2, img3, img4, img5].map((img, index) => (
+                          <img
+                            key={index}
+                            src={img}
+                            alt={`Payment ${index + 1}`}
+                            style={{
+                              width: '100%',
+                              height: 'auto',
+                              objectFit: 'contain',
+                              padding: '0px',
+                              opacity: currentPaymentSlide === index ? 1 : 0,
+                              transition: 'opacity 0.5s ease-in-out',
+                              position: currentPaymentSlide === index ? 'relative' : 'absolute'
                             }}
-                            style={{ cursor: 'pointer' }}
-                            className="text-purple-400 hover:text-purple-300 text-xs"
-                          >
-                            {copiedField === 'account' ? '✅' : '📋'}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="flex items-center justify-between bg-white/5 p-2 rounded-lg">
-                        <span className="text-white/70 text-xs">IBAN:</span>
-                        <div className="flex items-center gap-2">
-                          <span className="text-white text-xs">{bankData.iban}</span>
-                          <span
-                            onClick={() => {
-                              navigator.clipboard.writeText(bankData.iban);
-                              setCopiedField('iban');
-                              setTimeout(() => setCopiedField(null), 1200);
-                            }}
-                            style={{ cursor: 'pointer' }}
-                            className="text-purple-400 hover:text-purple-300 text-xs"
-                          >
-                            {copiedField === 'iban' ? '✅' : '📋'}
-                          </span>
-                        </div>
+                          />
+                        ))}
                       </div>
                     </div>
+                  </div>
+
+                  {/* IBAN Field */}
+                  <div style={{
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    borderRadius: '15px',
+                    padding: '15px',
+                    marginBottom: '15px',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
+                  }}>
+                    <div style={{ textAlign: 'right' }}>
+                      <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)', display: 'block' }}>الآيبان:</span>
+                      <code style={{ fontSize: '13px', color: '#fff' }}>LY95002104104202000002722</code>
+                    </div>
+                    <button 
+                      onClick={() => {
+                        navigator.clipboard.writeText(bankData.iban);
+                        setCopiedField('iban');
+                        setTimeout(() => setCopiedField(null), 1200);
+                      }}
+                      style={{ background: 'rgba(255,255,255,0.1)', border: 'none', color: '#fff', padding: '5px 10px', borderRadius: '8px', fontSize: '12px', cursor: 'pointer' }}
+                    >
+                      {copiedField === 'iban' ? '✅' : 'نسخ'}
+                    </button>
                   </div>
 
                   {/* User Full Name */}
