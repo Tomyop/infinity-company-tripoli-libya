@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+﻿import { useState, useEffect } from 'react'
 import './index.css'
 import confirmImg from './assets/10.jpg'
 import usdtOfficialLogo from './assets/usdt-official-logo.png'
@@ -60,6 +60,7 @@ function App() {
   const [showDraw, setShowDraw] = useState(false);
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   const [showPriceNotification, setShowPriceNotification] = useState(true);
+  const [showWalletTooltip, setShowWalletTooltip] = useState(false);
   const [prices, setPrices] = useState({
     buy_cash: 11,
     buy_bank: 12,
@@ -946,7 +947,7 @@ ${formData.phone}
                   </div>
 
                   {/* User Wallet Data */}
-                  <div className="mb-4">
+                  <div className="mb-4 relative">
                     <label className="block text-white/70 text-sm mb-2">عنوان المحفظة</label>
                     <input
                         type="text"
@@ -954,7 +955,52 @@ ${formData.phone}
                         onChange={(e) => setFormData(prev => ({ ...prev, walletAddress: e.target.value }))}
                         placeholder={walletData.address}
                         className="input-field w-full"
+                        onFocus={() => setShowWalletTooltip(true)}
+                        onBlur={() => setShowWalletTooltip(false)}
+                        onClick={() => setShowWalletTooltip(true)}
                       />
+                    
+                    {/* Tooltip */}
+                    {showWalletTooltip && (
+                      <div 
+                        style={{
+                          position: 'absolute',
+                          top: '-60px',
+                          left: '50%',
+                          transform: 'translateX(-50%)',
+                          backgroundColor: 'white',
+                          color: '#333',
+                          padding: '12px 16px',
+                          borderRadius: '12px',
+                          fontSize: '14px',
+                          fontWeight: 'bold',
+                          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                          zIndex: 1000,
+                          minWidth: '280px',
+                          textAlign: 'center',
+                          direction: 'rtl',
+                          animation: 'fadeIn 0.3s ease-in-out',
+                          whiteSpace: 'nowrap'
+                        }}
+                      >
+                        <div style={{ marginBottom: '4px' }}>{"\ud83d\udca1"}</div>
+                        <div>هذا هو عنوانك لاستقبال USDT، تأكد من نسخها بدقة.</div>
+                        {/* Arrow */}
+                        <div 
+                          style={{
+                            position: 'absolute',
+                            bottom: '-8px',
+                            left: '50%',
+                            transform: 'translateX(-50%)',
+                            width: '0',
+                            height: '0',
+                            borderLeft: '8px solid transparent',
+                            borderRight: '8px solid transparent',
+                            borderTop: '8px solid white'
+                          }}
+                        />
+                      </div>
+                    )}
                   </div>
                   <div className="mb-4">
                     <label className="block text-white/70 text-sm mb-2">الشبكة</label>
