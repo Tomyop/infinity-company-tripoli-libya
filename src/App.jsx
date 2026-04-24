@@ -61,6 +61,8 @@ function App() {
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   const [showPriceNotification, setShowPriceNotification] = useState(true);
   const [showWalletTooltip, setShowWalletTooltip] = useState(false);
+  const [isAccepted, setIsAccepted] = useState(false);
+  const [showTermsModal, setShowTermsModal] = useState(false);
   const [prices, setPrices] = useState({
     buy_cash: 11,
     buy_bank: 12,
@@ -465,6 +467,102 @@ ${formData.phone}
                 marginTop: "25px"
               }}
             />
+          </div>
+        </div>
+      )}
+
+      {/* Terms & Conditions Modal */}
+      {showTermsModal && (
+        <div style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          backgroundColor: "rgba(0, 0, 0, 0.8)",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          zIndex: 9999
+        }}>
+          <div style={{
+            backgroundColor: "#1F2937",
+            borderRadius: "16px",
+            padding: "32px",
+            margin: "20px",
+            maxWidth: "400px",
+            width: "100%",
+            maxHeight: "80vh",
+            overflowY: "auto",
+            textAlign: "right",
+            direction: "rtl",
+            animation: "fadeInScale 0.3s ease-out"
+          }}>
+            <h2 style={{
+              fontSize: "24px",
+              fontWeight: "bold",
+              color: "white",
+              marginBottom: "16px"
+            }}>
+              الشروط والأحكام (Terms & Conditions)
+            </h2>
+            <div style={{
+              fontSize: "14px",
+              color: "#D1D5DB",
+              lineHeight: "1.6",
+              marginBottom: "24px"
+            }}>
+              <p><strong>1) طبيعة الخدمة</strong><br/>تطبيق Infinity يقدّم خدمة رقمية لعرض الأسعار وتنفيذ طلبات شراء أصول رقمية/عملات عند الطلب. التطبيق ليس بنكًا ولا مؤسسة مالية.</p>
+              
+              <p><strong>2) إنشاء الطلب</strong><br/>- يختار المستخدم المبلغ وينشئ طلبًا.<br/>- تظهر له بيانات التحويل (رقم الحساب واسم المستفيد).</p>
+              
+              <p><strong>3) السعر</strong><br/>- السعر يتغير حسب السوق.<br/>- السعر المعروض وقت الطلب هو المعتمد.<br/>- تأكيد الطلب = موافقة على السعر.</p>
+              
+              <p><strong>4) التحويل</strong><br/>- المستخدم يحوّل المبلغ إلى الحساب المبيّن.<br/>- المستخدم مسؤول عن صحة البيانات والمبلغ.<br/>- يُفضّل أن يكون التحويل من حساب المستخدم نفسه.</p>
+              
+              <p><strong>5) التحقق</strong><br/>- التنفيذ يتم بعد التأكد من وصول المبلغ ومطابقته.<br/>- يحق طلب إثبات (صورة إيصال) عند الحاجة.</p>
+              
+              <p><strong>6) التنفيذ</strong><br/>- بعد التحقق، يتم تحويل الأصل/العملة الرقمية إلى العنوان الذي يحدده المستخدم.<br/>- وقت التنفيذ يعتمد على البنك/الشبكة.<br/>- لا يتحمّل التطبيق تأخير الجهات الخارجية.</p>
+              
+              <p><strong>7) الفاتورة</strong><br/>- يتم إصدار فاتورة إلكترونية لكل عملية بين التطبيق والمستخدم.<br/>- الفاتورة تمثل إثبات العملية المتفق عليها.</p>
+              
+              <p><strong>8) الإلغاء والاسترجاع</strong><br/>- لا يمكن الإلغاء بعد التحويل.<br/>- في حال خطأ، تتم المراجعة حسب البيانات المتوفرة.<br/>- الاسترجاع (إن وُجد) يكون حسب تقدير الإدارة.</p>
+              
+              <p><strong>9) مكافحة الاحتيال</strong><br/>- يحق رفض أي عملية مشبوهة أو إيقاف الحساب.<br/>- يتم تسجيل بيانات العملية لأغراض الأمان.</p>
+              
+              <p><strong>10) حدود الاستخدام</strong><br/>- قد تُفرض حدود على عدد/قيمة العمليات لحماية النظام.</p>
+              
+              <p><strong>11) المسؤولية</strong><br/>- التطبيق يوفّر تنفيذ الطلبات فقط، ولا يحتفظ بأرصدة (لا توجد محفظة داخل التطبيق).<br/>- المستخدم مسؤول عن التزامه بالقوانين المحلية.</p>
+              
+              <p><strong>12) التعديلات</strong><br/>- يمكن تعديل هذه الشروط في أي وقت.<br/>- استمرار الاستخدام يعني الموافقة.</p>
+              
+              <p><strong>13) التواصل</strong><br/>واتساب/هاتف: 00393895724547</p>
+              
+              <p>باستخدامك للتطبيق، فإنك توافق على هذه الشروط.</p>
+            </div>
+            <button
+              onClick={() => setShowTermsModal(false)}
+              style={{
+                backgroundColor: "#9333EA",
+                color: "white",
+                border: "none",
+                borderRadius: "12px",
+                padding: "12px 24px",
+                fontSize: "16px",
+                fontWeight: "bold",
+                cursor: "pointer",
+                transition: "all 0.2s ease",
+                width: "100%"
+              }}
+              onMouseOver={(e) => {
+                e.target.style.backgroundColor = "#7C3AED";
+              }}
+              onMouseOut={(e) => {
+                e.target.style.backgroundColor = "#9333EA";
+              }}
+            >
+              إغلاق
+            </button>
           </div>
         </div>
       )}
@@ -1282,11 +1380,52 @@ ${formData.phone}
           </div>
         )}
 
+        {/* Terms & Conditions Checkbox */}
+        {(currency === 'usdt' || currency === 'usd' || currency === 'eur') && (
+          <div className="card-primary mb-6">
+            <label style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              cursor: 'pointer',
+              color: 'white',
+              fontSize: '14px'
+            }}>
+              <input
+                type="checkbox"
+                checked={isAccepted}
+                onChange={(e) => setIsAccepted(e.target.checked)}
+                style={{
+                  width: '16px',
+                  height: '16px',
+                  cursor: 'pointer'
+                }}
+              />
+              <span>أوافق على </span>
+              <span
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setShowTermsModal(true);
+                }}
+                style={{
+                  color: '#9333EA',
+                  textDecoration: 'underline',
+                  cursor: 'pointer',
+                  fontWeight: '500'
+                }}
+              >
+                الشروط والأحكام
+              </span>
+            </label>
+          </div>
+        )}
+
         {/* Confirm Button */}
         <button
           onClick={handleConfirm}
           disabled={
-            (currency === 'usdt' ? (!amount || !imageSelected) : !amount) || 
+            (currency === 'usdt' ? (!amount || !imageSelected || !isAccepted) : (!amount || !isAccepted)) || 
             confirming || 
             confirmed
           }
