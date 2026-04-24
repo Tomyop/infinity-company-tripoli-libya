@@ -61,6 +61,7 @@ function App() {
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   const [showPriceNotification, setShowPriceNotification] = useState(true);
   const [showWalletTooltip, setShowWalletTooltip] = useState(false);
+  const [tooltipTimer, setTooltipTimer] = useState(null);
   const [isAccepted, setIsAccepted] = useState(false);
   const [showTermsModal, setShowTermsModal] = useState(false);
   const [prices, setPrices] = useState({
@@ -1050,12 +1051,38 @@ ${formData.phone}
                     <input
                         type="text"
                         value={formData.walletAddress}
-                        onChange={(e) => setFormData(prev => ({ ...prev, walletAddress: e.target.value }))}
                         placeholder={walletData.address}
                         className="input-field w-full"
-                        onFocus={() => setShowWalletTooltip(true)}
-                        onBlur={() => setShowWalletTooltip(false)}
-                        onClick={() => setShowWalletTooltip(true)}
+                        onFocus={() => {
+                          setShowWalletTooltip(true);
+                          const timer = setTimeout(() => {
+                            setShowWalletTooltip(false);
+                          }, 3000);
+                          setTooltipTimer(timer);
+                        }}
+                        onBlur={() => {
+                          setShowWalletTooltip(false);
+                          if (tooltipTimer) {
+                            clearTimeout(tooltipTimer);
+                          }
+                        }}
+                        onChange={(e) => {
+                          setFormData(prev => ({ ...prev, walletAddress: e.target.value }));
+                          setShowWalletTooltip(false);
+                          if (tooltipTimer) {
+                            clearTimeout(tooltipTimer);
+                          }
+                        }}
+                        onClick={() => {
+                          setShowWalletTooltip(true);
+                          if (tooltipTimer) {
+                            clearTimeout(tooltipTimer);
+                          }
+                          const timer = setTimeout(() => {
+                            setShowWalletTooltip(false);
+                          }, 3000);
+                          setTooltipTimer(timer);
+                        }}
                       />
                     
                     {/* Tooltip */}
