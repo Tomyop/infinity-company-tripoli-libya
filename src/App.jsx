@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react'
+﻿import { useState, useEffect, useRef } from 'react'
 import './index.css'
 import confirmImg from './assets/10.jpg'
 import usdtOfficialLogo from './assets/usdt-official-logo.png'
@@ -62,6 +62,14 @@ function App() {
   const [showPriceNotification, setShowPriceNotification] = useState(true);
   const [showWalletTooltip, setShowWalletTooltip] = useState(false);
   const [tooltipTimer, setTooltipTimer] = useState(null);
+  const [selectedNetwork, setSelectedNetwork] = useState('BEP20');
+
+  const validateNetwork = (network) => {
+    const allowedNetworks = ['TRC20', 'ERC20', 'BEP20'];
+    return allowedNetworks.includes(network);
+  };
+  const [showNetworkDropdown, setShowNetworkDropdown] = useState(false);
+  const dropdownRef = useRef(null);
   const [isAccepted, setIsAccepted] = useState(false);
   const [showTermsModal, setShowTermsModal] = useState(false);
   const [prices, setPrices] = useState({
@@ -83,6 +91,19 @@ function App() {
     transferTime: ''
   });
 
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowNetworkDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     const handleMessage = (event) => {
@@ -214,7 +235,7 @@ function App() {
     return subtotal + commission;
   };
 
-  function sendToGoogleSheet(phone, amount, total, currency) {
+  function sendToGoogleSheet(phone, amount, total, currency, network) {
     const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSfrpv4L0GwMM3zQC8OWKv9-iq8Uz0VwHY-l9TcMJdC9AHY5sQ/formResponse";
 
     const formData = new FormData();
@@ -222,6 +243,7 @@ function App() {
     formData.append("entry.446288420", amount);
     formData.append("entry.1134418766", total);
     formData.append("entry.1134418767", currency.toUpperCase());
+    formData.append("entry.1134418768", network);
 
     fetch(formUrl, {
       method: "POST",
@@ -324,7 +346,7 @@ ${formData.phone}
 
 👤 بيانات الزبون:
 • عنوان المحفظة: ${formData.walletAddress || walletData.address}
-• الشبكة: ${walletData.network}
+• الشبكة: ${selectedNetwork}
 
 🏦 بياناتنا:
 • البنك: مصرف الجمهورية
@@ -334,7 +356,7 @@ ${formData.phone}
 
 💼 محفظتنا:
 • العنوان: ${walletData.address}
-• الشبكة: ${walletData.network}`;
+• الشبكة: ${selectedNetwork}`;
     }
 
     // Send Telegram notification with full order details
@@ -358,7 +380,7 @@ ${formData.phone}
       setConfirmed(true);
       
       // Submit to Google Form
-      sendToGoogleSheet(formData.phone, amount, calculateTotal().toFixed(2), currency);
+      sendToGoogleSheet(formData.phone, amount, calculateTotal().toFixed(2), currency, selectedNetwork);
       
       // Store WhatsApp URL for manual button
       const url = `https://wa.me/393895724547?text=${encodeURIComponent(message)}`;
@@ -1127,11 +1149,112 @@ ${formData.phone}
                       </div>
                     )}
                   </div>
-                  <div className="mb-4">
-                    <label className="block text-white/70 text-sm mb-2">الشبكة</label>
-                    <div className="bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white">
-                      BEP20
+                  <div className="mb-4 relative" ref={dropdownRef} style={{ zIndex: 9999 }}>
+                    <label className="block text-white/70 text-sm mb-2">اختار الشبكة</label>
+                    <div 
+                      onClick={() => setShowNetworkDropdown(!showNetworkDropdown)}
+                      className="bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white cursor-pointer"
+                      style={{
+                        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        borderRadius: '12px',
+                        padding: '12px 16px',
+                        color: 'white',
+                        fontSize: '14px',
+                        position: 'relative',
+                        zIndex: 9999
+                      }}
+                    >
+                      <span>{selectedNetwork === 'TRC20' ? 'TRC20 (TRON)' : selectedNetwork === 'ERC20' ? 'ERC20 (Ethereum)' : 'BEP20 (BSC)'}</span>
+                      <span style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)' }}>▼</span>
                     </div>
+                    {showNetworkDropdown && (
+                      <div 
+                        style={{
+                          position: 'absolute',
+                          top: '100%',
+                          left: 0,
+                          right: 0,
+                          background: 'linear-gradient(135deg, #6d28d9, #9333ea)',
+                          border: '1px solid rgba(255, 255, 255, 0.2)',
+                          borderRadius: '12px',
+                          marginTop: '4px',
+                          zIndex: 9998,
+                          overflow: 'hidden',
+                          boxShadow: '0 4px 20px rgba(147, 51, 234, 0.3)'
+                        }}
+                      >
+                        <div 
+                          onClick={() => { setSelectedNetwork('TRC20'); setShowNetworkDropdown(false); }}
+                          style={{
+                            padding: '12px 16px',
+                            color: 'white',
+                            fontSize: '14px',
+                            cursor: 'pointer',
+                            backgroundColor: selectedNetwork === 'TRC20' ? 'rgba(255, 255, 255, 0.2)' : 'transparent',
+                            transition: 'background-color 0.2s ease'
+                          }}
+                          onMouseEnter={(e) => {
+                            if (selectedNetwork !== 'TRC20') {
+                              e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                            }
+                          }}
+                          onMouseLeave={(e) => {
+                            if (selectedNetwork !== 'TRC20') {
+                              e.target.style.backgroundColor = 'transparent';
+                            }
+                          }}
+                        >
+                          TRC20 (TRON)
+                        </div>
+                        <div 
+                          onClick={() => { setSelectedNetwork('ERC20'); setShowNetworkDropdown(false); }}
+                          style={{
+                            padding: '12px 16px',
+                            color: 'white',
+                            fontSize: '14px',
+                            cursor: 'pointer',
+                            backgroundColor: selectedNetwork === 'ERC20' ? 'rgba(255, 255, 255, 0.2)' : 'transparent',
+                            transition: 'background-color 0.2s ease'
+                          }}
+                          onMouseEnter={(e) => {
+                            if (selectedNetwork !== 'ERC20') {
+                              e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                            }
+                          }}
+                          onMouseLeave={(e) => {
+                            if (selectedNetwork !== 'ERC20') {
+                              e.target.style.backgroundColor = 'transparent';
+                            }
+                          }}
+                        >
+                          ERC20 (Ethereum)
+                        </div>
+                        <div 
+                          onClick={() => { setSelectedNetwork('BEP20'); setShowNetworkDropdown(false); }}
+                          style={{
+                            padding: '12px 16px',
+                            color: 'white',
+                            fontSize: '14px',
+                            cursor: 'pointer',
+                            backgroundColor: selectedNetwork === 'BEP20' ? 'rgba(255, 255, 255, 0.2)' : 'transparent',
+                            transition: 'background-color 0.2s ease'
+                          }}
+                          onMouseEnter={(e) => {
+                            if (selectedNetwork !== 'BEP20') {
+                              e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                            }
+                          }}
+                          onMouseLeave={(e) => {
+                            if (selectedNetwork !== 'BEP20') {
+                              e.target.style.backgroundColor = 'transparent';
+                            }
+                          }}
+                        >
+                          BEP20 (BSC)
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </>
               ) : (
@@ -1564,7 +1687,7 @@ ${formData.phone}
           alignItems: 'center',
           justifyContent: 'center',
           gap: '2px',
-          zIndex: 9999,
+          zIndex: 9998,
           transition: 'all 0.3s ease',
           animation: 'shake 1.2s infinite',
           textDecoration: 'none'
