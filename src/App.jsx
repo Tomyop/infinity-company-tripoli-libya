@@ -11,6 +11,72 @@ import AdBanner from './AdBanner'
 import InstallPrompt from './InstallPrompt'
 import Draw from './Draw'
 
+function ProcessingCard() {
+  const [timeLeft, setTimeLeft] = React.useState(1800);
+
+  React.useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft(prev => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const minutes = String(Math.floor(timeLeft / 60)).padStart(2, "0");
+  const seconds = String(timeLeft % 60).padStart(2, "0");
+  const progress = (timeLeft / 1800) * 100;
+
+  return (
+    <div style={{
+      marginTop: 20,
+      padding: 20,
+      borderRadius: 20,
+      background: "linear-gradient(135deg, #1e1e1e, #2c2c2c)",
+      color: "#fff",
+      textAlign: "center"
+    }}>
+      <h2 style={{ color: "#ffa726" }}>جاري التنفيذ ⏳</h2>
+
+      <p style={{ color: "#aaa" }}>الوقت المتبقي</p>
+
+      <h1 style={{ fontSize: 36, fontWeight: "bold" }}>
+        {minutes}:{seconds}
+      </h1>
+
+      <div style={{
+        height: 6,
+        background: "#444",
+        borderRadius: 10,
+        overflow: "hidden",
+        margin: "15px 0"
+      }}>
+        <div style={{
+          height: "100%",
+          width: progress + "%",
+          background: "#ff6d00",
+          transition: "width 1s linear"
+        }} />
+      </div>
+
+      <p style={{ color: "#ccc" }}>
+        يتم الآن معالجة طلبك، يرجى الانتظار
+      </p>
+
+      {timeLeft === 0 && (
+        <h3 style={{ color: "#4caf50", marginTop: 15 }}>
+          تم التنفيذ ✅
+        </h3>
+      )}
+    </div>
+  );
+}
+
 // Fixed data
 const bankData = {
   bank: "مصرف الجمهورية",
@@ -188,6 +254,31 @@ function App() {
     if (typeof window !== 'undefined' && window.gtag) {
       window.gtag('config', 'G-D101BHEN153', { page_path: window.location.pathname });
     }
+  }, []);
+
+  useEffect(() => {
+    let time = 1800;
+
+    const interval = setInterval(() => {
+      time--;
+
+      const minutes = String(Math.floor(time / 60)).padStart(2, "0");
+      const seconds = String(time % 60).padStart(2, "0");
+
+      const timerEl = document.getElementById("timer");
+      const progressEl = document.getElementById("progress");
+
+      if (timerEl) timerEl.innerText = `${minutes}:${seconds}`;
+      if (progressEl) progressEl.style.width = (time / 1800 * 100) + "%";
+
+      if (time <= 0) {
+        clearInterval(interval);
+        if (timerEl) timerEl.innerText = "تم التنفيذ ✅";
+      }
+
+    }, 1000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const handleCopy = (text, field) => {
@@ -433,49 +524,29 @@ ${formData.phone}
             }}>
               ✅ تم تسجيل طلبك بنجاح
             </div>
-            <div style={{
-              fontSize: "14px",
-              color: "#9CA3AF",
-              marginBottom: "20px"
-            }}>
-              📲 اضغط الزر بالأسفل لإرسال الطلب عبر واتساب
+            <div>
+              <h2 style={{color: "#ffa726"}}>جاري التنفيذ ⏳</h2>
+              <p style={{color: "#aaa"}}>الوقت المتبقي</p>
+              <h1 id="timer" style={{fontSize: "36px"}}>30:00</h1>
+
+              <div style={{
+                height: "6px",
+                background: "#444",
+                borderRadius: "10px",
+                overflow: "hidden",
+                margin: "15px 0"
+              }}>
+                <div id="progress" style={{
+                  height: "100%",
+                  width: "100%",
+                  background: "#ff6d00"
+                }}></div>
+              </div>
+
+              <p style={{color: "#ccc"}}>
+                يتم الآن معالجة طلبك، يرجى الانتظار
+              </p>
             </div>
-            
-            {/* WhatsApp Button */}
-            <button
-              onClick={() => window.location.href = whatsappUrl}
-              style={{
-                width: "100%",
-                maxWidth: "300px",
-                backgroundColor: "#25D366",
-                color: "white",
-                border: "none",
-                borderRadius: "12px",
-                padding: "16px",
-                fontSize: "16px",
-                fontWeight: "bold",
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "10px",
-                transition: "all 0.2s ease",
-                marginBottom: "10px"
-              }}
-              onMouseOver={(e) => {
-                e.target.style.backgroundColor = "#128C7E";
-                e.target.style.transform = "scale(1.02)";
-              }}
-              onMouseOut={(e) => {
-                e.target.style.backgroundColor = "#25D366";
-                e.target.style.transform = "scale(1)";
-              }}
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.149-.67.149-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414-.074-.123-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
-              </svg>
-              إرسال الطلب عبر واتساب
-            </button>
             
             {/* Image - Moved to Bottom */}
             <img 
