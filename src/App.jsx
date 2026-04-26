@@ -6,8 +6,6 @@ import buyIcon from './assets/buy-icon.png'
 import sellIcon from './assets/sell-icon.png'
 import img1 from './assets/images/1.png';
 import img2 from './assets/images/2.png';
-import img3 from './assets/images/3.png';
-import img4 from './assets/images/4.png';
 import img5 from './assets/images/5.png';
 import AdBanner from './AdBanner'
 import InstallPrompt from './InstallPrompt'
@@ -128,7 +126,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const paymentImages = [img1, img2, img3, img4, img5];
+    const paymentImages = [img1, img2, img5];
     const interval = setInterval(() => {
       setCurrentPaymentSlide((prev) => (prev + 1) % paymentImages.length);
     }, 3000);
@@ -1020,7 +1018,7 @@ ${formData.phone}
                         overflow: 'hidden'
                       }}>
                         {/* نظام عرض صورة واحدة متغيرة تلقائياً */}
-                        {[img1, img2, img3, img4, img5].map((img, index) => (
+                        {[img1, img2, img5].map((img, index) => (
                           <img
                             key={index}
                             src={img}
@@ -1276,7 +1274,7 @@ ${formData.phone}
                         overflow: 'hidden'
                       }}>
                         {/* نظام عرض صورة واحدة متغيرة تلقائياً */}
-                        {[img1, img2, img3, img4, img5].map((img, index) => (
+                        {[img1, img2, img5].map((img, index) => (
                           <img
                             key={index}
                             src={img}
@@ -1579,9 +1577,9 @@ ${formData.phone}
             confirming || 
             confirmed
           }
-          className="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed mb-8"
+          className={`w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed mb-8 ${isAccepted ? 'terms-accepted' : ''}`}
         >
-          {confirming ? 'جاري التأكيد...' : confirmed ? 'تمت العملية بنجاح ✅' : (operation === 'buy' ? 'تأكيد الدفع' : 'تأكيد البيع')}
+          {confirming ? 'جاري التأكيد...' : confirmed ? 'تمت العملية بنجاح ✅' : (operation === 'buy' ? (isAccepted ? 'تأكيد الدفع الآن' : 'تأكيد الدفع') : 'تأكيد البيع')}
         </button>
 
         {/* Success Message */}
