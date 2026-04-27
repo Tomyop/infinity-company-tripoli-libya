@@ -1926,7 +1926,7 @@ ${formData.phone}
         {currency === 'usdt' && (
           <div className="card-primary mb-6">
             <label className="block text-white font-medium mb-3">
-              إثبات الدفع
+              إثبات الهوية
             </label>
             <div className="border-2 border-dashed border-white/30 rounded-xl p-6 text-center">
               <input
