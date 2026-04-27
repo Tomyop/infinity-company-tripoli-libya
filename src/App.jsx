@@ -1347,6 +1347,45 @@ ${formData.phone}
                     </button>
                   </div>
 
+                  {/* Account Number Field */}
+                  <div style={{
+                    background: paymentTermsAccepted ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.02)',
+                    borderRadius: '15px',
+                    padding: '15px',
+                    marginBottom: '15px',
+                    border: paymentTermsAccepted ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(255, 255, 255, 0.05)',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    opacity: paymentTermsAccepted ? 1 : 0.5
+                  }}>
+                    <div style={{ textAlign: 'right' }}>
+                      <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)', display: 'block' }}>رقم الحساب:</span>
+                      <code style={{ fontSize: '13px', color: '#fff' }}>{paymentTermsAccepted ? '039011370298010' : '•••••••••••••••'}</code>
+                    </div>
+                    <button 
+                      onClick={() => {
+                        if (paymentTermsAccepted) {
+                          navigator.clipboard.writeText('039011370298010');
+                          setCopiedField('account');
+                          setTimeout(() => setCopiedField(null), 1200);
+                        }
+                      }}
+                      disabled={!paymentTermsAccepted}
+                      style={{ 
+                        background: paymentTermsAccepted ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.05)', 
+                        border: 'none', 
+                        color: paymentTermsAccepted ? '#fff' : 'rgba(255,255,255,0.3)', 
+                        padding: '5px 10px', 
+                        borderRadius: '8px', 
+                        fontSize: '12px', 
+                        cursor: paymentTermsAccepted ? 'pointer' : 'not-allowed'
+                      }}
+                    >
+                      {copiedField === 'account' ? '✅' : 'نسخ'}
+                    </button>
+                  </div>
+
                   {/* User Wallet Data */}
                   <div className="mb-4 relative">
                     <label className="block text-white/70 text-sm mb-2">عنوان المحفظة</label>
@@ -1668,6 +1707,45 @@ ${formData.phone}
                       }}
                     >
                       {copiedField === 'iban' ? '✅' : 'نسخ'}
+                    </button>
+                  </div>
+
+                  {/* Account Number Field */}
+                  <div style={{
+                    background: paymentTermsAccepted ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.02)',
+                    borderRadius: '15px',
+                    padding: '15px',
+                    marginBottom: '15px',
+                    border: paymentTermsAccepted ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(255, 255, 255, 0.05)',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    opacity: paymentTermsAccepted ? 1 : 0.5
+                  }}>
+                    <div style={{ textAlign: 'right' }}>
+                      <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)', display: 'block' }}>رقم الحساب:</span>
+                      <code style={{ fontSize: '13px', color: '#fff' }}>{paymentTermsAccepted ? '039011370298010' : '•••••••••••••••'}</code>
+                    </div>
+                    <button 
+                      onClick={() => {
+                        if (paymentTermsAccepted) {
+                          navigator.clipboard.writeText('039011370298010');
+                          setCopiedField('account2');
+                          setTimeout(() => setCopiedField(null), 1200);
+                        }
+                      }}
+                      disabled={!paymentTermsAccepted}
+                      style={{ 
+                        background: paymentTermsAccepted ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.05)', 
+                        border: 'none', 
+                        color: paymentTermsAccepted ? '#fff' : 'rgba(255,255,255,0.3)', 
+                        padding: '5px 10px', 
+                        borderRadius: '8px', 
+                        fontSize: '12px', 
+                        cursor: paymentTermsAccepted ? 'pointer' : 'not-allowed'
+                      }}
+                    >
+                      {copiedField === 'account2' ? '✅' : 'نسخ'}
                     </button>
                   </div>
 
