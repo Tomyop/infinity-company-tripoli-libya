@@ -137,6 +137,7 @@ function App() {
   const [isAccepted, setIsAccepted] = useState(false);
   const [showTermsModal, setShowTermsModal] = useState(false);
   const [paymentTermsAccepted, setPaymentTermsAccepted] = useState(false);
+  const [showPaymentTermsModal, setShowPaymentTermsModal] = useState(false);
   const [prices, setPrices] = useState({
     buy_cash: 11,
     buy_bank: 12,
@@ -739,6 +740,147 @@ ${formData.phone}
           </div>
         </div>
       )}
+
+      {/* Payment Terms Modal */}
+      {showPaymentTermsModal && (
+        <div style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          backgroundColor: "rgba(0, 0, 0, 0.8)",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          zIndex: 9999
+        }}>
+          <div style={{
+            backgroundColor: "#1F2937",
+            borderRadius: "16px",
+            padding: "32px",
+            margin: "20px",
+            maxWidth: "400px",
+            width: "100%",
+            maxHeight: "80vh",
+            overflowY: "auto",
+            textAlign: "right",
+            direction: "rtl",
+            animation: "fadeInScale 0.3s ease-out"
+          }}>
+            <h2 style={{
+              fontSize: "24px",
+              fontWeight: "bold",
+              color: "white",
+              marginBottom: "16px"
+            }}>
+              ⚠️ شروط الدفع:
+            </h2>
+            
+            <div style={{
+              fontSize: "14px",
+              color: "#D1D5DB",
+              lineHeight: "1.6",
+              marginBottom: "16px"
+            }}>
+              <ul style={{ margin: 0, paddingLeft: '20px' }}>
+                <li style={{ marginBottom: '8px' }}>يجب أن يكون الحساب البنكي المستخدم في التحويل هو نفسه لصاحب الطلب.</li>
+                <li style={{ marginBottom: '8px' }}>يجب أن تكون المحفظة الرقمية المستلمة مملوكة لنفس الشخص.</li>
+                <li style={{ marginBottom: '8px' }}>يُمنع منعاً باتاً التحويل من طرف ثالث.</li>
+              </ul>
+            </div>
+
+            <div style={{
+              background: 'rgba(217, 119, 6, 0.1)',
+              borderRadius: '10px',
+              padding: '12px',
+              marginBottom: '16px',
+              border: '1px solid rgba(217, 119, 6, 0.3)'
+            }}>
+              <div style={{
+                fontSize: '16px',
+                fontWeight: 'bold',
+                color: '#d97706',
+                marginBottom: '8px',
+                textAlign: 'center'
+              }}>
+                📹 التحقق الإجباري:
+              </div>
+              <div style={{
+                fontSize: '13px',
+                color: '#D1D5DB',
+                lineHeight: '1.5'
+              }}>
+                يجب إرسال فيديو حديث (10–15 ثانية) يتضمن:
+                <ul style={{ margin: '8px 0 0 0', paddingLeft: '20px' }}>
+                  <li>ظهور الوجه بوضوح</li>
+                  <li>ذكر الاسم الكامل</li>
+                  <li>ذكر التاريخ والوقت الحالي</li>
+                  <li>ذكر قيمة المبلغ</li>
+                  <li>ذكر رقم الطلب</li>
+                  <li>ذكر آخر 4 أرقام من الحساب البنكي المستخدم</li>
+                  <li>تأكيد أنك صاحب الحساب البنكي والمحفظة</li>
+                </ul>
+              </div>
+            </div>
+
+            <div style={{
+              fontSize: '14px',
+              fontWeight: 'bold',
+              color: '#dc2626',
+              textAlign: 'center',
+              marginBottom: '16px',
+              padding: '8px',
+              background: 'rgba(220, 38, 38, 0.1)',
+              borderRadius: '8px'
+            }}>
+              ❗ لن يتم إعطاء بيانات الدفع أو تنفيذ العملية بدون هذا الفيديو.
+            </div>
+
+            <div style={{
+              fontSize: '12px',
+              color: '#D1D5DB',
+              lineHeight: '1.4',
+              textAlign: 'center',
+              padding: '10px',
+              background: 'rgba(146, 64, 14, 0.05)',
+              borderRadius: '8px',
+              border: '1px solid rgba(146, 64, 14, 0.2)',
+              marginBottom: '24px'
+            }}>
+              ⚖️ إخلاء مسؤولية:<br/>
+              بإتمام عملية التحويل، أقرّ بأنني صاحب الحساب البنكي والمحفظة الرقمية، وأتحمل كامل المسؤولية في حال مخالفة هذه الشروط، ولا أحق لي المطالبة بأي تعويض.
+            </div>
+
+            <button
+              onClick={() => {
+                setShowPaymentTermsModal(false);
+                setPaymentTermsAccepted(true);
+              }}
+              style={{
+                backgroundColor: "#9333EA",
+                color: "white",
+                border: "none",
+                borderRadius: "12px",
+                padding: "12px 24px",
+                fontSize: "16px",
+                fontWeight: "bold",
+                cursor: "pointer",
+                transition: "all 0.2s ease",
+                width: "100%"
+              }}
+              onMouseOver={(e) => {
+                e.target.style.backgroundColor = "#7C3AED";
+              }}
+              onMouseOut={(e) => {
+                e.target.style.backgroundColor = "#9333EA";
+              }}
+            >
+              أوافق
+            </button>
+          </div>
+        </div>
+      )}
       
       <div className="max-w-mobile mx-auto px-4 py-6 pb-20">
         {/* Ad Banner */}
@@ -1110,127 +1252,60 @@ ${formData.phone}
                     </div>
                   </div>
 
-                  {/* Payment Terms Section */}
-                  <div style={{
-                    background: 'linear-gradient(135deg, #fef3c7, #fde68a)',
-                    borderRadius: '15px',
-                    padding: '20px',
-                    marginBottom: '15px',
-                    border: '2px solid #f59e0b',
-                    boxShadow: '0 4px 15px rgba(245, 158, 11, 0.2)',
-                    direction: 'rtl'
-                  }}>
-                    <div style={{
-                      fontSize: '16px',
-                      fontWeight: 'bold',
-                      color: '#d97706',
-                      marginBottom: '15px',
-                      textAlign: 'center'
-                    }}>
-                      ⚠️ شروط الدفع:
-                    </div>
-                    
-                    <div style={{
-                      fontSize: '13px',
-                      color: '#92400e',
-                      lineHeight: '1.6',
-                      marginBottom: '15px'
-                    }}>
-                      <ul style={{ margin: 0, paddingLeft: '20px' }}>
-                        <li style={{ marginBottom: '8px' }}>يجب أن يكون الحساب البنكي المستخدم في التحويل هو نفسه لصاحب الطلب.</li>
-                        <li style={{ marginBottom: '8px' }}>يجب أن تكون المحفظة الرقمية المستلمة مملوكة لنفس الشخص.</li>
-                        <li style={{ marginBottom: '8px' }}>يُمنع منعاً باتاً التحويل من طرف ثالث.</li>
-                      </ul>
-                    </div>
-
-                    <div style={{
-                      background: 'rgba(217, 119, 6, 0.1)',
-                      borderRadius: '10px',
-                      padding: '12px',
-                      marginBottom: '15px',
-                      border: '1px solid rgba(217, 119, 6, 0.3)'
-                    }}>
-                      <div style={{
-                        fontSize: '14px',
-                        fontWeight: 'bold',
-                        color: '#d97706',
-                        marginBottom: '8px',
-                        textAlign: 'center'
-                      }}>
-                        📹 التحقق الإجباري:
-                      </div>
-                      <div style={{
-                        fontSize: '12px',
-                        color: '#92400e',
-                        lineHeight: '1.5'
-                      }}>
-                        يجب إرسال فيديو حديث (10–15 ثانية) يتضمن:
-                        <ul style={{ margin: '8px 0 0 0', paddingLeft: '20px' }}>
-                          <li>ظهور الوجه بوضوح</li>
-                          <li>ذكر الاسم الكامل</li>
-                          <li>ذكر التاريخ والوقت الحالي</li>
-                          <li>ذكر قيمة المبلغ</li>
-                          <li>ذكر رقم الطلب</li>
-                          <li>ذكر آخر 4 أرقام من الحساب البنكي المستخدم</li>
-                          <li>تأكيد أنك صاحب الحساب البنكي والمحفظة</li>
-                        </ul>
-                      </div>
-                    </div>
-
-                    <div style={{
-                      fontSize: '13px',
-                      fontWeight: 'bold',
-                      color: '#dc2626',
-                      textAlign: 'center',
-                      marginBottom: '15px',
-                      padding: '8px',
-                      background: 'rgba(220, 38, 38, 0.1)',
-                      borderRadius: '8px'
-                    }}>
-                      ❗ لن يتم إعطاء بيانات الدفع أو تنفيذ العملية بدون هذا الفيديو.
-                    </div>
-
-                    <div style={{
-                      fontSize: '11px',
-                      color: '#92400e',
-                      lineHeight: '1.4',
-                      textAlign: 'center',
-                      padding: '10px',
-                      background: 'rgba(146, 64, 14, 0.05)',
-                      borderRadius: '8px',
-                      border: '1px solid rgba(146, 64, 14, 0.2)'
-                    }}>
-                      ⚖️ إخلاء مسؤولية:<br/>
-                      بإتمام عملية التحويل، أقرّ بأنني صاحب الحساب البنكي والمحفظة الرقمية، وأتحمل كامل المسؤولية في حال مخالفة هذه الشروط، ولا أحق لي المطالبة بأي تعويض.
-                    </div>
-                  </div>
-
-                  {/* Terms Acceptance Checkbox */}
+                  {/* Simple Terms Acceptance */}
                   <div style={{
                     marginBottom: '15px',
                     textAlign: 'right',
                     direction: 'rtl'
                   }}>
-                    <label style={{
+                    <div style={{
                       display: 'flex',
                       alignItems: 'center',
-                      cursor: 'pointer',
-                      fontSize: '14px',
-                      color: '#fff'
+                      justifyContent: 'space-between',
+                      marginBottom: '10px'
                     }}>
-                      <input
-                        type="checkbox"
-                        checked={paymentTermsAccepted}
-                        onChange={(e) => setPaymentTermsAccepted(e.target.checked)}
+                      <label style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        cursor: 'pointer',
+                        fontSize: '14px',
+                        color: '#fff'
+                      }}>
+                        <input
+                          type="checkbox"
+                          checked={paymentTermsAccepted}
+                          onChange={(e) => setPaymentTermsAccepted(e.target.checked)}
+                          style={{
+                            marginLeft: '10px',
+                            width: '18px',
+                            height: '18px',
+                            cursor: 'pointer'
+                          }}
+                        />
+                        أوافق على الشروط وأتعهد بالالتزام بها
+                      </label>
+                      <button
+                        onClick={() => setShowPaymentTermsModal(true)}
                         style={{
-                          marginLeft: '10px',
-                          width: '18px',
-                          height: '18px',
-                          cursor: 'pointer'
+                          background: 'rgba(255, 255, 255, 0.1)',
+                          border: '1px solid rgba(255, 255, 255, 0.2)',
+                          color: '#fff',
+                          padding: '6px 12px',
+                          borderRadius: '8px',
+                          fontSize: '12px',
+                          cursor: 'pointer',
+                          transition: 'all 0.2s ease'
                         }}
-                      />
-                      أوافق على الشروط وأتعهد بالالتزام بها
-                    </label>
+                        onMouseOver={(e) => {
+                          e.target.style.background = 'rgba(255, 255, 255, 0.2)';
+                        }}
+                        onMouseOut={(e) => {
+                          e.target.style.background = 'rgba(255, 255, 255, 0.1)';
+                        }}
+                      >
+                        عرض الشروط
+                      </button>
+                    </div>
                   </div>
 
                   {/* IBAN Field */}
@@ -1501,127 +1576,60 @@ ${formData.phone}
                     </div>
                   </div>
 
-                  {/* Payment Terms Section */}
-                  <div style={{
-                    background: 'linear-gradient(135deg, #fef3c7, #fde68a)',
-                    borderRadius: '15px',
-                    padding: '20px',
-                    marginBottom: '15px',
-                    border: '2px solid #f59e0b',
-                    boxShadow: '0 4px 15px rgba(245, 158, 11, 0.2)',
-                    direction: 'rtl'
-                  }}>
-                    <div style={{
-                      fontSize: '16px',
-                      fontWeight: 'bold',
-                      color: '#d97706',
-                      marginBottom: '15px',
-                      textAlign: 'center'
-                    }}>
-                      ⚠️ شروط الدفع:
-                    </div>
-                    
-                    <div style={{
-                      fontSize: '13px',
-                      color: '#92400e',
-                      lineHeight: '1.6',
-                      marginBottom: '15px'
-                    }}>
-                      <ul style={{ margin: 0, paddingLeft: '20px' }}>
-                        <li style={{ marginBottom: '8px' }}>يجب أن يكون الحساب البنكي المستخدم في التحويل هو نفسه لصاحب الطلب.</li>
-                        <li style={{ marginBottom: '8px' }}>يجب أن تكون المحفظة الرقمية المستلمة مملوكة لنفس الشخص.</li>
-                        <li style={{ marginBottom: '8px' }}>يُمنع منعاً باتاً التحويل من طرف ثالث.</li>
-                      </ul>
-                    </div>
-
-                    <div style={{
-                      background: 'rgba(217, 119, 6, 0.1)',
-                      borderRadius: '10px',
-                      padding: '12px',
-                      marginBottom: '15px',
-                      border: '1px solid rgba(217, 119, 6, 0.3)'
-                    }}>
-                      <div style={{
-                        fontSize: '14px',
-                        fontWeight: 'bold',
-                        color: '#d97706',
-                        marginBottom: '8px',
-                        textAlign: 'center'
-                      }}>
-                        📹 التحقق الإجباري:
-                      </div>
-                      <div style={{
-                        fontSize: '12px',
-                        color: '#92400e',
-                        lineHeight: '1.5'
-                      }}>
-                        يجب إرسال فيديو حديث (10–15 ثانية) يتضمن:
-                        <ul style={{ margin: '8px 0 0 0', paddingLeft: '20px' }}>
-                          <li>ظهور الوجه بوضوح</li>
-                          <li>ذكر الاسم الكامل</li>
-                          <li>ذكر التاريخ والوقت الحالي</li>
-                          <li>ذكر قيمة المبلغ</li>
-                          <li>ذكر رقم الطلب</li>
-                          <li>ذكر آخر 4 أرقام من الحساب البنكي المستخدم</li>
-                          <li>تأكيد أنك صاحب الحساب البنكي والمحفظة</li>
-                        </ul>
-                      </div>
-                    </div>
-
-                    <div style={{
-                      fontSize: '13px',
-                      fontWeight: 'bold',
-                      color: '#dc2626',
-                      textAlign: 'center',
-                      marginBottom: '15px',
-                      padding: '8px',
-                      background: 'rgba(220, 38, 38, 0.1)',
-                      borderRadius: '8px'
-                    }}>
-                      ❗ لن يتم إعطاء بيانات الدفع أو تنفيذ العملية بدون هذا الفيديو.
-                    </div>
-
-                    <div style={{
-                      fontSize: '11px',
-                      color: '#92400e',
-                      lineHeight: '1.4',
-                      textAlign: 'center',
-                      padding: '10px',
-                      background: 'rgba(146, 64, 14, 0.05)',
-                      borderRadius: '8px',
-                      border: '1px solid rgba(146, 64, 14, 0.2)'
-                    }}>
-                      ⚖️ إخلاء مسؤولية:<br/>
-                      بإتمام عملية التحويل، أقرّ بأنني صاحب الحساب البنكي والمحفظة الرقمية، وأتحمل كامل المسؤولية في حال مخالفة هذه الشروط، ولا أحق لي المطالبة بأي تعويض.
-                    </div>
-                  </div>
-
-                  {/* Terms Acceptance Checkbox */}
+                  {/* Simple Terms Acceptance */}
                   <div style={{
                     marginBottom: '15px',
                     textAlign: 'right',
                     direction: 'rtl'
                   }}>
-                    <label style={{
+                    <div style={{
                       display: 'flex',
                       alignItems: 'center',
-                      cursor: 'pointer',
-                      fontSize: '14px',
-                      color: '#fff'
+                      justifyContent: 'space-between',
+                      marginBottom: '10px'
                     }}>
-                      <input
-                        type="checkbox"
-                        checked={paymentTermsAccepted}
-                        onChange={(e) => setPaymentTermsAccepted(e.target.checked)}
+                      <label style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        cursor: 'pointer',
+                        fontSize: '14px',
+                        color: '#fff'
+                      }}>
+                        <input
+                          type="checkbox"
+                          checked={paymentTermsAccepted}
+                          onChange={(e) => setPaymentTermsAccepted(e.target.checked)}
+                          style={{
+                            marginLeft: '10px',
+                            width: '18px',
+                            height: '18px',
+                            cursor: 'pointer'
+                          }}
+                        />
+                        أوافق على الشروط وأتعهد بالالتزام بها
+                      </label>
+                      <button
+                        onClick={() => setShowPaymentTermsModal(true)}
                         style={{
-                          marginLeft: '10px',
-                          width: '18px',
-                          height: '18px',
-                          cursor: 'pointer'
+                          background: 'rgba(255, 255, 255, 0.1)',
+                          border: '1px solid rgba(255, 255, 255, 0.2)',
+                          color: '#fff',
+                          padding: '6px 12px',
+                          borderRadius: '8px',
+                          fontSize: '12px',
+                          cursor: 'pointer',
+                          transition: 'all 0.2s ease'
                         }}
-                      />
-                      أوافق على الشروط وأتعهد بالالتزام بها
-                    </label>
+                        onMouseOver={(e) => {
+                          e.target.style.background = 'rgba(255, 255, 255, 0.2)';
+                        }}
+                        onMouseOut={(e) => {
+                          e.target.style.background = 'rgba(255, 255, 255, 0.1)';
+                        }}
+                      >
+                        عرض الشروط
+                      </button>
+                    </div>
                   </div>
 
                   {/* IBAN Field */}
