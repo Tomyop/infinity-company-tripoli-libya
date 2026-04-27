@@ -1315,7 +1315,7 @@ ${formData.phone}
                     padding: '15px',
                     marginBottom: '15px',
                     border: paymentTermsAccepted ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(255, 255, 255, 0.05)',
-                    display: 'flex',
+                    display: 'none',
                     justifyContent: 'space-between',
                     alignItems: 'center',
                     opacity: paymentTermsAccepted ? 1 : 0.5
@@ -1354,7 +1354,7 @@ ${formData.phone}
                     padding: '15px',
                     marginBottom: '15px',
                     border: paymentTermsAccepted ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(255, 255, 255, 0.05)',
-                    display: 'flex',
+                    display: 'none',
                     justifyContent: 'space-between',
                     alignItems: 'center',
                     opacity: paymentTermsAccepted ? 1 : 0.5
@@ -1678,7 +1678,7 @@ ${formData.phone}
                     padding: '15px',
                     marginBottom: '15px',
                     border: paymentTermsAccepted ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(255, 255, 255, 0.05)',
-                    display: 'flex',
+                    display: 'none',
                     justifyContent: 'space-between',
                     alignItems: 'center',
                     opacity: paymentTermsAccepted ? 1 : 0.5
@@ -1717,7 +1717,7 @@ ${formData.phone}
                     padding: '15px',
                     marginBottom: '15px',
                     border: paymentTermsAccepted ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(255, 255, 255, 0.05)',
-                    display: 'flex',
+                    display: 'none',
                     justifyContent: 'space-between',
                     alignItems: 'center',
                     opacity: paymentTermsAccepted ? 1 : 0.5
