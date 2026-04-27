@@ -136,6 +136,7 @@ function App() {
   const dropdownRef = useRef(null);
   const [isAccepted, setIsAccepted] = useState(false);
   const [showTermsModal, setShowTermsModal] = useState(false);
+  const [paymentTermsAccepted, setPaymentTermsAccepted] = useState(false);
   const [prices, setPrices] = useState({
     buy_cash: 11,
     buy_bank: 12,
@@ -1109,28 +1110,163 @@ ${formData.phone}
                     </div>
                   </div>
 
+                  {/* Payment Terms Section */}
+                  <div style={{
+                    background: 'linear-gradient(135deg, #fef3c7, #fde68a)',
+                    borderRadius: '15px',
+                    padding: '20px',
+                    marginBottom: '15px',
+                    border: '2px solid #f59e0b',
+                    boxShadow: '0 4px 15px rgba(245, 158, 11, 0.2)',
+                    direction: 'rtl'
+                  }}>
+                    <div style={{
+                      fontSize: '16px',
+                      fontWeight: 'bold',
+                      color: '#d97706',
+                      marginBottom: '15px',
+                      textAlign: 'center'
+                    }}>
+                      ⚠️ شروط الدفع:
+                    </div>
+                    
+                    <div style={{
+                      fontSize: '13px',
+                      color: '#92400e',
+                      lineHeight: '1.6',
+                      marginBottom: '15px'
+                    }}>
+                      <ul style={{ margin: 0, paddingLeft: '20px' }}>
+                        <li style={{ marginBottom: '8px' }}>يجب أن يكون الحساب البنكي المستخدم في التحويل هو نفسه لصاحب الطلب.</li>
+                        <li style={{ marginBottom: '8px' }}>يجب أن تكون المحفظة الرقمية المستلمة مملوكة لنفس الشخص.</li>
+                        <li style={{ marginBottom: '8px' }}>يُمنع منعاً باتاً التحويل من طرف ثالث.</li>
+                      </ul>
+                    </div>
+
+                    <div style={{
+                      background: 'rgba(217, 119, 6, 0.1)',
+                      borderRadius: '10px',
+                      padding: '12px',
+                      marginBottom: '15px',
+                      border: '1px solid rgba(217, 119, 6, 0.3)'
+                    }}>
+                      <div style={{
+                        fontSize: '14px',
+                        fontWeight: 'bold',
+                        color: '#d97706',
+                        marginBottom: '8px',
+                        textAlign: 'center'
+                      }}>
+                        📹 التحقق الإجباري:
+                      </div>
+                      <div style={{
+                        fontSize: '12px',
+                        color: '#92400e',
+                        lineHeight: '1.5'
+                      }}>
+                        يجب إرسال فيديو حديث (10–15 ثانية) يتضمن:
+                        <ul style={{ margin: '8px 0 0 0', paddingLeft: '20px' }}>
+                          <li>ظهور الوجه بوضوح</li>
+                          <li>ذكر الاسم الكامل</li>
+                          <li>ذكر التاريخ والوقت الحالي</li>
+                          <li>ذكر قيمة المبلغ</li>
+                          <li>ذكر رقم الطلب</li>
+                          <li>ذكر آخر 4 أرقام من الحساب البنكي المستخدم</li>
+                          <li>تأكيد أنك صاحب الحساب البنكي والمحفظة</li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    <div style={{
+                      fontSize: '13px',
+                      fontWeight: 'bold',
+                      color: '#dc2626',
+                      textAlign: 'center',
+                      marginBottom: '15px',
+                      padding: '8px',
+                      background: 'rgba(220, 38, 38, 0.1)',
+                      borderRadius: '8px'
+                    }}>
+                      ❗ لن يتم إعطاء بيانات الدفع أو تنفيذ العملية بدون هذا الفيديو.
+                    </div>
+
+                    <div style={{
+                      fontSize: '11px',
+                      color: '#92400e',
+                      lineHeight: '1.4',
+                      textAlign: 'center',
+                      padding: '10px',
+                      background: 'rgba(146, 64, 14, 0.05)',
+                      borderRadius: '8px',
+                      border: '1px solid rgba(146, 64, 14, 0.2)'
+                    }}>
+                      ⚖️ إخلاء مسؤولية:<br/>
+                      بإتمام عملية التحويل، أقرّ بأنني صاحب الحساب البنكي والمحفظة الرقمية، وأتحمل كامل المسؤولية في حال مخالفة هذه الشروط، ولا أحق لي المطالبة بأي تعويض.
+                    </div>
+                  </div>
+
+                  {/* Terms Acceptance Checkbox */}
+                  <div style={{
+                    marginBottom: '15px',
+                    textAlign: 'right',
+                    direction: 'rtl'
+                  }}>
+                    <label style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      cursor: 'pointer',
+                      fontSize: '14px',
+                      color: '#fff'
+                    }}>
+                      <input
+                        type="checkbox"
+                        checked={paymentTermsAccepted}
+                        onChange={(e) => setPaymentTermsAccepted(e.target.checked)}
+                        style={{
+                          marginLeft: '10px',
+                          width: '18px',
+                          height: '18px',
+                          cursor: 'pointer'
+                        }}
+                      />
+                      أوافق على الشروط وأتعهد بالالتزام بها
+                    </label>
+                  </div>
+
                   {/* IBAN Field */}
                   <div style={{
-                    background: 'rgba(255, 255, 255, 0.05)',
+                    background: paymentTermsAccepted ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.02)',
                     borderRadius: '15px',
                     padding: '15px',
                     marginBottom: '15px',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    border: paymentTermsAccepted ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(255, 255, 255, 0.05)',
                     display: 'flex',
                     justifyContent: 'space-between',
-                    alignItems: 'center'
+                    alignItems: 'center',
+                    opacity: paymentTermsAccepted ? 1 : 0.5
                   }}>
                     <div style={{ textAlign: 'right' }}>
                       <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)', display: 'block' }}>الآيبان:</span>
-                      <code style={{ fontSize: '13px', color: '#fff' }}>LY95002104104202000002722</code>
+                      <code style={{ fontSize: '13px', color: '#fff' }}>{paymentTermsAccepted ? 'LY95002104104202000002722' : '••••••••••••••••••••••'}</code>
                     </div>
                     <button 
                       onClick={() => {
-                        navigator.clipboard.writeText(bankData.iban);
-                        setCopiedField('iban');
-                        setTimeout(() => setCopiedField(null), 1200);
+                        if (paymentTermsAccepted) {
+                          navigator.clipboard.writeText(bankData.iban);
+                          setCopiedField('iban');
+                          setTimeout(() => setCopiedField(null), 1200);
+                        }
                       }}
-                      style={{ background: 'rgba(255,255,255,0.1)', border: 'none', color: '#fff', padding: '5px 10px', borderRadius: '8px', fontSize: '12px', cursor: 'pointer' }}
+                      disabled={!paymentTermsAccepted}
+                      style={{ 
+                        background: paymentTermsAccepted ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.05)', 
+                        border: 'none', 
+                        color: paymentTermsAccepted ? '#fff' : 'rgba(255,255,255,0.3)', 
+                        padding: '5px 10px', 
+                        borderRadius: '8px', 
+                        fontSize: '12px', 
+                        cursor: paymentTermsAccepted ? 'pointer' : 'not-allowed'
+                      }}
                     >
                       {copiedField === 'iban' ? '✅' : 'نسخ'}
                     </button>
@@ -1365,28 +1501,163 @@ ${formData.phone}
                     </div>
                   </div>
 
+                  {/* Payment Terms Section */}
+                  <div style={{
+                    background: 'linear-gradient(135deg, #fef3c7, #fde68a)',
+                    borderRadius: '15px',
+                    padding: '20px',
+                    marginBottom: '15px',
+                    border: '2px solid #f59e0b',
+                    boxShadow: '0 4px 15px rgba(245, 158, 11, 0.2)',
+                    direction: 'rtl'
+                  }}>
+                    <div style={{
+                      fontSize: '16px',
+                      fontWeight: 'bold',
+                      color: '#d97706',
+                      marginBottom: '15px',
+                      textAlign: 'center'
+                    }}>
+                      ⚠️ شروط الدفع:
+                    </div>
+                    
+                    <div style={{
+                      fontSize: '13px',
+                      color: '#92400e',
+                      lineHeight: '1.6',
+                      marginBottom: '15px'
+                    }}>
+                      <ul style={{ margin: 0, paddingLeft: '20px' }}>
+                        <li style={{ marginBottom: '8px' }}>يجب أن يكون الحساب البنكي المستخدم في التحويل هو نفسه لصاحب الطلب.</li>
+                        <li style={{ marginBottom: '8px' }}>يجب أن تكون المحفظة الرقمية المستلمة مملوكة لنفس الشخص.</li>
+                        <li style={{ marginBottom: '8px' }}>يُمنع منعاً باتاً التحويل من طرف ثالث.</li>
+                      </ul>
+                    </div>
+
+                    <div style={{
+                      background: 'rgba(217, 119, 6, 0.1)',
+                      borderRadius: '10px',
+                      padding: '12px',
+                      marginBottom: '15px',
+                      border: '1px solid rgba(217, 119, 6, 0.3)'
+                    }}>
+                      <div style={{
+                        fontSize: '14px',
+                        fontWeight: 'bold',
+                        color: '#d97706',
+                        marginBottom: '8px',
+                        textAlign: 'center'
+                      }}>
+                        📹 التحقق الإجباري:
+                      </div>
+                      <div style={{
+                        fontSize: '12px',
+                        color: '#92400e',
+                        lineHeight: '1.5'
+                      }}>
+                        يجب إرسال فيديو حديث (10–15 ثانية) يتضمن:
+                        <ul style={{ margin: '8px 0 0 0', paddingLeft: '20px' }}>
+                          <li>ظهور الوجه بوضوح</li>
+                          <li>ذكر الاسم الكامل</li>
+                          <li>ذكر التاريخ والوقت الحالي</li>
+                          <li>ذكر قيمة المبلغ</li>
+                          <li>ذكر رقم الطلب</li>
+                          <li>ذكر آخر 4 أرقام من الحساب البنكي المستخدم</li>
+                          <li>تأكيد أنك صاحب الحساب البنكي والمحفظة</li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    <div style={{
+                      fontSize: '13px',
+                      fontWeight: 'bold',
+                      color: '#dc2626',
+                      textAlign: 'center',
+                      marginBottom: '15px',
+                      padding: '8px',
+                      background: 'rgba(220, 38, 38, 0.1)',
+                      borderRadius: '8px'
+                    }}>
+                      ❗ لن يتم إعطاء بيانات الدفع أو تنفيذ العملية بدون هذا الفيديو.
+                    </div>
+
+                    <div style={{
+                      fontSize: '11px',
+                      color: '#92400e',
+                      lineHeight: '1.4',
+                      textAlign: 'center',
+                      padding: '10px',
+                      background: 'rgba(146, 64, 14, 0.05)',
+                      borderRadius: '8px',
+                      border: '1px solid rgba(146, 64, 14, 0.2)'
+                    }}>
+                      ⚖️ إخلاء مسؤولية:<br/>
+                      بإتمام عملية التحويل، أقرّ بأنني صاحب الحساب البنكي والمحفظة الرقمية، وأتحمل كامل المسؤولية في حال مخالفة هذه الشروط، ولا أحق لي المطالبة بأي تعويض.
+                    </div>
+                  </div>
+
+                  {/* Terms Acceptance Checkbox */}
+                  <div style={{
+                    marginBottom: '15px',
+                    textAlign: 'right',
+                    direction: 'rtl'
+                  }}>
+                    <label style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      cursor: 'pointer',
+                      fontSize: '14px',
+                      color: '#fff'
+                    }}>
+                      <input
+                        type="checkbox"
+                        checked={paymentTermsAccepted}
+                        onChange={(e) => setPaymentTermsAccepted(e.target.checked)}
+                        style={{
+                          marginLeft: '10px',
+                          width: '18px',
+                          height: '18px',
+                          cursor: 'pointer'
+                        }}
+                      />
+                      أوافق على الشروط وأتعهد بالالتزام بها
+                    </label>
+                  </div>
+
                   {/* IBAN Field */}
                   <div style={{
-                    background: 'rgba(255, 255, 255, 0.05)',
+                    background: paymentTermsAccepted ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.02)',
                     borderRadius: '15px',
                     padding: '15px',
                     marginBottom: '15px',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    border: paymentTermsAccepted ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(255, 255, 255, 0.05)',
                     display: 'flex',
                     justifyContent: 'space-between',
-                    alignItems: 'center'
+                    alignItems: 'center',
+                    opacity: paymentTermsAccepted ? 1 : 0.5
                   }}>
                     <div style={{ textAlign: 'right' }}>
                       <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)', display: 'block' }}>الآيبان:</span>
-                      <code style={{ fontSize: '13px', color: '#fff' }}>LY95002104104202000002722</code>
+                      <code style={{ fontSize: '13px', color: '#fff' }}>{paymentTermsAccepted ? 'LY95002104104202000002722' : '••••••••••••••••••••••'}</code>
                     </div>
                     <button 
                       onClick={() => {
-                        navigator.clipboard.writeText(bankData.iban);
-                        setCopiedField('iban');
-                        setTimeout(() => setCopiedField(null), 1200);
+                        if (paymentTermsAccepted) {
+                          navigator.clipboard.writeText(bankData.iban);
+                          setCopiedField('iban');
+                          setTimeout(() => setCopiedField(null), 1200);
+                        }
                       }}
-                      style={{ background: 'rgba(255,255,255,0.1)', border: 'none', color: '#fff', padding: '5px 10px', borderRadius: '8px', fontSize: '12px', cursor: 'pointer' }}
+                      disabled={!paymentTermsAccepted}
+                      style={{ 
+                        background: paymentTermsAccepted ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.05)', 
+                        border: 'none', 
+                        color: paymentTermsAccepted ? '#fff' : 'rgba(255,255,255,0.3)', 
+                        padding: '5px 10px', 
+                        borderRadius: '8px', 
+                        fontSize: '12px', 
+                        cursor: paymentTermsAccepted ? 'pointer' : 'not-allowed'
+                      }}
                     >
                       {copiedField === 'iban' ? '✅' : 'نسخ'}
                     </button>
