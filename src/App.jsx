@@ -82,7 +82,7 @@ const bankData = {
   bank: "مصرف الجمهورية",
   branch: "وكالة البرج",
   account: "104202000002722",
-  iban: "LY95002104104202000002722"
+  iban: "LY24007039039011370298010"
 };
 
 const walletData = {
@@ -1322,7 +1322,7 @@ ${formData.phone}
                   }}>
                     <div style={{ textAlign: 'right' }}>
                       <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)', display: 'block' }}>الآيبان:</span>
-                      <code style={{ fontSize: '13px', color: '#fff' }}>{paymentTermsAccepted ? 'LY95002104104202000002722' : '••••••••••••••••••••••'}</code>
+                      <code style={{ fontSize: '13px', color: '#fff' }}>{paymentTermsAccepted ? 'LY24007039039011370298010' : '••••••••••••••••••••••'}</code>
                     </div>
                     <button 
                       onClick={() => {
@@ -1646,7 +1646,7 @@ ${formData.phone}
                   }}>
                     <div style={{ textAlign: 'right' }}>
                       <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)', display: 'block' }}>الآيبان:</span>
-                      <code style={{ fontSize: '13px', color: '#fff' }}>{paymentTermsAccepted ? 'LY95002104104202000002722' : '••••••••••••••••••••••'}</code>
+                      <code style={{ fontSize: '13px', color: '#fff' }}>{paymentTermsAccepted ? 'LY24007039039011370298010' : '••••••••••••••••••••••'}</code>
                     </div>
                     <button 
                       onClick={() => {
