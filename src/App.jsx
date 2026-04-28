@@ -2005,7 +2005,7 @@ ${formData.phone}
           }
           className={`w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed mb-8 ${isAccepted ? 'terms-accepted' : ''}`}
         >
-          {confirming ? 'جاري التأكيد...' : confirmed ? 'تمت العملية بنجاح ✅' : (operation === 'buy' ? (isAccepted ? 'تأكيد الدفع الآن' : 'تأكيد الدفع') : 'تأكيد البيع')}
+          {confirming ? 'جاري التأكيد...' : confirmed ? 'تمت العملية بنجاح ✅' : (operation === 'buy' ? (isAccepted ? 'تأكيد الطلب الآن' : 'تأكيد الدفع') : 'تأكيد البيع')}
         </button>
 
         {/* Success Message */}
