@@ -12,7 +12,7 @@ import InstallPrompt from './InstallPrompt'
 import Draw from './Draw'
 
 function ProcessingCard() {
-  const [timeLeft, setTimeLeft] = React.useState(1800);
+  const [timeLeft, setTimeLeft] = React.useState(600);
 
   React.useEffect(() => {
     const timer = setInterval(() => {
@@ -30,7 +30,7 @@ function ProcessingCard() {
 
   const minutes = String(Math.floor(timeLeft / 60)).padStart(2, "0");
   const seconds = String(timeLeft % 60).padStart(2, "0");
-  const progress = (timeLeft / 1800) * 100;
+  const progress = (timeLeft / 600) * 100;
 
   return (
     <div style={{
@@ -259,7 +259,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    let time = 1800;
+    let time = 600;
 
     const interval = setInterval(() => {
       time--;
@@ -271,7 +271,7 @@ function App() {
       const progressEl = document.getElementById("progress");
 
       if (timerEl) timerEl.innerText = `${minutes}:${seconds}`;
-      if (progressEl) progressEl.style.width = (time / 1800 * 100) + "%";
+      if (progressEl) progressEl.style.width = (time / 600 * 100) + "%";
 
       if (time <= 0) {
         clearInterval(interval);
