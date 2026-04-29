@@ -1920,40 +1920,6 @@ ${formData.phone}
           )}
         </div>
 
-        {/* Payment Proof - Only show for USDT */}
-        {currency === 'usdt' && (
-          <div className="card-primary mb-6">
-            <label className="block text-white font-medium mb-3">
-              إثبات الهوية
-            </label>
-            <div className="border-2 border-dashed border-white/30 rounded-xl p-6 text-center">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="hidden"
-                id="payment-proof"
-              />
-              <label
-                htmlFor="payment-proof"
-                className="cursor-pointer block"
-              >
-                {imageSelected ? (
-                  <div className="text-green-400">
-                    <span className="text-2xl mb-2">📷</span>
-                    <p className="text-sm">تم اختيار الصورة ✔</p>
-                  </div>
-                ) : (
-                  <div>
-                    <span className="text-2xl mb-2">📤</span>
-                    <p className="text-white/70 text-sm">اضغط لرفع الصورة</p>
-                  </div>
-                )}
-              </label>
-            </div>
-          </div>
-        )}
-
         {/* Terms & Conditions Checkbox */}
         {(currency === 'usdt' || currency === 'usd' || currency === 'eur') && (
           <div className="card-primary mb-6">
@@ -1999,7 +1965,7 @@ ${formData.phone}
         <button
           onClick={handleConfirm}
           disabled={
-            (currency === 'usdt' ? (!amount || !imageSelected || !isAccepted) : (!amount || !isAccepted)) || 
+            (!amount || !isAccepted) || 
             confirming || 
             confirmed
           }
