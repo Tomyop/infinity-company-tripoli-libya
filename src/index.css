@@ -174,3 +174,7 @@
 .financial-price-display:hover::before {
   left: 100%;
 }
+
+.current-price .note {
+  display: none;
+}

@@ -1269,6 +1269,7 @@ ${formData.phone}
           </div>
           <div className="mt-3">
             <div 
+              className="current-price"
               style={{
                 background: 'linear-gradient(135deg, #6C2EFF, #A855F7)',
                 borderRadius: '16px',
@@ -1311,12 +1312,24 @@ ${formData.phone}
               <div 
                 style={{
                   display: 'flex',
-                  flexDirection: 'column',
+                  flexDirection: 'row',
+                  direction: 'rtl',
                   alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '4px'
+                  justifyContent: 'center'
                 }}
               >
+                <span 
+                  style={{
+                    fontSize: '48px',
+                    color: '#FFFFFF',
+                    fontWeight: '700',
+                    lineHeight: '1',
+                    fontFamily: 'system-ui, -apple-system, sans-serif',
+                    marginLeft: '8px'
+                  }}
+                >
+                  {getCurrentPrice()}
+                </span>
                 <span 
                   style={{
                     fontSize: '48px',
@@ -1326,27 +1339,10 @@ ${formData.phone}
                     fontFamily: 'system-ui, -apple-system, sans-serif'
                   }}
                 >
-                  {getCurrentPrice()}
-                </span>
-                <span 
-                  style={{
-                    fontSize: '18px',
-                    color: '#FFFFFF',
-                    fontWeight: '500'
-                  }}
-                >
-                  دينار
-                </span>
-                <span 
-                  style={{
-                    fontSize: '14px',
-                    color: '#E0E0E0',
-                    fontWeight: '400'
-                  }}
-                >
-                  LYD
+                  د.ل
                 </span>
               </div>
+              <p className="note" style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '12px', marginTop: '8px' }}>Includes 2% commission</p>
             </div>
           </div>
         </div>
@@ -1554,11 +1550,41 @@ ${formData.phone}
             textAlign: 'center'
           }}>
             <div>
-              <p style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '14px', marginBottom: '8px' }}>Total in Libyan Dinar</p>
-              <p style={{ color: '#FFFFFF', fontSize: '32px', fontWeight: '700', marginBottom: '8px', lineHeight: '1' }}>
-                {calculateTotal().toFixed(2)} LYD
-              </p>
-              <p style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '12px' }}>Includes 2% commission</p>
+              <p style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '14px', marginBottom: '8px' }}>Currency Price</p>
+              <div 
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  direction: 'rtl',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+              >
+                <span 
+                  style={{
+                    fontSize: '48px',
+                    color: '#FFFFFF',
+                    fontWeight: '700',
+                    lineHeight: '1',
+                    fontFamily: 'system-ui, -apple-system, sans-serif',
+                    marginLeft: '8px'
+                  }}
+                >
+                  {calculateTotal().toFixed(2)}
+                </span>
+                <span 
+                  style={{
+                    fontSize: '48px',
+                    color: '#FFFFFF',
+                    fontWeight: '700',
+                    lineHeight: '1',
+                    fontFamily: 'system-ui, -apple-system, sans-serif'
+                  }}
+                >
+                  د.ل
+                </span>
+              </div>
+              <p style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '12px', marginTop: '8px' }}>Includes 2% commission</p>
             </div>
           </div>
         )}
