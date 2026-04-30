@@ -892,7 +892,7 @@ ${formData.phone}
           borderRadius: '16px',
           padding: '20px'
         }}>
-          <h2 style={{ fontSize: '18px', fontWeight: 'bold', color: '#1A1A1A', marginBottom: '16px', textAlign: 'center' }}>اختر العملية</h2>
+          <h2 style={{ fontSize: '18px', fontWeight: 'bold', color: '#1A1A1A', marginBottom: '16px', textAlign: 'right' }}>اختر العملية</h2>
           <div className="grid grid-cols-2 gap-4">
             <button
               onClick={() => {
@@ -1275,9 +1275,7 @@ ${formData.phone}
                 padding: '24px',
                 marginBottom: '24px',
                 boxShadow: '0px 8px 20px rgba(108, 46, 255, 0.15)',
-                textAlign: 'center',
-                position: 'relative',
-                overflow: 'hidden'
+                textAlign: 'center'
               }}
             >
               <div 
