@@ -480,7 +480,7 @@ ${formData.phone}
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-purple-950"
+    <div className="min-h-screen" style={{ backgroundColor: '#F7F7FB' }}
       onClick={(e) => {
         if (e.target.tagName !== "INPUT") {
           document.activeElement.blur();
@@ -885,63 +885,130 @@ ${formData.phone}
         <AdBanner />
         
         {/* Operation Selection */}
-        <div className="card-primary mb-6">
-          <h2 className="text-xl font-bold text-white mb-4">اختر العملية</h2>
-          <div className="grid grid-cols-2 gap-3">
-            <button
-              onClick={() => {
-                vibrate();
-                setOperation('buy');
-              }}
-              className={`py-3 px-4 rounded-xl font-bold transition-all duration-200 flex flex-col items-center justify-center ${
-                operation === 'buy'
-                  ? 'bg-green-600 text-white'
-                  : 'bg-white/20 text-white/70 hover:bg-white/30'
-              }`}
-            >
-              <div className="flex items-center gap-2 mb-1">
-                <img src={buyIcon} alt="Buy" width="16" height="16" />
-                <span>شراء</span>
-              </div>
-              <span className="text-xs opacity-75">BUY</span>
-            </button>
+        <div className="mb-6" style={{
+          backgroundColor: '#FFFFFF',
+          border: '1px solid rgba(0,0,0,0.05)',
+          boxShadow: '0px 8px 20px rgba(0,0,0,0.05)',
+          borderRadius: '16px',
+          padding: '20px'
+        }}>
+          <h2 style={{ fontSize: '18px', fontWeight: 'bold', color: '#1A1A1A', marginBottom: '16px', textAlign: 'center' }}>اختر العملية</h2>
+          <div className="grid grid-cols-2 gap-4">
             <button
               onClick={() => {
                 vibrate();
                 setOperation('sell');
               }}
-              className={`py-3 px-4 rounded-xl font-bold transition-all duration-200 flex flex-col items-center justify-center ${
-                operation === 'sell'
-                  ? 'bg-red-600 text-white'
-                  : 'bg-white/20 text-white/70 hover:bg-white/30'
-              }`}
+              style={{
+                backgroundColor: operation === 'sell' ? 'rgba(108, 62, 255, 0.1)' : '#FFFFFF',
+                border: operation === 'sell' ? '2px solid #6C3EFF' : '1px solid rgba(0,0,0,0.05)',
+                boxShadow: operation === 'sell' ? '0px 8px 20px rgba(108, 62, 255, 0.15)' : '0px 8px 20px rgba(0,0,0,0.05)',
+                borderRadius: '16px',
+                padding: '20px 16px',
+                transition: 'all 0.2s ease',
+                transform: 'scale(1)',
+                cursor: 'pointer'
+              }}
+              onMouseDown={(e) => {
+                e.target.style.transform = 'scale(0.98)';
+              }}
+              onMouseUp={(e) => {
+                e.target.style.transform = 'scale(1)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.transform = 'scale(1)';
+              }}
             >
-              <div className="flex items-center gap-2 mb-1">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{ transform: 'scaleX(-1)' }}>
-                  <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
-                </svg>
-                <span>بيع</span>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+                <div style={{
+                  width: '48px',
+                  height: '48px',
+                  borderRadius: '50%',
+                  backgroundColor: operation === 'sell' ? '#6C3EFF' : 'rgba(108, 62, 255, 0.1)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill={operation === 'sell' ? '#FFFFFF' : '#6C3EFF'}>
+                    <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+                  </svg>
+                </div>
+                <div>
+                  <span style={{ fontSize: '16px', fontWeight: 'bold', color: operation === 'sell' ? '#6C3EFF' : '#1A1A1A', display: 'block', marginBottom: '2px' }}>بيع</span>
+                  <span style={{ fontSize: '12px', color: operation === 'sell' ? '#6C3EFF' : '#6B7280' }}>SELL</span>
+                </div>
               </div>
-              <span className="text-xs opacity-75">SELL</span>
+            </button>
+            <button
+              onClick={() => {
+                vibrate();
+                setOperation('buy');
+              }}
+              style={{
+                backgroundColor: operation === 'buy' ? '#00C853' : '#FFFFFF',
+                border: operation === 'buy' ? '2px solid #00C853' : '1px solid rgba(0,0,0,0.05)',
+                boxShadow: operation === 'buy' ? '0px 8px 20px rgba(0, 200, 83, 0.15)' : '0px 8px 20px rgba(0,0,0,0.05)',
+                borderRadius: '16px',
+                padding: '20px 16px',
+                transition: 'all 0.2s ease',
+                transform: 'scale(1)',
+                cursor: 'pointer'
+              }}
+              onMouseDown={(e) => {
+                e.target.style.transform = 'scale(0.98)';
+              }}
+              onMouseUp={(e) => {
+                e.target.style.transform = 'scale(1)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.transform = 'scale(1)';
+              }}
+            >
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+                <div style={{
+                  width: '48px',
+                  height: '48px',
+                  borderRadius: '50%',
+                  backgroundColor: operation === 'buy' ? '#FFFFFF' : 'rgba(0, 200, 83, 0.1)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill={operation === 'buy' ? '#00C853' : '#00C853'}>
+                    <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+                  </svg>
+                </div>
+                <div>
+                  <span style={{ fontSize: '16px', fontWeight: 'bold', color: operation === 'buy' ? '#FFFFFF' : '#1A1A1A', display: 'block', marginBottom: '2px' }}>شراء</span>
+                  <span style={{ fontSize: '12px', color: operation === 'buy' ? '#FFFFFF' : '#6B7280' }}>BUY</span>
+                </div>
+              </div>
             </button>
           </div>
         </div>
 
         {/* Currency Selector */}
-        <div className="card-primary mb-6">
+        <div className="mb-6" style={{
+          backgroundColor: '#FFFFFF',
+          border: '1px solid rgba(0,0,0,0.05)',
+          boxShadow: '0px 8px 20px rgba(0,0,0,0.05)',
+          borderRadius: '16px',
+          padding: '20px'
+        }}>
           <div className="flex items-center gap-2 mb-4">
-            <h3 className="text-lg font-bold text-white">العملة</h3>
+            <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: '#1A1A1A' }}>العملة</h3>
             {showPriceNotification && (
               <span 
-                className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium text-white"
+                className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium"
                 style={{
-                  background: 'linear-gradient(135deg, #6d28d9, #9333ea)',
-                  boxShadow: '0 0 12px rgba(147, 51, 234, 0.4)',
+                  background: 'linear-gradient(135deg, #6C3EFF, #9D6BFF)',
+                  color: '#111111',
+                  boxShadow: '0 0 12px rgba(108, 62, 255, 0.4)',
                   animation: 'fadeInScale 0.4s ease-in-out',
                   transition: 'opacity 0.6s ease-in-out, transform 0.6s ease-in-out'
                 }}
               >
-                تم تحديث الأسعار حسب السوق 🔥
+                تم تحديث الأسعار حسب السوق 🔥 
               </span>
             )}
           </div>
@@ -951,26 +1018,48 @@ ${formData.phone}
                 vibrate();
                 setCurrency('usdt');
               }}
-              className={`py-4 px-3 rounded-xl font-bold transition-all duration-200 flex flex-col items-center justify-center ${
-                currency === 'usdt'
-                  ? 'bg-gradient-to-br from-purple-700 to-purple-800 text-white shadow-lg'
-                  : 'bg-white/20 text-white/70 hover:bg-white/30'
-              }`}
               style={{
-                boxShadow: currency === 'usdt' ? '0 4px 15px rgba(147, 51, 234, 0.4), 0 0 15px rgba(147, 51, 234, 0.2)' : '0 2px 8px rgba(0,0,0,0.1)',
-                transform: currency === 'usdt' ? 'scale(1.02)' : 'scale(1)'
+                backgroundColor: '#FFFFFF',
+                border: currency === 'usdt' ? '2px solid #6C3EFF' : '1px solid rgba(0,0,0,0.05)',
+                boxShadow: currency === 'usdt' ? '0px 8px 20px rgba(108, 62, 255, 0.15), 0 0 30px rgba(108, 62, 255, 0.4)' : '0px 8px 20px rgba(0,0,0,0.05)',
+                borderRadius: '16px',
+                padding: '16px 12px',
+                transition: 'all 0.2s ease',
+                transform: 'scale(1)',
+                cursor: 'pointer'
+              }}
+              onMouseDown={(e) => {
+                e.target.style.transform = 'scale(0.98)';
+              }}
+              onMouseUp={(e) => {
+                e.target.style.transform = 'scale(1)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.transform = 'scale(1)';
               }}
             >
-              <img 
-                src={usdtOfficialLogo} 
-                alt="USDT" 
-                width="32" 
-                height="32" 
-                style={{ borderRadius: '50%', marginBottom: '8px' }}
-              />
-              <div className="currency-label" style={{ textAlign: 'center', animation: 'fadeInUp 0.3s ease-out' }}>
-                <div className="title" style={{ fontSize: '16px', fontWeight: 'bold', color: '#fff', marginBottom: '2px' }}>USDT</div>
-                <div className="subtitle" style={{ fontSize: '12px', opacity: 0.7, color: '#ddd' }}>Tether</div>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+                <div style={{
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '50%',
+                  backgroundColor: '#6C3EFF',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <img 
+                    src={usdtOfficialLogo} 
+                    alt="USDT" 
+                    width="24" 
+                    height="24" 
+                    style={{ borderRadius: '50%' }}
+                  />
+                </div>
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{ fontSize: '14px', fontWeight: 'bold', color: '#1A1A1A', marginBottom: '2px' }}>USDT</div>
+                  <div style={{ fontSize: '11px', color: '#6B7280' }}>Tether</div>
+                </div>
               </div>
             </button>
             <button
@@ -978,20 +1067,42 @@ ${formData.phone}
                 vibrate();
                 setCurrency('usd');
               }}
-              className={`py-4 px-3 rounded-xl font-bold transition-all duration-200 flex flex-col items-center justify-center ${
-                currency === 'usd'
-                  ? 'bg-gradient-to-br from-purple-700 to-purple-800 text-white shadow-lg'
-                  : 'bg-white/20 text-white/70 hover:bg-white/30'
-              }`}
               style={{
-                boxShadow: currency === 'usd' ? '0 4px 15px rgba(147, 51, 234, 0.4), 0 0 15px rgba(147, 51, 234, 0.2)' : '0 2px 8px rgba(0,0,0,0.1)',
-                transform: currency === 'usd' ? 'scale(1.02)' : 'scale(1)'
+                backgroundColor: '#FFFFFF',
+                border: currency === 'usd' ? '2px solid #6C3EFF' : '1px solid rgba(0,0,0,0.05)',
+                boxShadow: currency === 'usd' ? '0px 8px 20px rgba(108, 62, 255, 0.15), 0 0 20px rgba(108, 62, 255, 0.3)' : '0px 8px 20px rgba(0,0,0,0.05)',
+                borderRadius: '16px',
+                padding: '16px 12px',
+                transition: 'all 0.2s ease',
+                transform: 'scale(1)',
+                cursor: 'pointer'
+              }}
+              onMouseDown={(e) => {
+                e.target.style.transform = 'scale(0.98)';
+              }}
+              onMouseUp={(e) => {
+                e.target.style.transform = 'scale(1)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.transform = 'scale(1)';
               }}
             >
-              <span style={{ fontSize: '28px', fontWeight: 'bold', marginBottom: '8px' }}>$</span>
-              <div className="currency-label" style={{ textAlign: 'center', animation: 'fadeInUp 0.3s ease-out' }}>
-                <div className="title" style={{ fontSize: '16px', fontWeight: 'bold', color: '#fff', marginBottom: '2px' }}>USD</div>
-                <div className="subtitle" style={{ fontSize: '12px', opacity: 0.7, color: '#ddd' }}>US Dollar</div>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+                <div style={{
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '50%',
+                  backgroundColor: '#6C3EFF',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <span style={{ fontSize: '20px', fontWeight: 'bold', color: '#FFFFFF' }}>$</span>
+                </div>
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{ fontSize: '14px', fontWeight: 'bold', color: '#1A1A1A', marginBottom: '2px' }}>USD</div>
+                  <div style={{ fontSize: '11px', color: '#6B7280' }}>US Dollar</div>
+                </div>
               </div>
             </button>
             <button
@@ -999,143 +1110,241 @@ ${formData.phone}
                 vibrate();
                 setCurrency('eur');
               }}
-              className={`py-4 px-3 rounded-xl font-bold transition-all duration-200 flex flex-col items-center justify-center ${
-                currency === 'eur'
-                  ? 'bg-gradient-to-br from-purple-700 to-purple-800 text-white shadow-lg'
-                  : 'bg-white/20 text-white/70 hover:bg-white/30'
-              }`}
               style={{
-                boxShadow: currency === 'eur' ? '0 4px 15px rgba(147, 51, 234, 0.4), 0 0 15px rgba(147, 51, 234, 0.2)' : '0 2px 8px rgba(0,0,0,0.1)',
-                transform: currency === 'eur' ? 'scale(1.02)' : 'scale(1)'
+                backgroundColor: '#FFFFFF',
+                border: currency === 'eur' ? '2px solid #6C3EFF' : '1px solid rgba(0,0,0,0.05)',
+                boxShadow: currency === 'eur' ? '0px 8px 20px rgba(108, 62, 255, 0.15), 0 0 20px rgba(108, 62, 255, 0.3)' : '0px 8px 20px rgba(0,0,0,0.05)',
+                borderRadius: '16px',
+                padding: '16px 12px',
+                transition: 'all 0.2s ease',
+                transform: 'scale(1)',
+                cursor: 'pointer'
+              }}
+              onMouseDown={(e) => {
+                e.target.style.transform = 'scale(0.98)';
+              }}
+              onMouseUp={(e) => {
+                e.target.style.transform = 'scale(1)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.transform = 'scale(1)';
               }}
             >
-              <span style={{ fontSize: '28px', fontWeight: 'bold', marginBottom: '8px' }}>€</span>
-              <div className="currency-label" style={{ textAlign: 'center', animation: 'fadeInUp 0.3s ease-out' }}>
-                <div className="title" style={{ fontSize: '16px', fontWeight: 'bold', color: '#fff', marginBottom: '2px' }}>EUR</div>
-                <div className="subtitle" style={{ fontSize: '12px', opacity: 0.7, color: '#ddd' }}>Euro</div>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+                <div style={{
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '50%',
+                  backgroundColor: '#6C3EFF',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <span style={{ fontSize: '20px', fontWeight: 'bold', color: '#FFFFFF' }}>?</span>
+                </div>
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{ fontSize: '14px', fontWeight: 'bold', color: '#1A1A1A', marginBottom: '2px' }}>EUR</div>
+                  <div style={{ fontSize: '11px', color: '#6B7280' }}>Euro</div>
+                </div>
               </div>
             </button>
           </div>
         </div>
 
         {/* Payment Method */}
-        <div className="card-primary mb-6">
-          <h3 className="text-lg font-bold text-white mb-3">طريقة الدفع</h3>
-          <div className="grid grid-cols-2 gap-2">
+        <div className="mb-6" style={{
+          backgroundColor: '#FFFFFF',
+          border: '1px solid rgba(0,0,0,0.05)',
+          boxShadow: '0px 8px 20px rgba(0,0,0,0.05)',
+          borderRadius: '16px',
+          padding: '20px'
+        }}>
+          <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: '#1A1A1A', marginBottom: '16px' }}>طريقة الدفع</h3>
+          <div className="grid grid-cols-2 gap-4">
             <button
               onClick={() => {
                 vibrate();
                 setPaymentMethod('bank');
               }}
-              className={`py-3 px-3 rounded-xl font-medium transition-all duration-300 flex flex-col items-center justify-center ${
-                paymentMethod === 'bank'
-                  ? 'bg-gradient-to-br from-purple-700 to-purple-800 text-white shadow-lg'
-                  : 'bg-white/20 text-white/70 hover:bg-white/30 opacity-60'
-              }`}
               style={{
-                boxShadow: paymentMethod === 'bank' ? '0 4px 15px rgba(147, 51, 234, 0.4), 0 0 15px rgba(147, 51, 234, 0.2)' : '0 2px 8px rgba(0,0,0,0.1)',
-                transform: paymentMethod === 'bank' ? 'scale(1.01)' : 'scale(1)'
+                backgroundColor: '#FFFFFF',
+                border: paymentMethod === 'bank' ? '2px solid #6C3EFF' : '1px solid rgba(0,0,0,0.05)',
+                boxShadow: paymentMethod === 'bank' ? '0px 8px 20px rgba(108, 62, 255, 0.15), 0 0 20px rgba(108, 62, 255, 0.3)' : '0px 8px 20px rgba(0,0,0,0.05)',
+                borderRadius: '16px',
+                padding: '16px 12px',
+                transition: 'all 0.2s ease',
+                transform: 'scale(1)',
+                cursor: 'pointer',
+                opacity: paymentMethod === 'bank' ? 1 : 0.5
+              }}
+              onMouseDown={(e) => {
+                e.target.style.transform = 'scale(0.98)';
+              }}
+              onMouseUp={(e) => {
+                e.target.style.transform = 'scale(1)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.transform = 'scale(1)';
               }}
             >
-              <svg width="32" height="32" viewBox="0 0 32 32" fill="none" style={{ marginBottom: '4px' }}>
-                <rect x="6" y="14" width="20" height="12" stroke="#FFD700" strokeWidth="1.2" fill="none"/>
-                <line x1="8" y1="16" x2="8" y2="24" stroke="#FFD700" strokeWidth="0.8"/>
-                <line x1="11" y1="16" x2="11" y2="24" stroke="#FFD700" strokeWidth="0.8"/>
-                <line x1="14" y1="16" x2="14" y2="24" stroke="#FFD700" strokeWidth="0.8"/>
-                <line x1="17" y1="16" x2="17" y2="24" stroke="#FFD700" strokeWidth="0.8"/>
-                <line x1="20" y1="16" x2="20" y2="24" stroke="#FFD700" strokeWidth="0.8"/>
-                <line x1="24" y1="16" x2="24" y2="24" stroke="#FFD700" strokeWidth="0.8"/>
-                <polygon points="6,14 16,8 26,14" stroke="#FFD700" strokeWidth="1.2" fill="none"/>
-              </svg>
-              <span className="text-xs font-bold">تحويل بنكي</span>
-              <span className="text-xs opacity-75 mt-0.5">BANK</span>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+                <div style={{
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '50%',
+                  backgroundColor: paymentMethod === 'bank' ? '#6C3EFF' : 'rgba(0,0,0,0.1)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <svg width="20" height="20" viewBox="0 0 32 32" fill="none">
+                    <rect x="6" y="14" width="20" height="12" stroke={paymentMethod === 'bank' ? '#FFFFFF' : '#6B7280'} strokeWidth="1.2" fill="none"/>
+                    <line x1="8" y1="16" x2="8" y2="24" stroke={paymentMethod === 'bank' ? '#FFFFFF' : '#6B7280'} strokeWidth="0.8"/>
+                    <line x1="11" y1="16" x2="11" y2="24" stroke={paymentMethod === 'bank' ? '#FFFFFF' : '#6B7280'} strokeWidth="0.8"/>
+                    <line x1="14" y1="16" x2="14" y2="24" stroke={paymentMethod === 'bank' ? '#FFFFFF' : '#6B7280'} strokeWidth="0.8"/>
+                    <line x1="17" y1="16" x2="17" y2="24" stroke={paymentMethod === 'bank' ? '#FFFFFF' : '#6B7280'} strokeWidth="0.8"/>
+                    <line x1="20" y1="16" x2="20" y2="24" stroke={paymentMethod === 'bank' ? '#FFFFFF' : '#6B7280'} strokeWidth="0.8"/>
+                    <line x1="24" y1="16" x2="24" y2="24" stroke={paymentMethod === 'bank' ? '#FFFFFF' : '#6B7280'} strokeWidth="0.8"/>
+                    <polygon points="6,14 16,8 26,14" stroke={paymentMethod === 'bank' ? '#FFFFFF' : '#6B7280'} strokeWidth="1.2" fill="none"/>
+                  </svg>
+                </div>
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{ fontSize: '14px', fontWeight: 'bold', color: paymentMethod === 'bank' ? '#6C3EFF' : '#1A1A1A', marginBottom: '2px' }}>تحويل مصرفي</div>
+                  <div style={{ fontSize: '11px', color: '#6B7280' }}>BANK</div>
+                </div>
+              </div>
             </button>
             <button
               onClick={() => {
                 vibrate();
                 setPaymentMethod('cash');
               }}
-              className={`py-3 px-3 rounded-xl font-medium transition-all duration-300 flex flex-col items-center justify-center ${
-                paymentMethod === 'cash'
-                  ? 'bg-gradient-to-br from-purple-700 to-purple-800 text-white shadow-lg'
-                  : 'bg-white/20 text-white/70 hover:bg-white/30 opacity-60'
-              }`}
               style={{
-                boxShadow: paymentMethod === 'cash' ? '0 4px 15px rgba(147, 51, 234, 0.4), 0 0 15px rgba(147, 51, 234, 0.2)' : '0 2px 8px rgba(0,0,0,0.1)',
-                transform: paymentMethod === 'cash' ? 'scale(1.01)' : 'scale(1)'
+                backgroundColor: '#FFFFFF',
+                border: paymentMethod === 'cash' ? '2px solid #6C3EFF' : '1px solid rgba(0,0,0,0.05)',
+                boxShadow: paymentMethod === 'cash' ? '0px 8px 20px rgba(108, 62, 255, 0.15), 0 0 20px rgba(108, 62, 255, 0.3)' : '0px 8px 20px rgba(0,0,0,0.05)',
+                borderRadius: '16px',
+                padding: '16px 12px',
+                transition: 'all 0.2s ease',
+                transform: 'scale(1)',
+                cursor: 'pointer',
+                opacity: paymentMethod === 'cash' ? 1 : 0.5
+              }}
+              onMouseDown={(e) => {
+                e.target.style.transform = 'scale(0.98)';
+              }}
+              onMouseUp={(e) => {
+                e.target.style.transform = 'scale(1)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.transform = 'scale(1)';
               }}
             >
-              <svg width="32" height="32" viewBox="0 0 32 32" fill="none" style={{ marginBottom: '4px' }}>
-                <rect x="5" y="10" width="22" height="16" rx="2" stroke="#FFD700" strokeWidth="1.2" fill="none"/>
-                <line x1="7" y1="13" x2="25" y2="13" stroke="#FFD700" strokeWidth="0.8"/>
-                <line x1="7" y1="16" x2="25" y2="16" stroke="#FFD700" strokeWidth="0.8"/>
-                <line x1="7" y1="19" x2="25" y2="19" stroke="#FFD700" strokeWidth="0.8"/>
-                <line x1="7" y1="22" x2="19" y2="22" stroke="#FFD700" strokeWidth="0.8"/>
-                <circle cx="22" cy="22" r="1.2" stroke="#FFD700" strokeWidth="0.8" fill="none"/>
-                <path d="M5 10 L5 7 L27 7 L27 10" stroke="#FFD700" strokeWidth="1.2" fill="none"/>
-              </svg>
-              <span className="text-xs font-bold">نقدي</span>
-              <span className="text-xs opacity-75 mt-0.5">CASH</span>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+                <div style={{
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '50%',
+                  backgroundColor: paymentMethod === 'cash' ? '#6C3EFF' : 'rgba(0,0,0,0.1)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <svg width="20" height="20" viewBox="0 0 32 32" fill="none">
+                    <rect x="5" y="10" width="22" height="16" rx="2" stroke={paymentMethod === 'cash' ? '#FFFFFF' : '#6B7280'} strokeWidth="1.2" fill="none"/>
+                    <line x1="7" y1="13" x2="25" y2="13" stroke={paymentMethod === 'cash' ? '#FFFFFF' : '#6B7280'} strokeWidth="0.8"/>
+                    <line x1="7" y1="16" x2="25" y2="16" stroke={paymentMethod === 'cash' ? '#FFFFFF' : '#6B7280'} strokeWidth="0.8"/>
+                    <line x1="7" y1="19" x2="25" y2="19" stroke={paymentMethod === 'cash' ? '#FFFFFF' : '#6B7280'} strokeWidth="0.8"/>
+                    <line x1="7" y1="22" x2="19" y2="22" stroke={paymentMethod === 'cash' ? '#FFFFFF' : '#6B7280'} strokeWidth="0.8"/>
+                    <circle cx="22" cy="22" r="1.2" stroke={paymentMethod === 'cash' ? '#FFFFFF' : '#6B7280'} strokeWidth="0.8" fill="none"/>
+                    <path d="M5 10 L5 7 L27 7 L27 10" stroke={paymentMethod === 'cash' ? '#FFFFFF' : '#6B7280'} strokeWidth="1.2" fill="none"/>
+                  </svg>
+                </div>
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{ fontSize: '14px', fontWeight: 'bold', color: paymentMethod === 'cash' ? '#6C3EFF' : '#1A1A1A', marginBottom: '2px' }}>نقدي</div>
+                  <div style={{ fontSize: '11px', color: '#6B7280' }}>CASH</div>
+                </div>
+              </div>
             </button>
           </div>
           <div className="mt-3">
             <div 
-              className="financial-price-display"
               style={{
-                background: 'rgba(255, 255, 255, 0.08)',
-                backdropFilter: 'blur(12px)',
-                border: '1px solid rgba(255, 255, 255, 0.15)',
-                borderRadius: '12px',
-                padding: '16px 20px',
-                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+                background: 'linear-gradient(135deg, #6C2EFF, #A855F7)',
+                borderRadius: '16px',
+                padding: '24px',
+                marginBottom: '24px',
+                boxShadow: '0px 8px 20px rgba(108, 46, 255, 0.15)',
+                textAlign: 'center',
                 position: 'relative',
                 overflow: 'hidden'
               }}
             >
               <div 
                 style={{
-                  fontSize: '11px',
-                  color: 'rgba(255, 255, 255, 0.6)',
-                  fontWeight: '500',
-                  marginBottom: '4px',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.5px'
+                  textAlign: 'center',
+                  marginBottom: '8px'
                 }}
               >
-                السعر الحالي
+                <div 
+                  style={{
+                    fontSize: '12px',
+                    color: '#E0E0E0',
+                    fontWeight: '500',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px',
+                    marginBottom: '2px'
+                  }}
+                >
+                  السعر الحالي
+                </div>
+                <div 
+                  style={{
+                    fontSize: '10px',
+                    color: '#E0E0E0',
+                    fontWeight: '400'
+                  }}
+                >
+                  Currency Price
+                </div>
               </div>
               <div 
                 style={{
                   display: 'flex',
-                  alignItems: 'baseline',
+                  flexDirection: 'column',
+                  alignItems: 'center',
                   justifyContent: 'center',
-                  gap: '6px',
-                  flexDirection: 'row-reverse',
-                  direction: 'rtl'
+                  gap: '4px'
                 }}
               >
                 <span 
                   style={{
-                    fontSize: '16px',
-                    color: 'rgba(255, 255, 255, 0.7)',
-                    fontWeight: '400',
-                    alignSelf: 'flex-end',
-                    marginBottom: '4px'
+                    fontSize: '48px',
+                    color: '#FFFFFF',
+                    fontWeight: '700',
+                    lineHeight: '1',
+                    fontFamily: 'system-ui, -apple-system, sans-serif'
+                  }}
+                >
+                  {getCurrentPrice()}
+                </span>
+                <span 
+                  style={{
+                    fontSize: '18px',
+                    color: '#FFFFFF',
+                    fontWeight: '500'
                   }}
                 >
                   دينار
                 </span>
                 <span 
                   style={{
-                    fontSize: '32px',
-                    color: '#10b981',
-                    fontWeight: '700',
-                    lineHeight: '1',
-                    textShadow: '0 0 20px rgba(16, 185, 129, 0.3)',
-                    fontFamily: 'system-ui, -apple-system, sans-serif'
+                    fontSize: '14px',
+                    color: '#E0E0E0',
+                    fontWeight: '400'
                   }}
                 >
-                  {getCurrentPrice()}
+                  LYD
                 </span>
               </div>
             </div>
@@ -1144,68 +1353,219 @@ ${formData.phone}
 
         {/* Amount Input - Only show for USDT */}
         {currency === 'usdt' && (
-          <div className="card-primary mb-6">
-            <label className="block text-white font-medium mb-2">
+          <div className="mb-6" style={{
+            backgroundColor: '#FFFFFF',
+            border: '1px solid rgba(0,0,0,0.05)',
+            boxShadow: '0px 8px 20px rgba(0,0,0,0.05)',
+            borderRadius: '16px',
+            padding: '20px'
+          }}>
+            <label style={{ 
+              display: 'block',
+              fontSize: '16px',
+              fontWeight: 'bold',
+              color: '#111111',
+              marginBottom: '12px'
+            }}>
               المبلغ (USDT)
             </label>
-            <input
-              type="number"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              placeholder="أدخل المبلغ"
-              className="input-field w-full"
-            />
+            <div style={{ position: 'relative' }}>
+              <div style={{
+                position: 'absolute',
+                left: '16px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                width: '24px',
+                height: '24px',
+                borderRadius: '50%',
+                backgroundColor: '#6C3EFF',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                zIndex: 1
+              }}>
+                <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#FFFFFF' }}>T</span>
+              </div>
+              <input
+                type="number"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                placeholder="أدخل المبلغ"
+                style={{
+                  width: '100%',
+                  padding: '14px 14px 14px 52px',
+                  border: '2px solid #6C3EFF',
+                  borderRadius: '14px',
+                  fontSize: '16px',
+                  color: '#111111',
+                  backgroundColor: '#FFFFFF',
+                  outline: 'none',
+                  transition: 'all 0.2s ease'
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = '#6C3EFF';
+                  e.target.style.boxShadow = '0 0 0 3px rgba(108, 62, 255, 0.1)';
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = 'rgba(0,0,0,0.1)';
+                  e.target.style.boxShadow = 'none';
+                }}
+              />
+            </div>
           </div>
         )}
 
         {/* Amount Input - Only show for USD */}
         {currency === 'usd' && (
-          <div className="card-primary mb-6">
-            <label className="block text-white font-medium mb-2">
+          <div className="mb-6" style={{
+            backgroundColor: '#FFFFFF',
+            border: '1px solid rgba(0,0,0,0.05)',
+            boxShadow: '0px 8px 20px rgba(0,0,0,0.05)',
+            borderRadius: '16px',
+            padding: '20px'
+          }}>
+            <label style={{ 
+              display: 'block',
+              fontSize: '16px',
+              fontWeight: 'bold',
+              color: '#111111',
+              marginBottom: '12px'
+            }}>
               المبلغ (USD)
             </label>
-            <input
-              type="number"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              placeholder="أدخل المبلغ (USD)"
-              className="input-field w-full"
-            />
+            <div style={{ position: 'relative' }}>
+              <div style={{
+                position: 'absolute',
+                left: '16px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                width: '24px',
+                height: '24px',
+                borderRadius: '50%',
+                backgroundColor: '#6C3EFF',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                zIndex: 1
+              }}>
+                <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#FFFFFF' }}>$</span>
+              </div>
+              <input
+                type="number"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                placeholder="أدخل المبلغ (USD)"
+                style={{
+                  width: '100%',
+                  padding: '14px 14px 14px 52px',
+                  border: '2px solid #6C3EFF',
+                  borderRadius: '14px',
+                  fontSize: '16px',
+                  color: '#111111',
+                  backgroundColor: '#FFFFFF',
+                  outline: 'none',
+                  transition: 'all 0.2s ease'
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = '#6C3EFF';
+                  e.target.style.boxShadow = '0 0 0 3px rgba(108, 62, 255, 0.1)';
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = 'rgba(0,0,0,0.1)';
+                  e.target.style.boxShadow = 'none';
+                }}
+              />
+            </div>
           </div>
         )}
 
         {/* Amount Input - Only show for EUR */}
         {currency === 'eur' && (
-          <div className="card-primary mb-6">
-            <label className="block text-white font-medium mb-2">
+          <div className="mb-6" style={{
+            backgroundColor: '#FFFFFF',
+            border: '1px solid rgba(0,0,0,0.05)',
+            boxShadow: '0px 8px 20px rgba(0,0,0,0.05)',
+            borderRadius: '16px',
+            padding: '20px'
+          }}>
+            <label style={{ 
+              display: 'block',
+              fontSize: '16px',
+              fontWeight: 'bold',
+              color: '#111111',
+              marginBottom: '12px'
+            }}>
               المبلغ (EUR)
             </label>
-            <input
-              type="number"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              placeholder="أدخل المبلغ (EUR)"
-              className="input-field w-full"
-            />
+            <div style={{ position: 'relative' }}>
+              <div style={{
+                position: 'absolute',
+                left: '16px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                width: '24px',
+                height: '24px',
+                borderRadius: '50%',
+                backgroundColor: '#6C3EFF',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                zIndex: 1
+              }}>
+                <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#FFFFFF' }}>?</span>
+              </div>
+              <input
+                type="number"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                placeholder="أدخل المبلغ (EUR)"
+                style={{
+                  width: '100%',
+                  padding: '14px 14px 14px 52px',
+                  border: '2px solid #6C3EFF',
+                  borderRadius: '14px',
+                  fontSize: '16px',
+                  color: '#111111',
+                  backgroundColor: '#FFFFFF',
+                  outline: 'none',
+                  transition: 'all 0.2s ease'
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = '#6C3EFF';
+                  e.target.style.boxShadow = '0 0 0 3px rgba(108, 62, 255, 0.1)';
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = 'rgba(0,0,0,0.1)';
+                  e.target.style.boxShadow = 'none';
+                }}
+              />
+            </div>
           </div>
         )}
 
         {/* Total Card */}
         {amount && (
-          <div className="bg-gradient-to-r from-green-600 to-green-700 rounded-xl p-6 mb-6 shadow-xl">
-            <div className="text-center">
-              <p className="text-white/80 text-sm mb-1">الإجمالي بالدينار الليبي</p>
-              <p className="text-white text-3xl font-bold mb-2">
-                {calculateTotal().toFixed(2)} د.ل
+          <div style={{
+            background: 'linear-gradient(135deg, #6C2EFF, #A855F7)',
+            borderRadius: '16px',
+            padding: '24px',
+            marginBottom: '24px',
+            boxShadow: '0px 8px 20px rgba(108, 46, 255, 0.15)',
+            textAlign: 'center'
+          }}>
+            <div>
+              <p style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '14px', marginBottom: '8px' }}>Total in Libyan Dinar</p>
+              <p style={{ color: '#FFFFFF', fontSize: '32px', fontWeight: '700', marginBottom: '8px', lineHeight: '1' }}>
+                {calculateTotal().toFixed(2)} LYD
               </p>
-              <p className="text-white/70 text-xs">يشمل عمولة 2%</p>
+              <p style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '12px' }}>Includes 2% commission</p>
             </div>
           </div>
         )}
 
         {/* Dynamic Form */}
         <div className="card-primary mb-6">
-          <h3 className="text-lg font-bold text-white mb-4">
+          <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: '#111111', marginBottom: '16px' }}>
             {operation === 'buy' ? 'بيانات الشراء' : 'بيانات البيع'}
           </h3>
 
@@ -1216,7 +1576,7 @@ ${formData.phone}
                   {/* Payment Methods (for USDT buy) */}
                   <div className="mb-4">
                     <div style={{ marginTop: '10px', marginBottom: '20px' }}>
-                      <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px', textAlign: 'right', marginBottom: '12px' }}>طريقة الدفع</p>
+                      <p style={{ color: '#111111', fontSize: '13px', textAlign: 'right', marginBottom: '12px' }}>DEENAR</p>
                       <div className="payment-auto-slider" style={{
                         background: 'rgba(255, 255, 255, 0.08)',
                         backdropFilter: 'blur(10px)',
@@ -1267,7 +1627,7 @@ ${formData.phone}
                         alignItems: 'center',
                         cursor: 'pointer',
                         fontSize: '14px',
-                        color: '#fff'
+                        color: '#111111'
                       }}>
                         <input
                           type="checkbox"
@@ -1287,7 +1647,7 @@ ${formData.phone}
                         style={{
                           background: 'rgba(255, 255, 255, 0.1)',
                           border: '1px solid rgba(255, 255, 255, 0.2)',
-                          color: '#fff',
+                          color: '#111111',
                           padding: '6px 12px',
                           borderRadius: '8px',
                           fontSize: '12px',
@@ -1386,25 +1746,39 @@ ${formData.phone}
 
                   {/* User Wallet Data */}
                   <div className="mb-4 relative">
-                    <label className="block text-white/70 text-sm mb-2">عنوان المحفظة</label>
+                    <label style={{ display: 'block', color: '#111111', fontSize: '14px', marginBottom: '8px' }}>عنوان المحفظة</label>
                     <input
                         type="text"
                         value={formData.walletAddress}
                         placeholder={walletData.address}
-                        className="input-field w-full"
-                        onFocus={() => {
-                          setShowWalletTooltip(true);
-                          const timer = setTimeout(() => {
-                            setShowWalletTooltip(false);
-                          }, 3000);
-                          setTooltipTimer(timer);
-                        }}
-                        onBlur={() => {
-                          setShowWalletTooltip(false);
-                          if (tooltipTimer) {
-                            clearTimeout(tooltipTimer);
-                          }
-                        }}
+                        style={{
+                    width: '100%',
+                    padding: '14px',
+                    border: '2px solid #6C3EFF',
+                    borderRadius: '14px',
+                    fontSize: '16px',
+                    color: '#111111',
+                    backgroundColor: '#FFFFFF',
+                    outline: 'none',
+                    transition: 'all 0.2s ease'
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = '#6C3EFF';
+                    e.target.style.boxShadow = '0 0 0 3px rgba(108, 62, 255, 0.1)';
+                    setShowWalletTooltip(true);
+                    const timer = setTimeout(() => {
+                      setShowWalletTooltip(false);
+                    }, 3000);
+                    setTooltipTimer(timer);
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = '#6C3EFF';
+                    e.target.style.boxShadow = 'none';
+                    setShowWalletTooltip(false);
+                    if (tooltipTimer) {
+                      clearTimeout(tooltipTimer);
+                    }
+                  }}
                         onChange={(e) => {
                           setFormData(prev => ({ ...prev, walletAddress: e.target.value }));
                           setShowWalletTooltip(false);
@@ -1435,7 +1809,7 @@ ${formData.phone}
                           backgroundColor: 'white',
                           color: '#333',
                           padding: '12px 16px',
-                          borderRadius: '12px',
+                          borderRadius: '14px',
                           fontSize: '14px',
                           fontWeight: 'bold',
                           boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
@@ -1467,19 +1841,20 @@ ${formData.phone}
                     )}
                   </div>
                   <div className="mb-4 relative" ref={dropdownRef} style={{ zIndex: 9999 }}>
-                    <label className="block text-white/70 text-sm mb-2">اختار الشبكة</label>
+                    <label style={{ display: 'block', color: '#111111', fontSize: '14px', marginBottom: '8px' }}>اختار الشبكة</label>
                     <div 
                       onClick={() => setShowNetworkDropdown(!showNetworkDropdown)}
                       className="bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white cursor-pointer"
                       style={{
                         backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                        border: '1px solid rgba(255, 255, 255, 0.2)',
-                        borderRadius: '12px',
-                        padding: '12px 16px',
-                        color: 'white',
+                        border: '2px solid #6C3EFF',
+                        borderRadius: '14px',
+                        padding: '14px 16px',
+                        color: '#111111',
                         fontSize: '14px',
                         position: 'relative',
-                        zIndex: 9999
+                        zIndex: 9999,
+                        boxShadow: '0 0 12px rgba(108,62,255,0.25)'
                       }}
                     >
                       <span>{selectedNetwork === 'TRC20' ? 'TRC20 (TRON)' : selectedNetwork === 'ERC20' ? 'ERC20 (Ethereum)' : 'BEP20 (BSC)'}</span>
@@ -1494,7 +1869,7 @@ ${formData.phone}
                           right: 0,
                           background: 'linear-gradient(135deg, #6d28d9, #9333ea)',
                           border: '1px solid rgba(255, 255, 255, 0.2)',
-                          borderRadius: '12px',
+                          borderRadius: '14px',
                           marginTop: '4px',
                           zIndex: 9998,
                           overflow: 'hidden',
@@ -1505,7 +1880,7 @@ ${formData.phone}
                           onClick={() => { setSelectedNetwork('TRC20'); setShowNetworkDropdown(false); }}
                           style={{
                             padding: '12px 16px',
-                            color: 'white',
+                            color: '#111111',
                             fontSize: '14px',
                             cursor: 'pointer',
                             backgroundColor: selectedNetwork === 'TRC20' ? 'rgba(255, 255, 255, 0.2)' : 'transparent',
@@ -1528,7 +1903,7 @@ ${formData.phone}
                           onClick={() => { setSelectedNetwork('ERC20'); setShowNetworkDropdown(false); }}
                           style={{
                             padding: '12px 16px',
-                            color: 'white',
+                            color: '#111111',
                             fontSize: '14px',
                             cursor: 'pointer',
                             backgroundColor: selectedNetwork === 'ERC20' ? 'rgba(255, 255, 255, 0.2)' : 'transparent',
@@ -1551,7 +1926,7 @@ ${formData.phone}
                           onClick={() => { setSelectedNetwork('BEP20'); setShowNetworkDropdown(false); }}
                           style={{
                             padding: '12px 16px',
-                            color: 'white',
+                            color: '#111111',
                             fontSize: '14px',
                             cursor: 'pointer',
                             backgroundColor: selectedNetwork === 'BEP20' ? 'rgba(255, 255, 255, 0.2)' : 'transparent',
@@ -1579,7 +1954,7 @@ ${formData.phone}
                   {/* Payment Methods (for USD/EUR buy) */}
                   <div className="mb-4">
                     <div style={{ marginTop: '10px', marginBottom: '20px' }}>
-                      <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px', textAlign: 'right', marginBottom: '12px' }}>طريقة الدفع</p>
+                      <p style={{ color: '#111111', fontSize: '13px', textAlign: 'right', marginBottom: '12px' }}>DEENAR</p>
                       <div className="payment-auto-slider" style={{
                         background: 'rgba(255, 255, 255, 0.08)',
                         backdropFilter: 'blur(10px)',
@@ -1630,7 +2005,7 @@ ${formData.phone}
                         alignItems: 'center',
                         cursor: 'pointer',
                         fontSize: '14px',
-                        color: '#fff'
+                        color: '#111111'
                       }}>
                         <input
                           type="checkbox"
@@ -1650,7 +2025,7 @@ ${formData.phone}
                         style={{
                           background: 'rgba(255, 255, 255, 0.1)',
                           border: '1px solid rgba(255, 255, 255, 0.2)',
-                          color: '#fff',
+                          color: '#111111',
                           padding: '6px 12px',
                           borderRadius: '8px',
                           fontSize: '12px',
@@ -1749,54 +2124,129 @@ ${formData.phone}
 
                   {/* User Full Name */}
                   <div className="mb-4">
-                    <label className="block text-white/70 text-sm mb-2">الاسم بالكامل</label>
+                    <label style={{ display: 'block', color: '#111111', fontSize: '14px', marginBottom: '8px' }}>الاسم بالكامل</label>
                     <input
                       type="text"
                       value={formData.fullName}
                       onChange={(e) => setFormData(prev => ({ ...prev, fullName: e.target.value }))}
                       placeholder="أدخل اسمك الكامل"
-                      className="input-field w-full"
-                      style={{ textAlign: 'right', direction: 'rtl' }}
-                      required
-                    />
-                  </div>
+                      style={{
+                    width: '100%',
+                    padding: '14px',
+                    border: '2px solid #6C3EFF',
+                    borderRadius: '14px',
+                    fontSize: '16px',
+                    color: '#111111',
+                    backgroundColor: '#FFFFFF',
+                    outline: 'none',
+                    transition: 'all 0.2s ease',
+                    textAlign: 'right',
+                    direction: 'rtl'
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = '#6C3EFF';
+                    e.target.style.boxShadow = '0 0 0 3px rgba(108, 62, 255, 0.1)';
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = '#6C3EFF';
+                    e.target.style.boxShadow = 'none';
+                  }}
+                  required
+                />
+              </div>
 
                   {/* Transfer Date */}
                   <div className="mb-4">
-                    <label className="block text-white/70 text-sm mb-2">حدد التاريخ</label>
+                    <label style={{ display: 'block', color: '#111111', fontSize: '14px', marginBottom: '8px' }}>حدد التاريخ</label>
                     <input
                       type="date"
                       value={formData.transferDate}
                       onChange={(e) => setFormData(prev => ({ ...prev, transferDate: e.target.value }))}
-                      className="input-field w-full"
-                      required
-                    />
-                  </div>
+                      style={{
+                    width: '100%',
+                    padding: '14px',
+                    border: '2px solid #6C3EFF',
+                    borderRadius: '14px',
+                    fontSize: '16px',
+                    color: '#111111',
+                    backgroundColor: '#FFFFFF',
+                    outline: 'none',
+                    transition: 'all 0.2s ease'
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = '#6C3EFF';
+                    e.target.style.boxShadow = '0 0 0 3px rgba(108, 62, 255, 0.1)';
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = '#6C3EFF';
+                    e.target.style.boxShadow = 'none';
+                  }}
+                  required
+                />
+              </div>
 
                   {/* Transfer Time */}
                   <div className="mb-4">
-                    <label className="block text-white/70 text-sm mb-2">حدد الوقت</label>
+                    <label style={{ display: 'block', color: '#111111', fontSize: '14px', marginBottom: '8px' }}>حدد الوقت</label>
                     <input
                       type="time"
                       value={formData.transferTime}
                       onChange={(e) => setFormData(prev => ({ ...prev, transferTime: e.target.value }))}
-                      className="input-field w-full"
-                      required
-                    />
-                  </div>
+                      style={{
+                    width: '100%',
+                    padding: '14px',
+                    border: '2px solid #6C3EFF',
+                    borderRadius: '14px',
+                    fontSize: '16px',
+                    color: '#111111',
+                    backgroundColor: '#FFFFFF',
+                    outline: 'none',
+                    transition: 'all 0.2s ease'
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = '#6C3EFF';
+                    e.target.style.boxShadow = '0 0 0 3px rgba(108, 62, 255, 0.1)';
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = '#6C3EFF';
+                    e.target.style.boxShadow = 'none';
+                  }}
+                  required
+                />
+              </div>
                 </>
               )}
 
               {/* Phone Number (common for all currencies) */}
               <div className="mb-4">
-                <label className="block text-white/70 text-sm mb-2">رقم الهاتف</label>
+                <label style={{ display: 'block', color: '#111111', fontSize: '14px', marginBottom: '8px' }}>رقم الهاتف</label>
                 <input
                   type="tel"
                   value={formData.phone}
                   onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
                   placeholder="09XXXXXXXX"
-                  className="input-field w-full"
-                  style={{ textAlign: 'right', direction: 'rtl' }}
+                  style={{
+                    width: '100%',
+                    padding: '14px',
+                    border: '2px solid #6C3EFF',
+                    borderRadius: '14px',
+                    fontSize: '16px',
+                    color: '#111111',
+                    backgroundColor: '#FFFFFF',
+                    outline: 'none',
+                    transition: 'all 0.2s ease',
+                    textAlign: 'right',
+                    direction: 'rtl',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = '#6C3EFF';
+                    e.target.style.boxShadow = '0 0 0 3px rgba(108, 62, 255, 0.1)';
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = '#6C3EFF';
+                    e.target.style.boxShadow = '0 4px 12px rgba(0,0,0,0.05)';
+                  }}
                   required
                 />
               </div>
@@ -1808,7 +2258,7 @@ ${formData.phone}
                 <>
                   {/* Wallet Data (for USDT sell) */}
                   <div className="mb-4">
-                    <label className="block text-white/70 text-sm mb-2">محفظتنا</label>
+                    <label style={{ display: 'block', color: '#111111', fontSize: '14px', marginBottom: '8px' }}>محفظتنا</label>
                     <div className="space-y-2">
                       <div className="bg-white/5 p-2 rounded-lg">
                         <div className="flex items-center justify-between">
@@ -1835,23 +2285,59 @@ ${formData.phone}
 
                   {/* User Bank Data */}
                   <div className="mb-4">
-                    <label className="block text-white/70 text-sm mb-2">الحساب البنكي</label>
+                    <label style={{ display: 'block', color: '#111111', fontSize: '14px', marginBottom: '8px' }}>الحساب البنكي</label>
                     <input
                       type="text"
                       value={formData.bankAccount}
                       onChange={(e) => setFormData(prev => ({ ...prev, bankAccount: e.target.value }))}
                       placeholder="أدخل رقم الحساب"
-                      className="input-field w-full"
+                      style={{
+                    width: '100%',
+                    padding: '14px',
+                    border: '2px solid #6C3EFF',
+                    borderRadius: '14px',
+                    fontSize: '16px',
+                    color: '#111111',
+                    backgroundColor: '#FFFFFF',
+                    outline: 'none',
+                    transition: 'all 0.2s ease'
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = '#6C3EFF';
+                    e.target.style.boxShadow = '0 0 0 3px rgba(108, 62, 255, 0.1)';
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = '#6C3EFF';
+                    e.target.style.boxShadow = 'none';
+                  }}
                     />
                   </div>
                   <div className="mb-4">
-                    <label className="block text-white/70 text-sm mb-2">الآيبان</label>
+                    <label style={{ display: 'block', color: '#111111', fontSize: '14px', marginBottom: '8px' }}>الآيبان</label>
                     <input
                       type="text"
                       value={formData.iban}
                       onChange={(e) => setFormData(prev => ({ ...prev, iban: e.target.value }))}
                       placeholder="أدخل الآيبان"
-                      className="input-field w-full"
+                      style={{
+                    width: '100%',
+                    padding: '14px',
+                    border: '2px solid #6C3EFF',
+                    borderRadius: '14px',
+                    fontSize: '16px',
+                    color: '#111111',
+                    backgroundColor: '#FFFFFF',
+                    outline: 'none',
+                    transition: 'all 0.2s ease'
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = '#6C3EFF';
+                    e.target.style.boxShadow = '0 0 0 3px rgba(108, 62, 255, 0.1)';
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = '#6C3EFF';
+                    e.target.style.boxShadow = 'none';
+                  }}
                     />
                   </div>
                 </>
@@ -1864,55 +2350,130 @@ ${formData.phone}
 
                   {/* User Full Name */}
                   <div className="mb-4">
-                    <label className="block text-white/70 text-sm mb-2">الاسم بالكامل</label>
+                    <label style={{ display: 'block', color: '#111111', fontSize: '14px', marginBottom: '8px' }}>الاسم بالكامل</label>
                     <input
                       type="text"
                       value={formData.fullName}
                       onChange={(e) => setFormData(prev => ({ ...prev, fullName: e.target.value }))}
                       placeholder="أدخل اسمك الكامل"
-                      className="input-field w-full"
-                      style={{ textAlign: 'right', direction: 'rtl' }}
-                      required
-                    />
-                  </div>
+                      style={{
+                    width: '100%',
+                    padding: '14px',
+                    border: '2px solid #6C3EFF',
+                    borderRadius: '14px',
+                    fontSize: '16px',
+                    color: '#111111',
+                    backgroundColor: '#FFFFFF',
+                    outline: 'none',
+                    transition: 'all 0.2s ease',
+                    textAlign: 'right',
+                    direction: 'rtl'
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = '#6C3EFF';
+                    e.target.style.boxShadow = '0 0 0 3px rgba(108, 62, 255, 0.1)';
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = '#6C3EFF';
+                    e.target.style.boxShadow = 'none';
+                  }}
+                  required
+                />
+              </div>
 
                   {/* Transfer Time */}
                   <div className="mb-4">
-                    <label className="block text-white/70 text-sm mb-2">حدد الوقت</label>
+                    <label style={{ display: 'block', color: '#111111', fontSize: '14px', marginBottom: '8px' }}>حدد الوقت</label>
                     <input
                       type="time"
                       value={formData.transferTime}
                       onChange={(e) => setFormData(prev => ({ ...prev, transferTime: e.target.value }))}
-                      className="input-field w-full"
-                      required
-                    />
-                  </div>
+                      style={{
+                    width: '100%',
+                    padding: '14px',
+                    border: '2px solid #6C3EFF',
+                    borderRadius: '14px',
+                    fontSize: '16px',
+                    color: '#111111',
+                    backgroundColor: '#FFFFFF',
+                    outline: 'none',
+                    transition: 'all 0.2s ease'
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = '#6C3EFF';
+                    e.target.style.boxShadow = '0 0 0 3px rgba(108, 62, 255, 0.1)';
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = '#6C3EFF';
+                    e.target.style.boxShadow = 'none';
+                  }}
+                  required
+                />
+              </div>
 
                   {/* Amount Input */}
                   <div className="mb-4">
-                    <label className="block text-white/70 text-sm mb-2">المبلغ</label>
+                    <label style={{ display: 'block', color: '#111111', fontSize: '14px', marginBottom: '8px' }}>المبلغ</label>
                     <input
                       type="number"
                       value={amount}
                       onChange={(e) => setAmount(e.target.value)}
                       placeholder={`أدخل المبلغ (${currency.toUpperCase()})`}
-                      className="input-field w-full"
-                      required
-                    />
-                  </div>
+                      style={{
+                    width: '100%',
+                    padding: '14px',
+                    border: '2px solid #6C3EFF',
+                    borderRadius: '14px',
+                    fontSize: '16px',
+                    color: '#111111',
+                    backgroundColor: '#FFFFFF',
+                    outline: 'none',
+                    transition: 'all 0.2s ease'
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = '#6C3EFF';
+                    e.target.style.boxShadow = '0 0 0 3px rgba(108, 62, 255, 0.1)';
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = '#6C3EFF';
+                    e.target.style.boxShadow = 'none';
+                  }}
+                  required
+                />
+              </div>
                 </>
               )}
 
               {/* Phone Number (common for all currencies) */}
               <div className="mb-4">
-                <label className="block text-white/70 text-sm mb-2">رقم الهاتف</label>
+                <label style={{ display: 'block', color: '#111111', fontSize: '14px', marginBottom: '8px' }}>رقم الهاتف</label>
                 <input
                   type="tel"
                   value={formData.phone}
                   onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
                   placeholder="09XXXXXXXX"
-                  className="input-field w-full"
-                  style={{ textAlign: 'right', direction: 'rtl' }}
+                  style={{
+                    width: '100%',
+                    padding: '14px',
+                    border: '2px solid #6C3EFF',
+                    borderRadius: '14px',
+                    fontSize: '16px',
+                    color: '#111111',
+                    backgroundColor: '#FFFFFF',
+                    outline: 'none',
+                    transition: 'all 0.2s ease',
+                    textAlign: 'right',
+                    direction: 'rtl',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = '#6C3EFF';
+                    e.target.style.boxShadow = '0 0 0 3px rgba(108, 62, 255, 0.1)';
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = '#6C3EFF';
+                    e.target.style.boxShadow = '0 4px 12px rgba(0,0,0,0.05)';
+                  }}
                   required
                 />
               </div>
@@ -1922,13 +2483,19 @@ ${formData.phone}
 
         {/* Terms & Conditions Checkbox */}
         {(currency === 'usdt' || currency === 'usd' || currency === 'eur') && (
-          <div className="card-primary mb-6">
+          <div className="mb-6" style={{
+            backgroundColor: '#FFFFFF',
+            border: '1px solid rgba(0,0,0,0.05)',
+            borderRadius: '14px',
+            padding: '12px',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
+          }}>
             <label style={{
               display: 'flex',
               alignItems: 'center',
               gap: '8px',
               cursor: 'pointer',
-              color: 'white',
+              color: '#333333',
               fontSize: '14px'
             }}>
               <input
@@ -1943,11 +2510,7 @@ ${formData.phone}
               />
               <span>أوافق على </span>
               <span
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setShowTermsModal(true);
-                }}
+                onClick={() => setShowTermsModal(true)}
                 style={{
                   color: '#9333EA',
                   textDecoration: 'underline',
@@ -1982,9 +2545,19 @@ ${formData.phone}
         )}
 
         {/* Bottom Navigation */}
-        <div className="fixed bottom-0 left-0 right-0 bg-gradient-to-t from-purple-900 via-purple-900/95 to-purple-800/90 backdrop-blur-xl border-t border-white/10 rounded-t-3xl shadow-2xl">
-          <div className="max-w-mobile mx-auto px-6 py-4">
-            <div className="flex justify-around items-center">
+        <div style={{
+          position: 'fixed',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          backgroundColor: '#FFFFFF',
+          borderTop: '1px solid rgba(0,0,0,0.05)',
+          boxShadow: '0px 8px 20px rgba(0,0,0,0.05)',
+          borderRadius: '16px 16px 0 0',
+          padding: '16px 0'
+        }}>
+          <div style={{ maxWidth: '400px', margin: '0 auto', padding: '0 20px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
               {/* Weekly Draw */}
               <a
                 href="#"
@@ -1992,9 +2565,29 @@ ${formData.phone}
                   e.preventDefault();
                   setShowDraw(true);
                 }}
-                className="flex items-center justify-center py-3 px-4 rounded-xl transition-all duration-200 hover:scale-105 active:scale-95 text-gray-400 hover:text-white"
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: '4px',
+                  padding: '8px 12px',
+                  borderRadius: '14px',
+                  transition: 'all 0.2s ease',
+                  textDecoration: 'none',
+                  color: '#6B7280'
+                }}
+                onMouseDown={(e) => {
+                  e.target.style.transform = 'scale(0.98)';
+                }}
+                onMouseUp={(e) => {
+                  e.target.style.transform = 'scale(1)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.transform = 'scale(1)';
+                }}
               >
-                <div style={{ fontSize: '32px' }}>🎁</div>
+                <div style={{ fontSize: '24px' }}>?</div>
+                <span style={{ fontSize: '11px', fontWeight: 'medium' }}>Draw</span>
               </a>
 
               {/* Market - Active */}
@@ -2002,20 +2595,35 @@ ${formData.phone}
                 href="https://coinmarketcap.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex flex-col items-center gap-1 py-3 px-4 rounded-2xl transition-all duration-200 hover:scale-105 active:scale-95 relative"
                 style={{
-                  background: 'rgba(255,255,255,0.08)',
-                  backdropFilter: 'blur(12px)',
-                  transform: 'translateY(-4px)',
-                  boxShadow: '0 8px 32px rgba(0,0,0,0.3), 0 4px 12px rgba(147,51,234,0.2)'
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: '4px',
+                  padding: '8px 12px',
+                  borderRadius: '14px',
+                  transition: 'all 0.2s ease',
+                  textDecoration: 'none',
+                  backgroundColor: 'rgba(108, 62, 255, 0.1)',
+                  color: '#6C3EFF',
+                  transform: 'translateY(-2px)',
+                  boxShadow: '0 4px 12px rgba(108, 62, 255, 0.2)'
+                }}
+                onMouseDown={(e) => {
+                  e.target.style.transform = 'translateY(-2px) scale(0.98)';
+                }}
+                onMouseUp={(e) => {
+                  e.target.style.transform = 'translateY(-2px) scale(1)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.transform = 'translateY(-2px) scale(1)';
                 }}
               >
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M3 3v18h18"/>
                   <path d="M7 16l4-8 4 6 4-4"/>
                 </svg>
-                <span className="text-xs font-medium text-white">Market</span>
-                <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-blue-400 rounded-full"></div>
+                <span style={{ fontSize: '11px', fontWeight: 'medium' }}>Market</span>
               </a>
 
               {/* Facebook */}
@@ -2023,33 +2631,92 @@ ${formData.phone}
                 href="https://www.facebook.com/share/1CHFuXq3zt/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex flex-col items-center gap-1 py-2 px-3 rounded-xl transition-all duration-200 hover:scale-105 active:scale-95 text-gray-400 hover:text-white"
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: '4px',
+                  padding: '8px 12px',
+                  borderRadius: '14px',
+                  transition: 'all 0.2s ease',
+                  textDecoration: 'none',
+                  color: '#6B7280'
+                }}
+                onMouseDown={(e) => {
+                  e.target.style.transform = 'scale(0.98)';
+                }}
+                onMouseUp={(e) => {
+                  e.target.style.transform = 'scale(1)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.transform = 'scale(1)';
+                }}
               >
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
                 </svg>
-                <span className="text-xs font-medium">Facebook</span>
+                <span style={{ fontSize: '11px', fontWeight: 'medium' }}>Facebook</span>
               </a>
 
               {/* Privacy */}
               <button
                 onClick={() => setShowPrivacyModal(true)}
-                className="flex flex-col items-center gap-1 py-2 px-3 rounded-xl transition-all duration-200 hover:scale-105 active:scale-95 text-gray-400 hover:text-white"
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: '4px',
+                  padding: '8px 12px',
+                  borderRadius: '14px',
+                  transition: 'all 0.2s ease',
+                  border: 'none',
+                  backgroundColor: 'transparent',
+                  color: '#6B7280',
+                  cursor: 'pointer'
+                }}
+                onMouseDown={(e) => {
+                  e.target.style.transform = 'scale(0.98)';
+                }}
+                onMouseUp={(e) => {
+                  e.target.style.transform = 'scale(1)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.transform = 'scale(1)';
+                }}
               >
-                <span className="text-xl">🔐</span>
-                <span className="text-xs font-medium">Privacy</span>
+                <span style={{ fontSize: '20px' }}>?</span>
+                <span style={{ fontSize: '11px', fontWeight: 'medium' }}>Privacy</span>
               </button>
 
               {/* Mail */}
               <a
                 href="mailto:elarenha@gmail.com"
-                className="flex flex-col items-center gap-1 py-2 px-3 rounded-xl transition-all duration-200 hover:scale-105 active:scale-95 text-gray-400 hover:text-white"
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: '4px',
+                  padding: '8px 12px',
+                  borderRadius: '14px',
+                  transition: 'all 0.2s ease',
+                  textDecoration: 'none',
+                  color: '#6B7280'
+                }}
+                onMouseDown={(e) => {
+                  e.target.style.transform = 'scale(0.98)';
+                }}
+                onMouseUp={(e) => {
+                  e.target.style.transform = 'scale(1)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.transform = 'scale(1)';
+                }}
               >
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <rect x="2" y="4" width="20" height="16" rx="2"/>
                   <path d="m22 7-10 5L2 7"/>
                 </svg>
-                <span className="text-xs font-medium">Mail</span>
+                <span style={{ fontSize: '11px', fontWeight: 'medium' }}>Mail</span>
               </a>
             </div>
           </div>
