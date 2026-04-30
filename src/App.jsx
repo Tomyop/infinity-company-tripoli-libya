@@ -892,7 +892,7 @@ ${formData.phone}
           borderRadius: '16px',
           padding: '20px'
         }}>
-          <h2 style={{ fontSize: '18px', fontWeight: 'bold', color: '#1A1A1A', marginBottom: '16px', textAlign: 'center' }}>اختر العملية</h2>
+          <h2 style={{ fontSize: '18px', fontWeight: 'bold', color: '#1A1A1A', marginBottom: '16px', textAlign: 'right' }}>اختر العملية</h2>
           <div className="grid grid-cols-2 gap-4">
             <button
               onClick={() => {
@@ -1276,9 +1276,7 @@ ${formData.phone}
                 padding: '24px',
                 marginBottom: '24px',
                 boxShadow: '0px 8px 20px rgba(108, 46, 255, 0.15)',
-                textAlign: 'center',
-                position: 'relative',
-                overflow: 'hidden'
+                textAlign: 'center'
               }}
             >
               <div 
@@ -2612,7 +2610,7 @@ ${formData.phone}
                   e.target.style.transform = 'scale(1)';
                 }}
               >
-                <div style={{ fontSize: '24px' }}>?</div>
+                <div style={{ fontSize: '24px' }}>🎁</div>
                 <span style={{ fontSize: '11px', fontWeight: 'medium' }}>Draw</span>
               </a>
 
@@ -2678,8 +2676,8 @@ ${formData.phone}
                   e.target.style.transform = 'scale(1)';
                 }}
               >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="#1877F2">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
                 </svg>
                 <span style={{ fontSize: '11px', fontWeight: 'medium' }}>Facebook</span>
               </a>
@@ -2710,7 +2708,10 @@ ${formData.phone}
                   e.target.style.transform = 'scale(1)';
                 }}
               >
-                <span style={{ fontSize: '20px' }}>?</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
                 <span style={{ fontSize: '11px', fontWeight: 'medium' }}>Privacy</span>
               </button>
 
@@ -2763,7 +2764,8 @@ ${formData.phone}
           borderRadius: '50%',
           background: 'linear-gradient(135deg, #9333ea 0%, #7c3aed 50%, #6d28d9 100%)',
           border: 'none',
-          boxShadow: '0 8px 32px rgba(147, 51, 234, 0.4), 0 4px 12px rgba(147, 51, 234, 0.2)',
+          boxShadow: 'none',
+          filter: 'none',
           cursor: 'pointer',
           display: 'flex',
           flexDirection: 'column',
@@ -2777,11 +2779,9 @@ ${formData.phone}
         }}
         onMouseOver={(e) => {
           e.target.style.transform = 'scale(1.1)';
-          e.target.style.boxShadow = '0 12px 40px rgba(147, 51, 234, 0.6), 0 6px 16px rgba(147, 51, 234, 0.3)';
         }}
         onMouseOut={(e) => {
           e.target.style.transform = 'scale(1)';
-          e.target.style.boxShadow = '0 8px 32px rgba(147, 51, 234, 0.4), 0 4px 12px rgba(147, 51, 234, 0.2)';
         }}
       >
         <svg width="24" height="24" viewBox="0 0 24 24" fill="#25D366">
