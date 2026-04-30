@@ -108,6 +108,16 @@ function App() {
     }
   };
 
+  const currencyIcons = {
+    EUR: "€",
+    USD: "$",
+    USDT: "T"
+  };
+
+  function getCurrencyIcon(currency){
+    return currencyIcons[currency] || currency;
+  }
+
   const [operation, setOperation] = useState('buy');
   const [paymentMethod, setPaymentMethod] = useState('bank');
   const [currency, setCurrency] = useState('usdt');
@@ -999,11 +1009,12 @@ ${formData.phone}
             <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: '#1A1A1A' }}>العملة</h3>
             {showPriceNotification && (
               <span 
-                className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium"
+                className="text-xs font-medium"
                 style={{
-                  background: 'linear-gradient(135deg, #6C3EFF, #9D6BFF)',
-                  color: '#111111',
-                  boxShadow: '0 0 12px rgba(108, 62, 255, 0.4)',
+                  background: 'none',
+                  boxShadow: 'none',
+                  color: '#000',
+                  padding: '0',
                   animation: 'fadeInScale 0.4s ease-in-out',
                   transition: 'opacity 0.6s ease-in-out, transform 0.6s ease-in-out'
                 }}
@@ -1318,7 +1329,7 @@ ${formData.phone}
               >
                 <span 
                   style={{
-                    fontSize: '48px',
+                    fontSize: '28px',
                     color: '#FFFFFF',
                     fontWeight: '700',
                     lineHeight: '1',
@@ -1330,7 +1341,7 @@ ${formData.phone}
                 </span>
                 <span 
                   style={{
-                    fontSize: '48px',
+                    fontSize: '18px',
                     color: '#FFFFFF',
                     fontWeight: '700',
                     lineHeight: '1',
@@ -1506,7 +1517,7 @@ ${formData.phone}
                 justifyContent: 'center',
                 zIndex: 1
               }}>
-                <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#FFFFFF' }}>?</span>
+                <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#FFFFFF' }}>{getCurrencyIcon('EUR')}</span>
               </div>
               <input
                 type="number"
@@ -1560,7 +1571,7 @@ ${formData.phone}
               >
                 <span 
                   style={{
-                    fontSize: '48px',
+                    fontSize: '28px',
                     color: '#FFFFFF',
                     fontWeight: '700',
                     lineHeight: '1',
@@ -1572,7 +1583,7 @@ ${formData.phone}
                 </span>
                 <span 
                   style={{
-                    fontSize: '48px',
+                    fontSize: '18px',
                     color: '#FFFFFF',
                     fontWeight: '700',
                     lineHeight: '1',
