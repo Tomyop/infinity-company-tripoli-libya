@@ -2295,26 +2295,130 @@ ${formData.phone}
                   <div className="mb-4">
                     <label style={{ display: 'block', color: '#111111', fontSize: '14px', marginBottom: '8px' }}>محفظتنا</label>
                     <div className="space-y-2">
-                      <div className="bg-white/5 p-2 rounded-lg">
-                        <div className="flex items-center justify-between">
-                          <span className="text-white text-xs break-all max-w-[70%]">{walletData.address}</span>
-                          <span
-                            onClick={() => {
-                              navigator.clipboard.writeText(walletData.address);
-                              setCopiedField('wallet');
-                              setTimeout(() => setCopiedField(null), 1200);
-                            }}
-                            style={{ cursor: 'pointer' }}
-                            className="text-purple-400 hover:text-purple-300 text-xs"
-                          >
-                            {copiedField === 'wallet' ? '✅' : '📋'}
-                          </span>
+                      <input
+                      type="text"
+                      value={walletData.address}
+                      readOnly
+                      style={{
+                        width: '100%',
+                        padding: '14px',
+                        border: '2px solid #6C3EFF',
+                        borderRadius: '14px',
+                        fontSize: '16px',
+                        color: '#111111',
+                        backgroundColor: '#FFFFFF',
+                        outline: 'none',
+                        transition: 'all 0.2s ease'
+                      }}
+                    />
+                      <div style={{ position: 'relative' }}>
+                    <label style={{ display: 'block', color: '#111111', fontSize: '14px', marginBottom: '8px' }}>اختيار الشبكة</label>
+                    <div 
+                      onClick={() => setShowNetworkDropdown(!showNetworkDropdown)}
+                      className="bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white cursor-pointer"
+                      style={{
+                        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                        border: '2px solid #6C3EFF',
+                        borderRadius: '14px',
+                        padding: '14px 16px',
+                        color: '#111111',
+                        fontSize: '14px',
+                        position: 'relative',
+                        zIndex: 9999,
+                        boxShadow: '0 0 12px rgba(108,62,255,0.25)'
+                      }}
+                    >
+                      <span>{selectedNetwork === 'TRC20' ? 'TRC20 (TRON)' : selectedNetwork === 'ERC20' ? 'ERC20 (Ethereum)' : 'BEP20 (BSC)'}</span>
+                      <span style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)' }}>▼</span>
+                    </div>
+                    {showNetworkDropdown && (
+                      <div 
+                        style={{
+                          position: 'absolute',
+                          top: '100%',
+                          left: 0,
+                          right: 0,
+                          background: 'linear-gradient(135deg, #6d28d9, #9333ea)',
+                          border: '1px solid rgba(255, 255, 255, 0.2)',
+                          borderRadius: '14px',
+                          marginTop: '4px',
+                          zIndex: 9998,
+                          overflow: 'hidden',
+                          boxShadow: '0 4px 20px rgba(147, 51, 234, 0.3)'
+                        }}
+                      >
+                        <div 
+                          onClick={() => { setSelectedNetwork('TRC20'); setShowNetworkDropdown(false); }}
+                          style={{
+                            padding: '12px 16px',
+                            color: '#111111',
+                            fontSize: '14px',
+                            cursor: 'pointer',
+                            backgroundColor: selectedNetwork === 'TRC20' ? 'rgba(255, 255, 255, 0.2)' : 'transparent',
+                            transition: 'background-color 0.2s ease'
+                          }}
+                          onMouseEnter={(e) => {
+                            if (selectedNetwork !== 'TRC20') {
+                              e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                            }
+                          }}
+                          onMouseLeave={(e) => {
+                            if (selectedNetwork !== 'TRC20') {
+                              e.target.style.backgroundColor = 'transparent';
+                            }
+                          }}
+                        >
+                          TRC20 (TRON)
+                        </div>
+                        <div 
+                          onClick={() => { setSelectedNetwork('ERC20'); setShowNetworkDropdown(false); }}
+                          style={{
+                            padding: '12px 16px',
+                            color: '#111111',
+                            fontSize: '14px',
+                            cursor: 'pointer',
+                            backgroundColor: selectedNetwork === 'ERC20' ? 'rgba(255, 255, 255, 0.2)' : 'transparent',
+                            transition: 'background-color 0.2s ease'
+                          }}
+                          onMouseEnter={(e) => {
+                            if (selectedNetwork !== 'ERC20') {
+                              e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                            }
+                          }}
+                          onMouseLeave={(e) => {
+                            if (selectedNetwork !== 'ERC20') {
+                              e.target.style.backgroundColor = 'transparent';
+                            }
+                          }}
+                        >
+                          ERC20 (Ethereum)
+                        </div>
+                        <div 
+                          onClick={() => { setSelectedNetwork('BEP20'); setShowNetworkDropdown(false); }}
+                          style={{
+                            padding: '12px 16px',
+                            color: '#111111',
+                            fontSize: '14px',
+                            cursor: 'pointer',
+                            backgroundColor: selectedNetwork === 'BEP20' ? 'rgba(255, 255, 255, 0.2)' : 'transparent',
+                            transition: 'background-color 0.2s ease'
+                          }}
+                          onMouseEnter={(e) => {
+                            if (selectedNetwork !== 'BEP20') {
+                              e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                            }
+                          }}
+                          onMouseLeave={(e) => {
+                            if (selectedNetwork !== 'BEP20') {
+                              e.target.style.backgroundColor = 'transparent';
+                            }
+                          }}
+                        >
+                          BEP20 (BSC)
                         </div>
                       </div>
-                      <div className="flex items-center justify-between bg-white/5 p-2 rounded-lg">
-                        <span className="text-white/70 text-xs">الشبكة:</span>
-                        <span className="text-white text-xs">{walletData.network}</span>
-                      </div>
+                    )}
+                  </div>
                     </div>
                   </div>
 
