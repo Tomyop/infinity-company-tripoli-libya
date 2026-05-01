@@ -1351,7 +1351,7 @@ ${formData.phone}
                   د.ل
                 </span>
               </div>
-              <p className="note" style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '12px', marginTop: '8px' }}>Includes 2% commission</p>
+              <p className="note" style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '12px', marginTop: '8px' }}>يشمل عمولة 2%</p>
             </div>
           </div>
         </div>
@@ -1593,7 +1593,7 @@ ${formData.phone}
                   د.ل
                 </span>
               </div>
-              <p style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '12px', marginTop: '8px' }}>Includes 2% commission</p>
+              <p style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '12px', marginTop: '8px' }}>يشمل عمولة 2%</p>
             </div>
           </div>
         )}
@@ -2295,22 +2295,77 @@ ${formData.phone}
                   <div className="mb-4">
                     <label style={{ display: 'block', color: '#111111', fontSize: '14px', marginBottom: '8px' }}>محفظتنا</label>
                     <div className="space-y-2">
-                      <input
-                      type="text"
-                      value={walletData.address}
-                      readOnly
-                      style={{
-                        width: '100%',
-                        padding: '14px',
-                        border: '2px solid #6C3EFF',
-                        borderRadius: '14px',
-                        fontSize: '16px',
-                        color: '#111111',
-                        backgroundColor: '#FFFFFF',
-                        outline: 'none',
-                        transition: 'all 0.2s ease'
-                      }}
-                    />
+                      <div style={{ position: 'relative', width: '100%' }}>
+                        <input
+                        type="text"
+                        value={walletData.address}
+                        readOnly
+                        style={{
+                          width: '100%',
+                          padding: '14px 45px 14px 14px',
+                          border: '2px solid #6C3EFF',
+                          borderRadius: '14px',
+                          fontSize: '16px',
+                          color: '#111111',
+                          backgroundColor: '#FFFFFF',
+                          outline: 'none',
+                          transition: 'all 0.2s ease'
+                        }}
+                      />
+                      
+                      {/* Copy Icon Button */}
+                      <button
+                        type="button"
+                        onClick={async () => {
+                          try {
+                            await navigator.clipboard.writeText(walletData.address);
+                            setCopiedField('sellWallet');
+                            setTimeout(() => {
+                              setCopiedField(null);
+                            }, 1200);
+                          } catch (err) {
+                            console.error('Failed to copy:', err);
+                          }
+                        }}
+                        style={{
+                          position: 'absolute',
+                          right: '12px',
+                          top: '50%',
+                          transform: 'translateY(-50%)',
+                          backgroundColor: 'transparent',
+                          border: 'none',
+                          cursor: 'pointer',
+                          padding: '8px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          transition: 'all 0.2s ease',
+                          borderRadius: '8px'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.target.style.backgroundColor = 'rgba(108, 62, 255, 0.1)';
+                          e.target.style.transform = 'translateY(-50%) scale(1.1)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.target.style.backgroundColor = 'transparent';
+                          e.target.style.transform = 'translateY(-50%) scale(1)';
+                        }}
+                        title={copiedField === 'sellWallet' ? 'تم النسخ' : 'نسخ العنوان'}
+                        aria-label={copiedField === 'sellWallet' ? 'تم النسخ' : 'نسخ العنوان'}
+                      >
+                        {copiedField === 'sellWallet' ? (
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style={{ color: '#22C55E' }}>
+                            <path d="M9 12L11 14L15 10" stroke="#22C55E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            <circle cx="12" cy="12" r="10" stroke="#22C55E" strokeWidth="2"/>
+                          </svg>
+                        ) : (
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style={{ color: '#6C3EFF' }}>
+                            <rect x="9" y="9" width="13" height="13" rx="2" stroke="currentColor" strokeWidth="2"/>
+                            <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                          </svg>
+                        )}
+                      </button>
+                      </div>
                       <div style={{ position: 'relative' }}>
                     <label style={{ display: 'block', color: '#111111', fontSize: '14px', marginBottom: '8px' }}>اختيار الشبكة</label>
                     <div 
@@ -2726,7 +2781,7 @@ ${formData.phone}
                 }}
               >
                 <div style={{ fontSize: '24px' }}>🎁</div>
-                <span style={{ fontSize: '11px', fontWeight: 'medium' }}>Draw</span>
+                <span style={{ fontSize: '11px', fontWeight: 'medium' }}>سحب أسبوعي</span>
               </a>
 
               {/* Market - Active */}
