@@ -298,12 +298,16 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (currency === 'btc') {
+    fetchBTCPrice();
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
       fetchBTCPrice();
-      const interval = setInterval(fetchBTCPrice, 5000);
-      return () => clearInterval(interval);
-    }
-  }, [currency]);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const handleCopy = (text, field) => {
     try {
@@ -393,11 +397,18 @@ function App() {
 
   const fetchBTCPrice = async () => {
   try {
-    const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
+    const res = await fetch("https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT");
     const data = await res.json();
-    setBtcPrice(data.bitcoin.usd);
-  } catch (e) {
-    setBtcPrice(null);
+    
+    console.log("API DATA:", data);
+    
+    const price = parseFloat(data.price);
+    
+    console.log("PRICE:", price);
+    
+    setBtcPrice(price);
+  } catch (error) {
+    console.error("ERROR:", error);
   }
 };
 
@@ -1170,8 +1181,10 @@ ${formData.phone}
             </button>
             <button
               onClick={() => {
+                console.log("BTC clicked");
                 vibrate();
                 setCurrency('btc');
+                fetchBTCPrice();
               }}
               style={{
                 backgroundColor: '#FFFFFF',
@@ -1381,7 +1394,7 @@ ${formData.phone}
                     marginLeft: '8px'
                   }}
                 >
-                  {getCurrentPrice()}
+                  {(() => { console.log("Rendered price:", currency === 'btc' ? btcPrice : getCurrentPrice()); return currency === 'btc' ? (btcPrice ? btcPrice.toFixed(2) : 'Loading...') : getCurrentPrice(); })()}
                 </span>
                 <span 
                   style={{
