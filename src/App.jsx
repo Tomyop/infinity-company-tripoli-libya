@@ -1452,7 +1452,7 @@ ${formData.phone}
                 justifyContent: 'center',
                 zIndex: 1
               }}>
-                <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#FFFFFF' }}>T</span>
+                <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#FFFFFF' }}>{currency === 'btc' ? '₿' : 'T'}</span>
               </div>
               <input
                 type="number"
