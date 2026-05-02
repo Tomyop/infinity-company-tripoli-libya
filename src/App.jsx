@@ -7,6 +7,9 @@ import sellIcon from './assets/sell-icon.png'
 import img1 from './assets/images/1.png';
 import img2 from './assets/images/2.png';
 import img5 from './assets/images/5.png';
+import btcIcon from './assets/Btc.png';
+import eurIcon from './assets/euro.png';
+import usdIcon from './assets/usd.png';
 import AdBanner from './AdBanner'
 import InstallPrompt from './InstallPrompt'
 import Draw from './Draw'
@@ -137,6 +140,7 @@ function App() {
   const [showWalletTooltip, setShowWalletTooltip] = useState(false);
   const [tooltipTimer, setTooltipTimer] = useState(null);
   const [selectedNetwork, setSelectedNetwork] = useState('BEP20');
+  const [btcPrice, setBtcPrice] = useState(null);
 
   const validateNetwork = (network) => {
     const allowedNetworks = ['TRC20', 'ERC20', 'BEP20'];
@@ -293,6 +297,14 @@ function App() {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    if (currency === 'btc') {
+      fetchBTCPrice();
+      const interval = setInterval(fetchBTCPrice, 5000);
+      return () => clearInterval(interval);
+    }
+  }, [currency]);
+
   const handleCopy = (text, field) => {
     try {
       if (navigator.clipboard && window.isSecureContext) {
@@ -330,6 +342,17 @@ function App() {
 
   const calculateTotal = () => {
     if (!amount) return 0;
+    
+    if (currency === 'btc') {
+      if (!btcPrice) return 0;
+      const usdRate = operation === 'buy' ? 
+        (paymentMethod === 'bank' ? prices.usd_buy_bank : prices.usd_buy_cash) :
+        (paymentMethod === 'bank' ? prices.usd_sell_bank : prices.usd_sell_cash);
+      const subtotal = parseFloat(amount) * btcPrice * usdRate;
+      const commission = subtotal * prices.fee;
+      return subtotal + commission;
+    }
+    
     const price = getCurrentPrice();
     const subtotal = parseFloat(amount) * price;
     const commission = subtotal * prices.fee;
@@ -367,6 +390,16 @@ function App() {
       setImageSelected(true);
     }
   };
+
+  const fetchBTCPrice = async () => {
+  try {
+    const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
+    const data = await res.json();
+    setBtcPrice(data.bitcoin.usd);
+  } catch (e) {
+    setBtcPrice(null);
+  }
+};
 
   const sendTelegramNotification = () => {
     try {
@@ -1023,7 +1056,7 @@ ${formData.phone}
               </span>
             )}
           </div>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-4 gap-3">
             <button
               onClick={() => {
                 vibrate();
@@ -1099,16 +1132,8 @@ ${formData.phone}
               }}
             >
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-                <div style={{
-                  width: '40px',
-                  height: '40px',
-                  borderRadius: '50%',
-                  backgroundColor: '#6C3EFF',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}>
-                  <span style={{ fontSize: '20px', fontWeight: 'bold', color: '#FFFFFF' }}>$</span>
+                <div className="currency-icon">
+                  <img src={usdIcon} alt="USD" className="currency-img" />
                 </div>
                 <div style={{ textAlign: 'center' }}>
                   <div style={{ fontSize: '14px', fontWeight: 'bold', color: '#1A1A1A', marginBottom: '2px' }}>USD</div>
@@ -1142,6 +1167,41 @@ ${formData.phone}
               }}
             >
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+                <div className="currency-icon">
+                  <img src={eurIcon} alt="EUR" className="currency-img" />
+                </div>
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{ fontSize: '14px', fontWeight: 'bold', color: '#1A1A1A', marginBottom: '2px' }}>EUR</div>
+                  <div style={{ fontSize: '11px', color: '#6B7280' }}>Euro</div>
+                </div>
+              </div>
+            </button>
+            <button
+              onClick={() => {
+                vibrate();
+                setCurrency('btc');
+              }}
+              style={{
+                backgroundColor: '#FFFFFF',
+                border: currency === 'btc' ? '2px solid #6C3EFF' : '1px solid rgba(0,0,0,0.05)',
+                boxShadow: currency === 'btc' ? '0px 8px 20px rgba(108, 62, 255, 0.15), 0 0 20px rgba(108, 62, 255, 0.3)' : '0px 8px 20px rgba(0,0,0,0.05)',
+                borderRadius: '16px',
+                padding: '16px 12px',
+                transition: 'all 0.2s ease',
+                transform: 'scale(1)',
+                cursor: 'pointer'
+              }}
+              onMouseDown={(e) => {
+                e.target.style.transform = 'scale(0.98)';
+              }}
+              onMouseUp={(e) => {
+                e.target.style.transform = 'scale(1)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.transform = 'scale(1)';
+              }}
+            >
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
                 <div style={{
                   width: '40px',
                   height: '40px',
@@ -1151,11 +1211,13 @@ ${formData.phone}
                   alignItems: 'center',
                   justifyContent: 'center'
                 }}>
-                  <span style={{ fontSize: '20px', fontWeight: 'bold', color: '#FFFFFF' }}>€</span>
+                <div className="currency-icon">
+                  <img src={btcIcon} alt="BTC" className="btc-img" />
+                </div>
                 </div>
                 <div style={{ textAlign: 'center' }}>
-                  <div style={{ fontSize: '14px', fontWeight: 'bold', color: '#1A1A1A', marginBottom: '2px' }}>EUR</div>
-                  <div style={{ fontSize: '11px', color: '#6B7280' }}>Euro</div>
+                  <div style={{ fontSize: '14px', fontWeight: 'bold', color: '#1A1A1A', marginBottom: '2px' }}>BTC</div>
+                  <div style={{ fontSize: '11px', color: '#6B7280' }}>Bitcoin</div>
                 </div>
               </div>
             </button>
@@ -1517,13 +1579,83 @@ ${formData.phone}
                 justifyContent: 'center',
                 zIndex: 1
               }}>
-                <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#FFFFFF' }}>{getCurrencyIcon('EUR')}</span>
+                <div className="currency-icon">
+                  <img src={eurIcon} alt="EUR" className="currency-img" />
+                </div>
               </div>
               <input
                 type="number"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 placeholder="أدخل المبلغ (EUR)"
+                style={{
+                  width: '100%',
+                  padding: '14px 14px 14px 52px',
+                  border: '2px solid #6C3EFF',
+                  borderRadius: '14px',
+                  fontSize: '16px',
+                  color: '#111111',
+                  backgroundColor: '#FFFFFF',
+                  outline: 'none',
+                  transition: 'all 0.2s ease'
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = '#6C3EFF';
+                  e.target.style.boxShadow = '0 0 0 3px rgba(108, 62, 255, 0.1)';
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = 'rgba(0,0,0,0.1)';
+                  e.target.style.boxShadow = 'none';
+                }}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Amount Input - Only show for BTC */}
+        {currency === 'btc' && (
+          <div className="mb-6" style={{
+            backgroundColor: '#FFFFFF',
+            border: '1px solid rgba(0,0,0,0.05)',
+            boxShadow: '0px 8px 20px rgba(0,0,0,0.05)',
+            borderRadius: '16px',
+            padding: '20px'
+          }}>
+            <label style={{ 
+              display: 'block',
+              fontSize: '16px',
+              fontWeight: 'bold',
+              color: '#111111',
+              marginBottom: '12px'
+            }}>
+              المبلغ (BTC)
+            </label>
+            <div style={{ position: 'relative' }}>
+              <div style={{
+                position: 'absolute',
+                left: '16px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                width: '24px',
+                height: '24px',
+                borderRadius: '50%',
+                backgroundColor: '#6C3EFF',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                zIndex: 1
+              }}>
+                <div className="currency-icon">
+                  <img src={btcIcon} alt="BTC" className="btc-img" />
+                </div>
+              </div>
+              <input
+                type="number"
+                step="0.00000001"
+                min="0"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                placeholder="أدخل المبلغ (BTC)"
                 style={{
                   width: '100%',
                   padding: '14px 14px 14px 52px',
@@ -2676,7 +2808,7 @@ ${formData.phone}
         </div>
 
         {/* Terms & Conditions Checkbox */}
-        {(currency === 'usdt' || currency === 'usd' || currency === 'eur') && (
+        {(currency === 'usdt' || currency === 'usd' || currency === 'eur' || currency === 'btc') && (
           <div className="mb-6" style={{
             backgroundColor: '#FFFFFF',
             border: '1px solid rgba(0,0,0,0.05)',
