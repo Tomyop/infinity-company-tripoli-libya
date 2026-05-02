@@ -1083,15 +1083,7 @@ ${formData.phone}
               }}
             >
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-                <div style={{
-                  width: '40px',
-                  height: '40px',
-                  borderRadius: '50%',
-                  backgroundColor: '#6C3EFF',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}>
+                <div className="currency-icon">
                   <img 
                     src={usdtOfficialLogo} 
                     alt="USDT" 
@@ -1202,18 +1194,8 @@ ${formData.phone}
               }}
             >
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-                <div style={{
-                  width: '40px',
-                  height: '40px',
-                  borderRadius: '50%',
-                  backgroundColor: '#6C3EFF',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}>
                 <div className="currency-icon">
                   <img src={btcIcon} alt="BTC" className="btc-img" />
-                </div>
                 </div>
                 <div style={{ textAlign: 'center' }}>
                   <div style={{ fontSize: '14px', fontWeight: 'bold', color: '#1A1A1A', marginBottom: '2px' }}>BTC</div>

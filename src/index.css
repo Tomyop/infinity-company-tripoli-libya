@@ -180,22 +180,20 @@
 }
 
 .currency-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
   overflow: hidden;
-  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none !important;
+  box-shadow: none !important;
 }
 
-.btc-img {
+.currency-icon img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   border-radius: 50%;
-  display: block;
-}
-
-.currency-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 50%;
-  display: block;
 }
