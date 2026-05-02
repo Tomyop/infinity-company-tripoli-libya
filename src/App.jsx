@@ -1435,7 +1435,7 @@ ${formData.phone}
               color: '#111111',
               marginBottom: '12px'
             }}>
-              المبلغ (USDT)
+              المبلغ ({currency.toUpperCase()})
             </label>
             <div style={{ position: 'relative' }}>
               <div style={{
@@ -1613,74 +1613,7 @@ ${formData.phone}
           </div>
         )}
 
-        {/* Amount Input - Only show for BTC */}
-        {currency === 'btc' && (
-          <div className="mb-6" style={{
-            backgroundColor: '#FFFFFF',
-            border: '1px solid rgba(0,0,0,0.05)',
-            boxShadow: '0px 8px 20px rgba(0,0,0,0.05)',
-            borderRadius: '16px',
-            padding: '20px'
-          }}>
-            <label style={{ 
-              display: 'block',
-              fontSize: '16px',
-              fontWeight: 'bold',
-              color: '#111111',
-              marginBottom: '12px'
-            }}>
-              المبلغ (BTC)
-            </label>
-            <div className="currency-btc" style={{ position: 'relative' }}>
-              <div style={{
-                position: 'absolute',
-                left: '16px',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                width: '24px',
-                height: '24px',
-                borderRadius: '50%',
-                backgroundColor: '#6C3EFF',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                zIndex: 1
-              }}>
-                <div className="input-icon">
-                  <img src={btcIcon} alt="BTC" className="btc-img" />
-                </div>
-              </div>
-              <input
-                type="number"
-                step="0.00000001"
-                min="0"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                placeholder="أدخل المبلغ (BTC)"
-                style={{
-                  width: '100%',
-                  padding: '14px 14px 14px 52px',
-                  border: '2px solid #6C3EFF',
-                  borderRadius: '14px',
-                  fontSize: '16px',
-                  color: '#111111',
-                  backgroundColor: '#FFFFFF',
-                  outline: 'none',
-                  transition: 'all 0.2s ease'
-                }}
-                onFocus={(e) => {
-                  e.target.style.borderColor = '#6C3EFF';
-                  e.target.style.boxShadow = '0 0 0 3px rgba(108, 62, 255, 0.1)';
-                }}
-                onBlur={(e) => {
-                  e.target.style.borderColor = 'rgba(0,0,0,0.1)';
-                  e.target.style.boxShadow = 'none';
-                }}
-              />
-            </div>
-          </div>
-        )}
-
+        
         {/* Total Card */}
         {amount && (
           <div style={{
