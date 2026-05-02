@@ -2122,7 +2122,7 @@ ${formData.phone}
                   {/* Payment Methods (for USD/EUR buy) */}
                   <div className="mb-4">
                     <div style={{ marginTop: '10px', marginBottom: '20px' }}>
-                      <p style={{ color: '#111111', fontSize: '13px', textAlign: 'right', marginBottom: '12px' }}>DEENAR</p>
+                      <p style={{ color: '#111111', fontSize: '13px', textAlign: 'right', marginBottom: '12px' }}>طريقة الدفع</p>
                       <div className="payment-auto-slider" style={{
                         background: 'rgba(255, 255, 255, 0.08)',
                         backdropFilter: 'blur(10px)',
