@@ -349,12 +349,18 @@ function App() {
     
     if (currency === 'btc') {
       if (!btcPrice) return 0;
-      const usdRate = operation === 'buy' ? 
-        (paymentMethod === 'bank' ? prices.usd_buy_bank : prices.usd_buy_cash) :
-        (paymentMethod === 'bank' ? prices.usd_sell_bank : prices.usd_sell_cash);
-      const subtotal = parseFloat(amount) * btcPrice * usdRate;
-      const commission = subtotal * prices.fee;
-      return subtotal + commission;
+      const amountValue = parseFloat(amount) || 0;
+      const price = parseFloat(btcPrice) || 0;
+      
+      console.log("BTC price:", price);
+      console.log("BTC amount:", amountValue);
+      
+      const total = price * amountValue;
+      const finalPrice = total * 1.02;
+      
+      console.log("BTC final:", finalPrice);
+      
+      return finalPrice;
     }
     
     const price = getCurrentPrice();
