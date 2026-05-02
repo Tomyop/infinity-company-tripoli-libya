@@ -197,3 +197,73 @@
   object-fit: cover;
   border-radius: 50%;
 }
+
+.input-icon {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50% !important;
+  background: #6C3EFF !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin-right: 8px !important;
+  box-shadow: none !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+.input-icon img {
+  width: 24px !important;
+  height: 24px !important;
+  object-fit: contain !important;
+  display: block !important;
+  box-shadow: none !important;
+  filter: none !important;
+  background: none !important;
+  border: none !important;
+  border-radius: 50% !important;
+}
+
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.currency-btc .input-icon,
+.currency-eur .input-icon {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 6px;
+}
+
+.currency-btc .input-icon img,
+.currency-eur .input-icon img {
+  width: 18px !important;
+  height: 18px !important;
+  object-fit: contain !important;
+  background: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+  border-radius: 0 !important;
+}
+
+.currency-usd img {
+  width: 64px !important;
+  height: 64px !important;
+  object-fit: contain;
+  transform: scale(1.25) !important;
+}
+
+.currency-usd .icon-wrapper {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}

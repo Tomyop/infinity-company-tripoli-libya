@@ -1124,7 +1124,7 @@ ${formData.phone}
               }}
             >
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-                <div className="currency-icon">
+                <div className="currency-icon currency-usd">
                   <img src={usdIcon} alt="USD" className="currency-img" />
                 </div>
                 <div style={{ textAlign: 'center' }}>
@@ -1546,7 +1546,7 @@ ${formData.phone}
             }}>
               المبلغ (EUR)
             </label>
-            <div style={{ position: 'relative' }}>
+            <div className="currency-eur" style={{ position: 'relative' }}>
               <div style={{
                 position: 'absolute',
                 left: '16px',
@@ -1561,7 +1561,7 @@ ${formData.phone}
                 justifyContent: 'center',
                 zIndex: 1
               }}>
-                <div className="currency-icon">
+                <div className="input-icon">
                   <img src={eurIcon} alt="EUR" className="currency-img" />
                 </div>
               </div>
@@ -1612,7 +1612,7 @@ ${formData.phone}
             }}>
               المبلغ (BTC)
             </label>
-            <div style={{ position: 'relative' }}>
+            <div className="currency-btc" style={{ position: 'relative' }}>
               <div style={{
                 position: 'absolute',
                 left: '16px',
@@ -1627,7 +1627,7 @@ ${formData.phone}
                 justifyContent: 'center',
                 zIndex: 1
               }}>
-                <div className="currency-icon">
+                <div className="input-icon">
                   <img src={btcIcon} alt="BTC" className="btc-img" />
                 </div>
               </div>
