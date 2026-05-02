@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import './index.css'
 import confirmImg from './assets/10.jpg'
 import usdtOfficialLogo from './assets/usdt-official-logo.png'
@@ -1420,7 +1420,7 @@ ${formData.phone}
         </div>
 
         {/* Amount Input - Only show for USDT */}
-        {currency === 'usdt' && (
+        {(currency === 'usdt' || currency === 'btc') && (
           <div className="mb-6" style={{
             backgroundColor: '#FFFFFF',
             border: '1px solid rgba(0,0,0,0.05)',
@@ -1739,7 +1739,7 @@ ${formData.phone}
 
           {operation === 'buy' ? (
             <>
-              {currency === 'usdt' ? (
+              {(currency === 'usdt' || currency === 'btc') ? (
                 <>
                   {/* Payment Methods (for USDT buy) */}
                   <div className="mb-4">
@@ -2422,7 +2422,7 @@ ${formData.phone}
                           </>
           ) : (
             <>
-              {currency === 'usdt' ? (
+              {(currency === 'usdt' || currency === 'btc') ? (
                 <>
                   {/* Wallet Data (for USDT sell) */}
                   <div className="mb-4">
