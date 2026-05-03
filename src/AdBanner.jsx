@@ -5,7 +5,9 @@ const AdBanner = () => {
   const images = [
     '/1-install.png',
     '/2-install.png',
-    '/3-install.png'
+    '/3-install.png',
+    '/4-install.png',
+    '/5-install.png'
   ];
 
   useEffect(() => {
@@ -27,24 +29,28 @@ const AdBanner = () => {
         background: '#2a0d4d'
       }}
     >
-      {images.map((image, index) => (
-        <img
-          key={index}
-          src={image}
-          alt={`Advertisement ${index + 1}`}
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            objectFit: 'contain',
-            objectPosition: 'center',
-            opacity: currentSlide === index ? 1 : 0,
-            transition: 'opacity 0.5s ease-in-out'
-          }}
-        />
-      ))}
+      {images.map((image, index) => {
+        const isFullWidthImage = image === '/4-install.png' || image === '/5-install.png';
+        return (
+          <img
+            key={index}
+            src={image}
+            alt={`Advertisement ${index + 1}`}
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: isFullWidthImage ? 'cover' : 'contain',
+              objectPosition: isFullWidthImage ? 'center' : 'center',
+              opacity: currentSlide === index ? 1 : 0,
+              transition: 'opacity 0.5s ease-in-out',
+              padding: isFullWidthImage ? '0' : '0'
+            }}
+          />
+        );
+      })}
       
       {/* Dots indicator */}
       <div style={{
