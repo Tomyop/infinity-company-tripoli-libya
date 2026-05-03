@@ -1146,7 +1146,7 @@ ${formData.phone}
                 </div>
                 <div style={{ textAlign: 'center' }}>
                   <div style={{ fontSize: '14px', fontWeight: 'bold', color: '#1A1A1A', marginBottom: '2px' }}>USD</div>
-                  <div style={{ fontSize: '11px', color: '#6B7280' }}>US Dollar</div>
+                  <div style={{ fontSize: '11px', color: '#6B7280' }}>Dollar</div>
                 </div>
               </div>
             </button>
