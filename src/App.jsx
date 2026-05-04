@@ -464,29 +464,47 @@ function App() {
     return realPrice;
   };
 
+  // STEP 2: GLOBAL commission function
+  function applyCommission(baseTotal) {
+    // STEP 8: Use Google Sheets fee if available, fallback to 2%
+    const COMMISSION_RATE = prices.fee || 0.02;
+    return baseTotal * (1 + COMMISSION_RATE);
+  }
+
   const calculateTotal = () => {
     if (!amount) return 0;
+    
+    console.log("🔄 STEP 3: Applying commission globally to all transactions");
     
     if (currency === 'btc') {
       if (!btcPrice) return 0;
       const amountValue = parseFloat(amount) || 0;
       const price = parseFloat(btcPrice) || 0;
       
-      console.log("BTC price:", price);
-      console.log("BTC amount:", amountValue);
+      console.log("💰 BTC calculation - Amount:", amountValue, "Price:", price);
       
-      const total = price * amountValue;
-      const finalPrice = total * 1.02;
+      // STEP 3: Apply commission globally
+      const baseTotal = price * amountValue;
+      const totalWithCommission = applyCommission(baseTotal);
       
-      console.log("BTC final:", finalPrice);
+      console.log("✅ BTC final with commission:", totalWithCommission);
       
-      return finalPrice;
+      return totalWithCommission;
     }
     
+    // STEP 3: Apply commission to ALL currencies (USDT, USD, EUR)
     const price = getCurrentPrice();
-    const subtotal = parseFloat(amount) * price;
-    const commission = subtotal * prices.fee;
-    return subtotal + commission;
+    const amountValue = parseFloat(amount) || 0;
+    
+    console.log(`💰 ${currency.toUpperCase()} calculation - Amount:`, amountValue, "Price:", price);
+    
+    // STEP 3: Apply commission globally - NO EXCEPTIONS
+    const baseTotal = amountValue * price;
+    const totalWithCommission = applyCommission(baseTotal);
+    
+    console.log(`✅ ${currency.toUpperCase()} final with commission:`, totalWithCommission);
+    
+    return totalWithCommission;
   };
 
   function sendToGoogleSheet(phone, amount, total, currency, network) {
@@ -1593,7 +1611,7 @@ ${formData.phone}
                   د.ل
                 </span>
               </div>
-              <p className="note" style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '12px', marginTop: '8px' }}>يشمل عمولة 2%</p>
+              <p className="note" style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '12px', marginTop: '8px' }}>يشمل عمولة {((prices.fee || 0.02) * 100).toFixed(0)}%</p>
             </div>
           </div>
         </div>
