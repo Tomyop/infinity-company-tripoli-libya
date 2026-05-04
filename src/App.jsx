@@ -143,7 +143,7 @@ function App() {
   const [btcPrice, setBtcPrice] = useState(null);
   const [liveUsdtPrice, setLiveUsdtPrice] = useState(8.50);
   const [previousUsdtPrice, setPreviousUsdtPrice] = useState(8.50);
-  const [isPriceIncreasing, setIsPriceIncreasing] = useState(false);
+  const [priceDirection, setPriceDirection] = useState('neutral'); // 'increase', 'decrease', 'neutral'
 
   const validateNetwork = (network) => {
     const allowedNetworks = ['TRC20', 'ERC20', 'BEP20'];
@@ -313,36 +313,26 @@ function App() {
   }, []);
 
   useEffect(() => {
-    // Expanded range with ping-pong pattern: 46→47→48→49→50→51→52→53→52→51→50→49→48→47→46
-    const priceCycle = [8.46, 8.47, 8.48, 8.49, 8.50, 8.51, 8.52, 8.53, 8.52, 8.51, 8.50, 8.49, 8.48, 8.47];
-    let currentIndex = 4; // Start with 8.50 (middle position)
-    let direction = 1; // 1 for forward, -1 for backward
+    // Sequential movement: 48→49→50→51→52 then back
+    const priceCycle = [8.48, 8.49, 8.50, 8.51, 8.52, 8.51, 8.50, 8.49];
+    let currentIndex = 2; // Start with 8.50
     
     const interval = setInterval(() => {
       setPreviousUsdtPrice(liveUsdtPrice);
-      
-      // Move to next position
-      currentIndex += direction;
-      
-      // Reverse direction at boundaries
-      if (currentIndex >= priceCycle.length - 1) {
-        currentIndex = priceCycle.length - 1;
-        direction = -1;
-      } else if (currentIndex <= 0) {
-        currentIndex = 0;
-        direction = 1;
-      }
-      
+      currentIndex = (currentIndex + 1) % priceCycle.length;
       const newPrice = priceCycle[currentIndex];
       
-      // Check if price is increasing (for green flash effect)
+      // Determine price direction for Binance-style colors
       if (newPrice > liveUsdtPrice) {
-        setIsPriceIncreasing(true);
-        setTimeout(() => setIsPriceIncreasing(false), 1000); // Match CSS transition
+        setPriceDirection('increase'); // Green flash
+        setTimeout(() => setPriceDirection('neutral'), 1000); // Return to white after 1s
+      } else if (newPrice < liveUsdtPrice) {
+        setPriceDirection('decrease'); // Red flash
+        setTimeout(() => setPriceDirection('neutral'), 1000); // Return to white after 1s
       }
       
       setLiveUsdtPrice(newPrice);
-    }, 3000); // Smooth transitions every 3 seconds
+    }, 2000); // 2-second intervals
     
     return () => clearInterval(interval);
   }, [liveUsdtPrice]);
@@ -1462,10 +1452,16 @@ ${formData.phone}
                           <span style={{ color: '#FFFFFF' }}>{integerPart}.</span>
                           <span 
                             id="decimal-part"
-                            className={`live-price-animation ${isPriceIncreasing ? 'live-price-increase' : ''}`}
+                            className={`live-price-animation ${
+                              priceDirection === 'increase' ? 'price-increase' : 
+                              priceDirection === 'decrease' ? 'price-decrease' : 
+                              ''
+                            }`}
                             style={{
-                              color: isPriceIncreasing ? '#27ae60' : '#FFFFFF',
-                              transition: 'all 1s ease',
+                              color: priceDirection === 'increase' ? '#0ECB81' : 
+                                     priceDirection === 'decrease' ? '#F6465D' : 
+                                     '#FFFFFF',
+                              transition: 'color 0.1s ease',
                               minWidth: '2.5ch',
                               display: 'inline-block',
                               textAlign: 'left'

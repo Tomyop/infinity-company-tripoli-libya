@@ -275,35 +275,40 @@
   transform: scale(0.92) !important;
 }
 
-/* Professional Live Price Animation Styles - Decimal Only */
+/* Binance-style Color Flash Animation - Decimal Only */
 #decimal-part.live-price-animation {
-  transition: all 1s ease;
-  animation: decimalFadeSlide 3s ease-in-out;
+  transition: color 0.1s ease;
+  /* No movement, just color changes */
 }
 
-@keyframes decimalFadeSlide {
-  0% { opacity: 0.6; transform: translateY(3px); }
-  20% { opacity: 0.75; transform: translateY(2px); }
-  40% { opacity: 0.85; transform: translateY(1px); }
-  60% { opacity: 0.95; transform: translateY(0.5px); }
-  80% { opacity: 1; transform: translateY(0); }
-  100% { opacity: 0.6; transform: translateY(-3px); }
+#decimal-part.price-increase {
+  color: #0ECB81 !important; /* Binance green */
+  animation: greenFlash 0.3s ease;
 }
 
-#decimal-part.live-price-increase {
-  color: #27ae60 !important;
-  animation: decimalPulse 1s ease;
+@keyframes greenFlash {
+  0% { color: #FFFFFF; }
+  10% { color: #0ECB81; filter: brightness(1.2); }
+  100% { color: #0ECB81; }
 }
 
-@keyframes decimalPulse {
-  0% { transform: scale(1); opacity: 1; }
-  15% { transform: scale(1.02); opacity: 1; }
-  30% { transform: scale(1.04); opacity: 0.98; }
-  45% { transform: scale(1.05); opacity: 0.95; }
-  60% { transform: scale(1.04); opacity: 0.98; }
-  75% { transform: scale(1.02); opacity: 1; }
-  90% { transform: scale(1.01); opacity: 1; }
-  100% { transform: scale(1); opacity: 1; }
+#decimal-part.price-decrease {
+  color: #F6465D !important; /* Binance red */
+  animation: redFlash 0.3s ease;
+}
+
+@keyframes redFlash {
+  0% { color: #FFFFFF; }
+  10% { color: #F6465D; filter: brightness(1.2); }
+  100% { color: #F6465D; }
+}
+
+/* Container for stable numbers */
+.decimal-slider-container {
+  display: inline-block;
+  minWidth: '2.5ch';
+  text-align: left;
+  /* No overflow needed since no sliding */
 }
 
 /* Ensure stable integer part */
