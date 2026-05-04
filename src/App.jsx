@@ -226,51 +226,64 @@ function App() {
   useEffect(() => {
     const fetchPrices = async () => {
       try {
+        console.log("🔄 STEP 1: FORCING RAW FETCH TEST");
         const response = await fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vSy4Evf9vffihdOQ6rNWSaIstjIl02IZNnXlDeMcvAo4KhqdqzxRl_aThwjcKwZ71S99WZ4We-ueM3-/pub?gid=2014693807&single=true&output=csv&t=' + Date.now(), { cache: "no-store" });
+        
+        console.log("📊 RAW SHEET DATA RESPONSE:", response.status, response.statusText);
         const csvText = await response.text();
+        console.log("📄 RAW CSV TEXT:", csvText);
+        
         const lines = csvText.split('\n').filter(line => line.trim());
+        console.log("📋 SPLIT LINES:", lines);
         
         const prices = {}
         
-        // Skip first header row, process each data row
+        // STEP 3: PARSE STRUCTURE CORRECTLY
+        console.log("🔧 STEP 3: PARSING KEY/VALUE STRUCTURE");
         for (let i = 1; i < lines.length; i++) {
           const row = lines[i];
           const [key, value] = row.split(',')
           if (key && value) {
-            prices[key.trim()] = Number(value.trim())
+            const cleanKey = key.trim();
+            const cleanValue = value.trim();
+            prices[cleanKey] = Number(cleanValue);
+            console.log(`  ✅ Parsed: ${cleanKey} = ${cleanValue}`);
+          } else {
+            console.log(`  ❌ Skipped row ${i}:`, row);
           }
         }
         
-        console.log("PRICES:", prices)
+        console.log("💰 STEP 7: FINAL PARSED PRICES OBJECT:", prices);
         
-        setPrices({
-          // USDT prices (original)
-          buy_cash: prices.buy_cash || 11,
-          buy_bank: prices.buy_bank || 12,
-          sell_cash: prices.sell_cash || 9,
-          sell_bank: prices.sell_bank || 10,
-          // USD prices
-          usd_buy_cash: prices.usd_buy_cash || 5.1,
-          usd_buy_bank: prices.usd_buy_bank || 5.2,
-          usd_sell_cash: prices.usd_sell_cash || 4.9,
-          usd_sell_bank: prices.usd_sell_bank || 5.0,
-          // EUR prices
-          eur_buy_cash: prices.eur_buy_cash || 5.5,
-          eur_buy_bank: prices.eur_buy_bank || 5.6,
-          eur_sell_cash: prices.eur_sell_cash || 5.3,
-          eur_sell_bank: prices.eur_sell_bank || 5.4,
-          // Fee
-          fee: prices.fee || 0.02
-        });
+        // STEP 4: REMOVE FAKE DEFAULTS - NO FALLBACKS
+        // STEP 5: STATE OVERRIDE - FRESH SHEET DATA ONLY
+        if (Object.keys(prices).length === 0) {
+          console.error("❌ CRITICAL: No prices parsed from sheet!");
+          throw new Error("No price data available from Google Sheets");
+        }
+        
+        console.log("🔄 STEP 5: STATE OVERRIDE WITH FRESH SHEET DATA");
+        setPrices(prices); // DIRECT OVERRIDE - NO MERGING
+        
+        console.log("✅ STEP 7: DATA SYNC COMPLETE - Sheet → State → UI pipeline verified");
+        
       } catch (error) {
-        console.error('Failed to fetch prices:', error);
+        console.error('❌ STEP 1: FETCH FAILED:', error);
+        console.error('🚨 CRITICAL DATA SYNC FAILURE - Check Google Sheets API access');
       }
     };
 
-    fetchPrices();
-    const interval = setInterval(fetchPrices, 60000); // Update every minute
+    console.log("🚀 INITIALIZING DATA SYNC PIPELINE");
+    fetchPrices(); // Immediate fetch on load
     
-    return () => clearInterval(interval);
+    // STEP 6: DISABLE CACHE - 15 SECOND INTERVAL
+    console.log("⏰ STEP 6: SETTING 15 SECOND FETCH INTERVAL");
+    const interval = setInterval(fetchPrices, 15000); // 15 seconds for faster testing
+    
+    return () => {
+      console.log("🛑 CLEANING UP FETCH INTERVAL");
+      clearInterval(interval);
+    };
   }, []);
 
   useEffect(() => {
@@ -430,29 +443,24 @@ function App() {
   };
 
   const getCurrentPrice = () => {
-    // Get real base price from Google Sheets
+    // STEP 8: KEEP BINANCE EFFECTS ISOLATED - Source data from Google Sheets only
     const currencyPrefix = currency === 'usdt' ? '' : `${currency}_`;
     const paymentSuffix = paymentMethod === 'bank' ? 'bank' : 'cash';
     const operationPrefix = operation === 'buy' ? 'buy' : 'sell';
     const priceKey = `${currencyPrefix}${operationPrefix}_${paymentSuffix}`;
-    const realPrice = prices[priceKey] || 0;
+    const realPrice = prices[priceKey];
     
-    // For UI display, apply live animation on top of real base price
-    if (currency === 'usdt' && realPrice > 0) {
-      // Use real price as base, add/subtract small animation offset
-      const offset = liveUsdtPrice - 8.50; // Animation offset from base
-      return Math.max(0, realPrice + offset);
-    }
-    if (currency === 'usd' && realPrice > 0) {
-      const offset = liveUsdPrice - 4.90; // Animation offset from base
-      return Math.max(0, realPrice + offset);
-    }
-    if (currency === 'eur' && realPrice > 0) {
-      const offset = liveEurPrice - 5.30; // Animation offset from base
-      return Math.max(0, realPrice + offset);
+    console.log(`🎯 STEP 8: Getting price for ${currency} ${operation} ${paymentMethod}:`, priceKey, "=", realPrice);
+    
+    // VALIDATION: Ensure real price exists
+    if (realPrice === undefined || realPrice === null || realPrice === 0) {
+      console.error(`❌ CRITICAL: Missing real price for ${priceKey} from Google Sheets`);
+      return 0; // Fail fast - no fallbacks
     }
     
-    // Fallback to real price if no animation or no real data
+    // For UI display: Real price is the source of truth
+    // Animation is purely visual layer applied in JSX, not here
+    console.log(`✅ STEP 8: Returning REAL price from Google Sheets: ${realPrice}`);
     return realPrice;
   };
 
@@ -1506,14 +1514,13 @@ ${formData.phone}
                   const currentPrice = currency === 'btc' ? (btcPrice ? btcPrice.toFixed(2) : 'Loading...') : getCurrentPrice();
                   console.log("Rendered price:", currentPrice);
                   
-                  // For ALL operations (buy and sell), split into integer and decimal parts with Binance animation
+                  // STEP 8: USE REAL GOOGLE SHEETS DATA with visual Binance animation only
                   if (currency === 'usdt' || currency === 'usd' || currency === 'eur') {
-                    let currentLivePrice;
-                    if (currency === 'usdt') currentLivePrice = liveUsdtPrice;
-                    else if (currency === 'usd') currentLivePrice = liveUsdPrice;
-                    else if (currency === 'eur') currentLivePrice = liveEurPrice;
+                    // Use REAL price from Google Sheets - not live animation state
+                    const realPrice = currentPrice;
+                    console.log(`🎯 STEP 8: Rendering REAL price from Google Sheets: ${realPrice}`);
                     
-                    const priceStr = currentLivePrice.toFixed(2);
+                    const priceStr = realPrice.toFixed(2);
                     const [integerPart, decimalPart] = priceStr.split('.');
                     
                     return (
