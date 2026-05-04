@@ -141,6 +141,9 @@ function App() {
   const [tooltipTimer, setTooltipTimer] = useState(null);
   const [selectedNetwork, setSelectedNetwork] = useState('BEP20');
   const [btcPrice, setBtcPrice] = useState(null);
+  const [liveUsdtPrice, setLiveUsdtPrice] = useState(8.50);
+  const [previousUsdtPrice, setPreviousUsdtPrice] = useState(8.50);
+  const [isPriceIncreasing, setIsPriceIncreasing] = useState(false);
 
   const validateNetwork = (network) => {
     const allowedNetworks = ['TRC20', 'ERC20', 'BEP20'];
@@ -309,6 +312,41 @@ function App() {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    // Expanded range with ping-pong pattern: 46→47→48→49→50→51→52→53→52→51→50→49→48→47→46
+    const priceCycle = [8.46, 8.47, 8.48, 8.49, 8.50, 8.51, 8.52, 8.53, 8.52, 8.51, 8.50, 8.49, 8.48, 8.47];
+    let currentIndex = 4; // Start with 8.50 (middle position)
+    let direction = 1; // 1 for forward, -1 for backward
+    
+    const interval = setInterval(() => {
+      setPreviousUsdtPrice(liveUsdtPrice);
+      
+      // Move to next position
+      currentIndex += direction;
+      
+      // Reverse direction at boundaries
+      if (currentIndex >= priceCycle.length - 1) {
+        currentIndex = priceCycle.length - 1;
+        direction = -1;
+      } else if (currentIndex <= 0) {
+        currentIndex = 0;
+        direction = 1;
+      }
+      
+      const newPrice = priceCycle[currentIndex];
+      
+      // Check if price is increasing (for green flash effect)
+      if (newPrice > liveUsdtPrice) {
+        setIsPriceIncreasing(true);
+        setTimeout(() => setIsPriceIncreasing(false), 1000); // Match CSS transition
+      }
+      
+      setLiveUsdtPrice(newPrice);
+    }, 3000); // Smooth transitions every 3 seconds
+    
+    return () => clearInterval(interval);
+  }, [liveUsdtPrice]);
+
   const handleCopy = (text, field) => {
     try {
       if (navigator.clipboard && window.isSecureContext) {
@@ -336,6 +374,12 @@ function App() {
   };
 
   const getCurrentPrice = () => {
+    // Use live animated price ONLY for USDT bank transfer buy operations
+    if (currency === 'usdt' && operation === 'buy' && paymentMethod === 'bank') {
+      return liveUsdtPrice;
+    }
+    
+    // For all other cases (including USDT cash), use real data from prices
     const currencyPrefix = currency === 'usdt' ? '' : `${currency}_`;
     const paymentSuffix = paymentMethod === 'bank' ? 'bank' : 'cash';
     const operationPrefix = operation === 'buy' ? 'buy' : 'sell';
@@ -1283,8 +1327,8 @@ ${formData.phone}
                   </svg>
                 </div>
                 <div style={{ textAlign: 'center' }}>
-                  <div style={{ fontSize: '14px', fontWeight: 'bold', color: paymentMethod === 'bank' ? '#6C3EFF' : '#1A1A1A', marginBottom: '2px' }}>تحويل مصرفي</div>
-                  <div style={{ fontSize: '11px', color: '#6B7280' }}>BANK</div>
+                  <div style={{ fontSize: '14px', fontWeight: 'bold', color: paymentMethod === 'bank' ? '#6C3EFF' : '#1A1A1A', marginBottom: '2px' }}>تحويل بنكي</div>
+                  <div style={{ fontSize: '11px', color: '#6B7280' }}>Bank Transfer</div>
                 </div>
               </div>
             </button>
@@ -1390,18 +1434,67 @@ ${formData.phone}
                   justifyContent: 'center'
                 }}
               >
-                <span 
-                  style={{
-                    fontSize: '28px',
-                    color: '#FFFFFF',
-                    fontWeight: '700',
-                    lineHeight: '1',
-                    fontFamily: 'system-ui, -apple-system, sans-serif',
-                    marginLeft: '8px'
-                  }}
-                >
-                  {(() => { console.log("Rendered price:", currency === 'btc' ? btcPrice : getCurrentPrice()); return currency === 'btc' ? (btcPrice ? btcPrice.toFixed(2) : 'Loading...') : getCurrentPrice(); })()}
-                </span>
+                {(() => {
+                  const currentPrice = currency === 'btc' ? (btcPrice ? btcPrice.toFixed(2) : 'Loading...') : getCurrentPrice();
+                  console.log("Rendered price:", currentPrice);
+                  
+                  // For USDT bank transfer, split into integer and decimal parts
+                  if (currency === 'usdt' && operation === 'buy' && paymentMethod === 'bank') {
+                    const priceStr = liveUsdtPrice.toFixed(2);
+                    const [integerPart, decimalPart] = priceStr.split('.');
+                    
+                    return (
+                      <>
+                        <span 
+                          id="usdt-transfer-price"
+                          className="raw-price"
+                          style={{
+                            fontSize: '28px',
+                            color: '#FFFFFF',
+                            fontWeight: '700',
+                            lineHeight: '1',
+                            fontFamily: 'system-ui, -apple-system, sans-serif',
+                            marginLeft: '8px',
+                            direction: 'ltr',
+                            display: 'inline-block'
+                          }}
+                        >
+                          <span style={{ color: '#FFFFFF' }}>{integerPart}.</span>
+                          <span 
+                            id="decimal-part"
+                            className={`live-price-animation ${isPriceIncreasing ? 'live-price-increase' : ''}`}
+                            style={{
+                              color: isPriceIncreasing ? '#27ae60' : '#FFFFFF',
+                              transition: 'all 1s ease',
+                              minWidth: '2.5ch',
+                              display: 'inline-block',
+                              textAlign: 'left'
+                            }}
+                          >
+                            {decimalPart}
+                          </span>
+                        </span>
+                      </>
+                    );
+                  }
+                  
+                  // For all other cases, show normal price
+                  return (
+                    <span 
+                      id={currency === 'usdt' && operation === 'buy' ? (paymentMethod === 'cash' ? 'usdt-cash-price' : '') : ''}
+                      style={{
+                        fontSize: '28px',
+                        color: '#FFFFFF',
+                        fontWeight: '700',
+                        lineHeight: '1',
+                        fontFamily: 'system-ui, -apple-system, sans-serif',
+                        marginLeft: '8px'
+                      }}
+                    >
+                      {currentPrice}
+                    </span>
+                  );
+                })()}
                 <span 
                   style={{
                     fontSize: '18px',
@@ -2814,7 +2907,8 @@ ${formData.phone}
           borderTop: '1px solid rgba(0,0,0,0.05)',
           boxShadow: '0px 8px 20px rgba(0,0,0,0.05)',
           borderRadius: '16px 16px 0 0',
-          padding: '16px 0'
+          padding: '16px 0',
+          zIndex: 999
         }}>
           <div style={{ maxWidth: '400px', margin: '0 auto', padding: '0 20px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>

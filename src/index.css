@@ -210,6 +210,8 @@
   box-shadow: none !important;
   border: none !important;
   padding: 0 !important;
+  z-index: 1;
+  position: relative;
 }
 
 .input-icon img {
@@ -239,6 +241,8 @@
   align-items: center;
   justify-content: center;
   margin-right: 6px;
+  z-index: 1;
+  position: relative;
 }
 
 .currency-btc .input-icon img,
@@ -269,4 +273,54 @@
   height: 100%;
   object-fit: contain;
   transform: scale(0.92) !important;
+}
+
+/* Professional Live Price Animation Styles - Decimal Only */
+#decimal-part.live-price-animation {
+  transition: all 1s ease;
+  animation: decimalFadeSlide 3s ease-in-out;
+}
+
+@keyframes decimalFadeSlide {
+  0% { opacity: 0.6; transform: translateY(3px); }
+  20% { opacity: 0.75; transform: translateY(2px); }
+  40% { opacity: 0.85; transform: translateY(1px); }
+  60% { opacity: 0.95; transform: translateY(0.5px); }
+  80% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0.6; transform: translateY(-3px); }
+}
+
+#decimal-part.live-price-increase {
+  color: #27ae60 !important;
+  animation: decimalPulse 1s ease;
+}
+
+@keyframes decimalPulse {
+  0% { transform: scale(1); opacity: 1; }
+  15% { transform: scale(1.02); opacity: 1; }
+  30% { transform: scale(1.04); opacity: 0.98; }
+  45% { transform: scale(1.05); opacity: 0.95; }
+  60% { transform: scale(1.04); opacity: 0.98; }
+  75% { transform: scale(1.02); opacity: 1; }
+  90% { transform: scale(1.01); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Ensure stable integer part */
+.usdt-price-container {
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+}
+
+/* Professional decimal container styling */
+#decimal-part {
+  position: relative;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
+/* Subtle glow effect for increasing prices */
+#decimal-part.live-price-increase {
+  text-shadow: 0 0 8px rgba(39, 174, 96, 0.3);
 }
