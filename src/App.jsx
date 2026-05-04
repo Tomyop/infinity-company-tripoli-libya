@@ -143,6 +143,10 @@ function App() {
   const [btcPrice, setBtcPrice] = useState(null);
   const [liveUsdtPrice, setLiveUsdtPrice] = useState(8.50);
   const [previousUsdtPrice, setPreviousUsdtPrice] = useState(8.50);
+  const [liveUsdPrice, setLiveUsdPrice] = useState(4.90);
+  const [previousUsdPrice, setPreviousUsdPrice] = useState(4.90);
+  const [liveEurPrice, setLiveEurPrice] = useState(5.30);
+  const [previousEurPrice, setPreviousEurPrice] = useState(5.30);
   const [priceDirection, setPriceDirection] = useState('neutral'); // 'increase', 'decrease', 'neutral'
 
   const validateNetwork = (network) => {
@@ -313,7 +317,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    // Sequential movement: 48→49→50→51→52 then back
+    // USDT Sequential movement: 48→49→50→51→52 then back
     const priceCycle = [8.48, 8.49, 8.50, 8.51, 8.52, 8.51, 8.50, 8.49];
     let currentIndex = 2; // Start with 8.50
     
@@ -336,6 +340,38 @@ function App() {
     
     return () => clearInterval(interval);
   }, [liveUsdtPrice]);
+
+  useEffect(() => {
+    // USD Sequential movement: 88→89→90→91→92 then back
+    const priceCycle = [4.88, 4.89, 4.90, 4.91, 4.92, 4.91, 4.90, 4.89];
+    let currentIndex = 2; // Start with 4.90
+    
+    const interval = setInterval(() => {
+      setPreviousUsdPrice(liveUsdPrice);
+      currentIndex = (currentIndex + 1) % priceCycle.length;
+      const newPrice = priceCycle[currentIndex];
+      
+      setLiveUsdPrice(newPrice);
+    }, 2000); // 2-second intervals
+    
+    return () => clearInterval(interval);
+  }, [liveUsdPrice]);
+
+  useEffect(() => {
+    // EUR Sequential movement: 28→29→30→31→32 then back
+    const priceCycle = [5.28, 5.29, 5.30, 5.31, 5.32, 5.31, 5.30, 5.29];
+    let currentIndex = 2; // Start with 5.30
+    
+    const interval = setInterval(() => {
+      setPreviousEurPrice(liveEurPrice);
+      currentIndex = (currentIndex + 1) % priceCycle.length;
+      const newPrice = priceCycle[currentIndex];
+      
+      setLiveEurPrice(newPrice);
+    }, 2000); // 2-second intervals
+    
+    return () => clearInterval(interval);
+  }, [liveEurPrice]);
 
   const handleCopy = (text, field) => {
     try {
@@ -364,12 +400,13 @@ function App() {
   };
 
   const getCurrentPrice = () => {
-    // Use live animated price ONLY for USDT bank transfer buy operations
-    if (currency === 'usdt' && operation === 'buy' && paymentMethod === 'bank') {
-      return liveUsdtPrice;
-    }
+    // Use live animated prices for ALL operations (UI only)
+    if (currency === 'usdt') return liveUsdtPrice;
+    if (currency === 'usd') return liveUsdPrice;
+    if (currency === 'eur') return liveEurPrice;
     
-    // For all other cases (including USDT cash), use real data from prices
+    // For API calls and form submissions, use real data from prices
+    // This ensures data safety - live prices are for UI display only
     const currencyPrefix = currency === 'usdt' ? '' : `${currency}_`;
     const paymentSuffix = paymentMethod === 'bank' ? 'bank' : 'cash';
     const operationPrefix = operation === 'buy' ? 'buy' : 'sell';
@@ -1428,15 +1465,20 @@ ${formData.phone}
                   const currentPrice = currency === 'btc' ? (btcPrice ? btcPrice.toFixed(2) : 'Loading...') : getCurrentPrice();
                   console.log("Rendered price:", currentPrice);
                   
-                  // For USDT bank transfer, split into integer and decimal parts
-                  if (currency === 'usdt' && operation === 'buy' && paymentMethod === 'bank') {
-                    const priceStr = liveUsdtPrice.toFixed(2);
+                  // For ALL operations (buy and sell), split into integer and decimal parts with Binance animation
+                  if (currency === 'usdt' || currency === 'usd' || currency === 'eur') {
+                    let currentLivePrice;
+                    if (currency === 'usdt') currentLivePrice = liveUsdtPrice;
+                    else if (currency === 'usd') currentLivePrice = liveUsdPrice;
+                    else if (currency === 'eur') currentLivePrice = liveEurPrice;
+                    
+                    const priceStr = currentLivePrice.toFixed(2);
                     const [integerPart, decimalPart] = priceStr.split('.');
                     
                     return (
                       <>
                         <span 
-                          id="usdt-transfer-price"
+                          id={`${currency}-${operation}-price`}
                           className="raw-price"
                           style={{
                             fontSize: '28px',
