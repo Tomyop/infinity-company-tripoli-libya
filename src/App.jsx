@@ -317,9 +317,19 @@ function App() {
   }, []);
 
   useEffect(() => {
-    // USDT Sequential movement: 48→49→50→51→52 then back
-    const priceCycle = [8.48, 8.49, 8.50, 8.51, 8.52, 8.51, 8.50, 8.49];
-    let currentIndex = 2; // Start with 8.50
+    // USDT animation based on real Google Sheets price
+    const basePrice = prices.buy_bank || 8.50; // Get real base price
+    const priceCycle = [
+      basePrice - 0.02,
+      basePrice - 0.01,
+      basePrice,
+      basePrice + 0.01,
+      basePrice + 0.02,
+      basePrice + 0.01,
+      basePrice,
+      basePrice - 0.01
+    ];
+    let currentIndex = 2; // Start with base price
     
     const interval = setInterval(() => {
       setPreviousUsdtPrice(liveUsdtPrice);
@@ -339,12 +349,22 @@ function App() {
     }, 2000); // 2-second intervals
     
     return () => clearInterval(interval);
-  }, [liveUsdtPrice]);
+  }, [liveUsdtPrice, prices.buy_bank]); // Depend on real price changes
 
   useEffect(() => {
-    // USD Sequential movement: 88→89→90→91→92 then back
-    const priceCycle = [4.88, 4.89, 4.90, 4.91, 4.92, 4.91, 4.90, 4.89];
-    let currentIndex = 2; // Start with 4.90
+    // USD animation based on real Google Sheets price
+    const basePrice = prices.usd_buy_bank || 4.90; // Get real base price
+    const priceCycle = [
+      basePrice - 0.02,
+      basePrice - 0.01,
+      basePrice,
+      basePrice + 0.01,
+      basePrice + 0.02,
+      basePrice + 0.01,
+      basePrice,
+      basePrice - 0.01
+    ];
+    let currentIndex = 2; // Start with base price
     
     const interval = setInterval(() => {
       setPreviousUsdPrice(liveUsdPrice);
@@ -355,12 +375,22 @@ function App() {
     }, 2000); // 2-second intervals
     
     return () => clearInterval(interval);
-  }, [liveUsdPrice]);
+  }, [liveUsdPrice, prices.usd_buy_bank]); // Depend on real price changes
 
   useEffect(() => {
-    // EUR Sequential movement: 28→29→30→31→32 then back
-    const priceCycle = [5.28, 5.29, 5.30, 5.31, 5.32, 5.31, 5.30, 5.29];
-    let currentIndex = 2; // Start with 5.30
+    // EUR animation based on real Google Sheets price
+    const basePrice = prices.eur_buy_bank || 5.30; // Get real base price
+    const priceCycle = [
+      basePrice - 0.02,
+      basePrice - 0.01,
+      basePrice,
+      basePrice + 0.01,
+      basePrice + 0.02,
+      basePrice + 0.01,
+      basePrice,
+      basePrice - 0.01
+    ];
+    let currentIndex = 2; // Start with base price
     
     const interval = setInterval(() => {
       setPreviousEurPrice(liveEurPrice);
@@ -371,7 +401,7 @@ function App() {
     }, 2000); // 2-second intervals
     
     return () => clearInterval(interval);
-  }, [liveEurPrice]);
+  }, [liveEurPrice, prices.eur_buy_bank]); // Depend on real price changes
 
   const handleCopy = (text, field) => {
     try {
@@ -400,19 +430,30 @@ function App() {
   };
 
   const getCurrentPrice = () => {
-    // Use live animated prices for ALL operations (UI only)
-    if (currency === 'usdt') return liveUsdtPrice;
-    if (currency === 'usd') return liveUsdPrice;
-    if (currency === 'eur') return liveEurPrice;
-    
-    // For API calls and form submissions, use real data from prices
-    // This ensures data safety - live prices are for UI display only
+    // Get real base price from Google Sheets
     const currencyPrefix = currency === 'usdt' ? '' : `${currency}_`;
     const paymentSuffix = paymentMethod === 'bank' ? 'bank' : 'cash';
     const operationPrefix = operation === 'buy' ? 'buy' : 'sell';
-    
     const priceKey = `${currencyPrefix}${operationPrefix}_${paymentSuffix}`;
-    return prices[priceKey] || 0;
+    const realPrice = prices[priceKey] || 0;
+    
+    // For UI display, apply live animation on top of real base price
+    if (currency === 'usdt' && realPrice > 0) {
+      // Use real price as base, add/subtract small animation offset
+      const offset = liveUsdtPrice - 8.50; // Animation offset from base
+      return Math.max(0, realPrice + offset);
+    }
+    if (currency === 'usd' && realPrice > 0) {
+      const offset = liveUsdPrice - 4.90; // Animation offset from base
+      return Math.max(0, realPrice + offset);
+    }
+    if (currency === 'eur' && realPrice > 0) {
+      const offset = liveEurPrice - 5.30; // Animation offset from base
+      return Math.max(0, realPrice + offset);
+    }
+    
+    // Fallback to real price if no animation or no real data
+    return realPrice;
   };
 
   const calculateTotal = () => {
