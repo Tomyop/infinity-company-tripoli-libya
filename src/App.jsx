@@ -148,6 +148,12 @@ function App() {
   const [liveEurPrice, setLiveEurPrice] = useState(5.30);
   const [previousEurPrice, setPreviousEurPrice] = useState(5.30);
   const [priceDirection, setPriceDirection] = useState('neutral'); // 'increase', 'decrease', 'neutral'
+  
+  // STEP 1-2: UI-ONLY ANIMATION SYSTEM WITH BTC EXCLUSION
+  const [animatedPrice, setAnimatedPrice] = useState(null);
+  const [lockedPrice, setLockedPrice] = useState(null);
+  const [isLocked, setIsLocked] = useState(false);
+  const [isBTC, setIsBTC] = useState(false);
 
   const validateNetwork = (network) => {
     const allowedNetworks = ['TRC20', 'ERC20', 'BEP20'];
@@ -286,6 +292,35 @@ function App() {
     };
   }, []);
 
+  // STEP 1: Detect BTC currency changes and implement instant price switching
+  useEffect(() => {
+    const newIsBTC = currency === 'btc';
+    setIsBTC(newIsBTC);
+    console.log("🔍 STEP 1: Currency detected - BTC:", newIsBTC);
+    
+    // STEP 3: Local price mapping for instant switching
+    if (newIsBTC) {
+      // BTC: Use exact sheet price instantly
+      const btcSheetPrice = btcPrice || 0;
+      console.log("⚡ STEP 3: BTC instant price from sheet:", btcSheetPrice);
+      setAnimatedPrice(btcSheetPrice);
+    } else {
+      // Other currencies: Use cached sheet data instantly
+      const currencyPrefix = currency === 'usdt' ? '' : `${currency}_`;
+      const paymentSuffix = paymentMethod === 'bank' ? 'bank' : 'cash';
+      const operationPrefix = operation === 'buy' ? 'buy' : 'sell';
+      const priceKey = `${currencyPrefix}${operationPrefix}_${paymentSuffix}`;
+      const sheetPrice = prices[priceKey] || 0;
+      
+      console.log("⚡ STEP 3: Instant price from cached sheet data:", priceKey, "=", sheetPrice);
+      setAnimatedPrice(sheetPrice);
+    }
+    
+    // Reset lock state when currency/payment changes
+    setLockedPrice(null);
+    setIsLocked(false);
+  }, [currency, paymentMethod, operation, prices, btcPrice]); // Include all dependencies for instant updates
+
   useEffect(() => {
     if (typeof window !== 'undefined' && window.gtag) {
       window.gtag('config', 'G-D101BHEN153', { page_path: window.location.pathname });
@@ -329,92 +364,61 @@ function App() {
     return () => clearInterval(interval);
   }, []);
 
+  // STEP 3: UI-ONLY ANIMATION LOGIC WITH BTC EXCLUSION
   useEffect(() => {
-    // USDT animation based on real Google Sheets price
-    const basePrice = prices.buy_bank || 8.50; // Get real base price
-    const priceCycle = [
-      basePrice - 0.02,
-      basePrice - 0.01,
-      basePrice,
-      basePrice + 0.01,
-      basePrice + 0.02,
-      basePrice + 0.01,
-      basePrice,
-      basePrice - 0.01
-    ];
-    let currentIndex = 2; // Start with base price
+    console.log("🔄 STEP 3: Starting UI-only animation with BTC exclusion");
     
     const interval = setInterval(() => {
-      setPreviousUsdtPrice(liveUsdtPrice);
-      currentIndex = (currentIndex + 1) % priceCycle.length;
-      const newPrice = priceCycle[currentIndex];
+      if (isLocked) {
+        console.log("🔒 Price locked - skipping animation");
+        return;
+      }
+
+      // 🚫 BTC must NEVER animate
+      if (isBTC) {
+        const basePrice = btcPrice || 0;
+        console.log("🚫 BTC detected - forcing static price:", basePrice);
+        setAnimatedPrice(basePrice);
+        return;
+      }
+
+      // ✅ Other currencies animate
+      const currencyPrefix = currency === 'usdt' ? '' : `${currency}_`;
+      const paymentSuffix = paymentMethod === 'bank' ? 'bank' : 'cash';
+      const operationPrefix = operation === 'buy' ? 'buy' : 'sell';
+      const priceKey = `${currencyPrefix}${operationPrefix}_${paymentSuffix}`;
+      const basePrice = prices[priceKey] || 0;
+
+      if (basePrice === 0) {
+        console.log("❌ No base price available for animation");
+        return;
+      }
+
+      // Create small variation around base price
+      const variation = (Math.random() * 0.04) - 0.02; // -0.02 to +0.02
+      const newAnimatedPrice = +(basePrice + variation).toFixed(2);
       
-      // Determine price direction for Binance-style colors
-      if (newPrice > liveUsdtPrice) {
-        setPriceDirection('increase'); // Green flash
-        setTimeout(() => setPriceDirection('neutral'), 1000); // Return to white after 1s
-      } else if (newPrice < liveUsdtPrice) {
-        setPriceDirection('decrease'); // Red flash
-        setTimeout(() => setPriceDirection('neutral'), 1000); // Return to white after 1s
+      console.log(`📈 ${currency.toUpperCase()} animation:`, basePrice, "→", newAnimatedPrice);
+      
+      // Determine price direction for color feedback
+      if (animatedPrice !== null) {
+        if (newAnimatedPrice > animatedPrice) {
+          setPriceDirection('increase'); // Green flash
+          setTimeout(() => setPriceDirection('neutral'), 1000);
+        } else if (newAnimatedPrice < animatedPrice) {
+          setPriceDirection('decrease'); // Red flash
+          setTimeout(() => setPriceDirection('neutral'), 1000);
+        }
       }
       
-      setLiveUsdtPrice(newPrice);
-    }, 2000); // 2-second intervals
+      setAnimatedPrice(newAnimatedPrice);
+    }, 1500); // 1.5 second intervals
     
-    return () => clearInterval(interval);
-  }, [liveUsdtPrice, prices.buy_bank]); // Depend on real price changes
-
-  useEffect(() => {
-    // USD animation based on real Google Sheets price
-    const basePrice = prices.usd_buy_bank || 4.90; // Get real base price
-    const priceCycle = [
-      basePrice - 0.02,
-      basePrice - 0.01,
-      basePrice,
-      basePrice + 0.01,
-      basePrice + 0.02,
-      basePrice + 0.01,
-      basePrice,
-      basePrice - 0.01
-    ];
-    let currentIndex = 2; // Start with base price
-    
-    const interval = setInterval(() => {
-      setPreviousUsdPrice(liveUsdPrice);
-      currentIndex = (currentIndex + 1) % priceCycle.length;
-      const newPrice = priceCycle[currentIndex];
-      
-      setLiveUsdPrice(newPrice);
-    }, 2000); // 2-second intervals
-    
-    return () => clearInterval(interval);
-  }, [liveUsdPrice, prices.usd_buy_bank]); // Depend on real price changes
-
-  useEffect(() => {
-    // EUR animation based on real Google Sheets price
-    const basePrice = prices.eur_buy_bank || 5.30; // Get real base price
-    const priceCycle = [
-      basePrice - 0.02,
-      basePrice - 0.01,
-      basePrice,
-      basePrice + 0.01,
-      basePrice + 0.02,
-      basePrice + 0.01,
-      basePrice,
-      basePrice - 0.01
-    ];
-    let currentIndex = 2; // Start with base price
-    
-    const interval = setInterval(() => {
-      setPreviousEurPrice(liveEurPrice);
-      currentIndex = (currentIndex + 1) % priceCycle.length;
-      const newPrice = priceCycle[currentIndex];
-      
-      setLiveEurPrice(newPrice);
-    }, 2000); // 2-second intervals
-    
-    return () => clearInterval(interval);
-  }, [liveEurPrice, prices.eur_buy_bank]); // Depend on real price changes
+    return () => {
+      console.log("🛑 Cleaning up animation interval");
+      clearInterval(interval);
+    };
+  }, [currency, operation, paymentMethod, isBTC, isLocked, prices, btcPrice, animatedPrice]);
 
   const handleCopy = (text, field) => {
     try {
@@ -443,25 +447,18 @@ function App() {
   };
 
   const getCurrentPrice = () => {
-    // STEP 8: KEEP BINANCE EFFECTS ISOLATED - Source data from Google Sheets only
-    const currencyPrefix = currency === 'usdt' ? '' : `${currency}_`;
-    const paymentSuffix = paymentMethod === 'bank' ? 'bank' : 'cash';
-    const operationPrefix = operation === 'buy' ? 'buy' : 'sell';
-    const priceKey = `${currencyPrefix}${operationPrefix}_${paymentSuffix}`;
-    const realPrice = prices[priceKey];
+    // STEP 4: Use animated/locked price for UI calculations
+    const price = isLocked ? lockedPrice : animatedPrice;
     
-    console.log(`🎯 STEP 8: Getting price for ${currency} ${operation} ${paymentMethod}:`, priceKey, "=", realPrice);
+    console.log(`🎯 STEP 4: Using price for ${currency} ${operation} ${paymentMethod}:`, {
+      isLocked,
+      lockedPrice,
+      animatedPrice,
+      finalPrice: price
+    });
     
-    // VALIDATION: Ensure real price exists
-    if (realPrice === undefined || realPrice === null || realPrice === 0) {
-      console.error(`❌ CRITICAL: Missing real price for ${priceKey} from Google Sheets`);
-      return 0; // Fail fast - no fallbacks
-    }
-    
-    // For UI display: Real price is the source of truth
-    // Animation is purely visual layer applied in JSX, not here
-    console.log(`✅ STEP 8: Returning REAL price from Google Sheets: ${realPrice}`);
-    return realPrice;
+    // Return the appropriate price for calculations
+    return price || 0;
   };
 
   // STEP 2: GLOBAL commission function
@@ -583,15 +580,21 @@ function App() {
   const handleConfirm = () => {
     setConfirming(true);
     
+    // STEP 5: Confirm lock mechanism - lock current visible price
+    const currentVisiblePrice = isLocked ? lockedPrice : animatedPrice;
+    console.log("🔒 STEP 5: Confirming order - locking price:", currentVisiblePrice);
+    
+    setLockedPrice(currentVisiblePrice);
+    setIsLocked(true);
     
     // Prepare WhatsApp message based on currency and operation
     let message = `🚀 طلب جديد
 
 📊 تفاصيل العملية:
-• العملية: ${operation === 'buy' ? 'شراء' : 'بيع'}
+• العملة: ${operation === 'buy' ? 'شراء' : 'بيع'}
 • العملة: ${currency.toUpperCase()}
 • المبلغ: ${amount} ${currency.toUpperCase()}
-• السعر: ${getCurrentPrice()} د.ل
+• السعر: ${currentVisiblePrice} د.ل
 • الإجمالي: ${calculateTotal().toFixed(2)} د.ل`;
 
     if (operation === 'buy' && currency !== 'usdt') {
@@ -674,6 +677,13 @@ ${formData.phone}
       // Store WhatsApp URL for manual button
       const url = `https://wa.me/393895724547?text=${encodeURIComponent(message)}`;
       setWhatsappUrl(url);
+      
+      // STEP 6: Reset mechanism after order completion (delayed reset)
+      setTimeout(() => {
+        console.log("🔄 STEP 6: Resetting animation state after order completion");
+        setIsLocked(false);
+        setLockedPrice(null);
+      }, 5000); // Reset after 5 seconds
     }, 2000);
   };
 
@@ -1529,74 +1539,67 @@ ${formData.phone}
                 }}
               >
                 {(() => {
-                  const currentPrice = currency === 'btc' ? (btcPrice ? btcPrice.toFixed(2) : 'Loading...') : getCurrentPrice();
-                  console.log("Rendered price:", currentPrice);
+                  // STEP 4: Use animated/locked price system for all currencies
+                  let displayPrice;
                   
-                  // STEP 8: USE REAL GOOGLE SHEETS DATA with visual Binance animation only
-                  if (currency === 'usdt' || currency === 'usd' || currency === 'eur') {
-                    // Use REAL price from Google Sheets - not live animation state
-                    const realPrice = currentPrice;
-                    console.log(`🎯 STEP 8: Rendering REAL price from Google Sheets: ${realPrice}`);
-                    
-                    const priceStr = realPrice.toFixed(2);
-                    const [integerPart, decimalPart] = priceStr.split('.');
-                    
-                    return (
-                      <>
-                        <span 
-                          id={`${currency}-${operation}-price`}
-                          className="raw-price"
-                          style={{
-                            fontSize: '28px',
-                            color: '#FFFFFF',
-                            fontWeight: '700',
-                            lineHeight: '1',
-                            fontFamily: 'system-ui, -apple-system, sans-serif',
-                            marginLeft: '8px',
-                            direction: 'ltr',
-                            display: 'inline-block'
-                          }}
-                        >
-                          <span style={{ color: '#FFFFFF' }}>{integerPart}.</span>
-                          <span 
-                            id="decimal-part"
-                            className={`live-price-animation ${
-                              priceDirection === 'increase' ? 'price-increase' : 
-                              priceDirection === 'decrease' ? 'price-decrease' : 
-                              ''
-                            }`}
-                            style={{
-                              color: priceDirection === 'increase' ? '#0ECB81' : 
-                                     priceDirection === 'decrease' ? '#F6465D' : 
-                                     '#FFFFFF',
-                              transition: 'color 0.1s ease',
-                              minWidth: '2.5ch',
-                              display: 'inline-block',
-                              textAlign: 'left'
-                            }}
-                          >
-                            {decimalPart}
-                          </span>
-                        </span>
-                      </>
-                    );
+                  if (currency === 'btc') {
+                    // BTC always shows exact sheet price (no animation)
+                    displayPrice = btcPrice || 0;
+                    console.log("🚫 BTC display - static price:", displayPrice);
+                  } else {
+                    // Other currencies use animated/locked price
+                    displayPrice = getCurrentPrice();
+                    console.log(`📈 ${currency.toUpperCase()} display - animated price:`, displayPrice);
                   }
                   
-                  // For all other cases, show normal price
+                  // STEP 5: No loading state - use cached data instantly
+                  // If no price available, show last valid price or 0
+                  if (displayPrice === 0) {
+                    console.log("⚡ STEP 5: No price available - showing 0 instantly");
+                  }
+                  
+                  const priceStr = displayPrice.toFixed(2);
+                  const [integerPart, decimalPart] = priceStr.split('.');
+                  
                   return (
-                    <span 
-                      id={currency === 'usdt' && operation === 'buy' ? (paymentMethod === 'cash' ? 'usdt-cash-price' : '') : ''}
-                      style={{
-                        fontSize: '28px',
-                        color: '#FFFFFF',
-                        fontWeight: '700',
-                        lineHeight: '1',
-                        fontFamily: 'system-ui, -apple-system, sans-serif',
-                        marginLeft: '8px'
-                      }}
-                    >
-                      {currentPrice}
-                    </span>
+                    <>
+                      <span 
+                        id={`${currency}-${operation}-price`}
+                        className="raw-price"
+                        style={{
+                          fontSize: '28px',
+                          color: '#FFFFFF',
+                          fontWeight: '700',
+                          lineHeight: '1',
+                          fontFamily: 'system-ui, -apple-system, sans-serif',
+                          marginLeft: '8px',
+                          direction: 'ltr',
+                          display: 'inline-block'
+                        }}
+                      >
+                        <span style={{ color: '#FFFFFF' }}>{integerPart}.</span>
+                        <span 
+                          id="decimal-part"
+                          className={`live-price-animation ${
+                            // STEP 7: Color feedback only for non-BTC currencies
+                            !isBTC && priceDirection === 'increase' ? 'price-increase' : 
+                            !isBTC && priceDirection === 'decrease' ? 'price-decrease' : 
+                            ''
+                          }`}
+                          style={{
+                            color: !isBTC && priceDirection === 'increase' ? '#0ECB81' : 
+                                   !isBTC && priceDirection === 'decrease' ? '#F6465D' : 
+                                   '#FFFFFF',
+                            transition: 'color 0.1s ease',
+                            minWidth: '2.5ch',
+                            display: 'inline-block',
+                            textAlign: 'left'
+                          }}
+                        >
+                          {decimalPart}
+                        </span>
+                      </span>
+                    </>
                   );
                 })()}
                 <span 
