@@ -30,7 +30,7 @@ const AdBanner = () => {
       }}
     >
       {images.map((image, index) => {
-        const isFullWidthImage = image === '/4-install.png' || image === '/5-install.png';
+        const isFullWidthImage = image === '/3-install.png' || image === '/4-install.png' || image === '/5-install.png';
         return (
           <img
             key={index}
@@ -43,10 +43,9 @@ const AdBanner = () => {
               width: '100%',
               height: '100%',
               objectFit: isFullWidthImage ? 'cover' : 'contain',
-              objectPosition: isFullWidthImage ? 'center' : 'center',
+              objectPosition: 'center',
               opacity: currentSlide === index ? 1 : 0,
-              transition: 'opacity 0.5s ease-in-out',
-              padding: isFullWidthImage ? '0' : '0'
+              transition: 'opacity 0.5s ease-in-out'
             }}
           />
         );
