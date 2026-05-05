@@ -30,7 +30,7 @@ const AdBanner = () => {
       }}
     >
       {images.map((image, index) => {
-        const isFullWidthImage = image === '/3-install.png' || image === '/4-install.png' || image === '/5-install.png';
+        const isFullWidthImage = image === '/2-install.png' || image === '/3-install.png' || image === '/4-install.png' || image === '/5-install.png';
         return (
           <img
             key={index}
