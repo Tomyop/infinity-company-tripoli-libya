@@ -5,6 +5,10 @@
 @layer base {
   * {
     @apply box-border;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
   }
   
   html, body {
@@ -23,11 +27,24 @@
   body {
     @apply bg-gradient-to-br from-purple-900 via-purple-800 to-purple-950 text-white min-h-screen font-sans;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
+    text-size-adjust: 100%;
   }
   
   #app {
     position: relative;
     z-index: 1;
+  }
+  
+    
+  /* Allow text selection for inputs */
+  input, textarea {
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
   }
 }
 
