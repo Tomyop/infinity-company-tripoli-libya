@@ -19,12 +19,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </script>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
     <title>Infinity Company Tripoli Libya</title>
 <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#1a0142">
-    <script type="module" crossorigin src="/assets/index-DxGbZSqB.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-C-8xJ1WH.css">
+    <script type="module" crossorigin src="/assets/index-Cr2W97Mx.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-C6QQk7x7.css">
   </head>
   <body>
     <!-- Google Tag Manager (noscript) -->
@@ -35,6 +35,72 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
 <!-- End Google Tag Manager (noscript) -->
     <div id="root"></div>
 <script>
+// Prevent zoom functionality
+document.addEventListener('DOMContentLoaded', function() {
+  // Prevent pinch zoom
+  document.addEventListener('touchstart', function(event) {
+    if (event.touches.length > 1) {
+      event.preventDefault();
+    }
+  }, { passive: false });
+
+  // Prevent double tap zoom
+  let lastTouchEnd = 0;
+  document.addEventListener('touchend', function(event) {
+    const now = Date.now();
+    if (now - lastTouchEnd <= 300) {
+      event.preventDefault();
+    }
+    lastTouchEnd = now;
+  }, { passive: false });
+
+  // Prevent gesture zoom
+  document.addEventListener('gesturestart', function(event) {
+    event.preventDefault();
+  });
+
+  // Prevent wheel zoom on keyboard ctrl
+  document.addEventListener('wheel', function(event) {
+    if (event.ctrlKey) {
+      event.preventDefault();
+    }
+  }, { passive: false });
+
+  // Prevent keyboard zoom shortcuts
+  document.addEventListener('keydown', function(event) {
+    if ((event.ctrlKey || event.metaKey) && (event.key === '+' || event.key === '-' || event.key === '0')) {
+      event.preventDefault();
+    }
+  });
+
+  // Android WebView zoom prevention
+  if (window.AndroidWebView) {
+    window.AndroidWebView.setSupportZoom(false);
+    window.AndroidWebView.setBuiltInZoomControls(false);
+    window.AndroidWebView.setDisplayZoomControls(false);
+  }
+
+  // iOS WKWebView zoom prevention
+  if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.zoomControl) {
+    window.webkit.messageHandlers.zoomControl.postMessage({
+      action: 'disableZoom'
+    });
+  }
+
+  // Additional mobile zoom prevention
+  if (navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry|IEMobile|Opera Mini)/)) {
+    // Prevent orientation change zoom
+    window.addEventListener('orientationchange', function() {
+      setTimeout(function() {
+        var viewport = document.querySelector('meta[name="viewport"]');
+        if (viewport) {
+          viewport.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover');
+        }
+      }, 100);
+    });
+  }
+});
+
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("/sw.js");

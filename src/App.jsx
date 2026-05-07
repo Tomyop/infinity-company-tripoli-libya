@@ -651,18 +651,35 @@ ${formData.phone}
 • الشبكة: ${selectedNetwork}`;
     }
 
-    // Send Telegram notification with full order details
+    // Send order to our server
     try {
-      fetch('https://api.telegram.org/bot8699917719:AAGF7CMMjsHtBK-ISlbCHbs3PRTGHq2Im70/sendMessage', {
+      const orderData = {
+        operation: operation,
+        currency: currency,
+        amount: amount,
+        price: currentVisiblePrice,
+        total: calculateTotal().toFixed(2),
+        paymentMethod: paymentMethod,
+        phone: formData.phone,
+        network: selectedNetwork,
+        message: message
+      };
+
+      fetch('http://192.168.1.207:3000/api/orders', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({
-          chat_id: '8624852792',
-          text: message
+        headers: { 
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(orderData)
+      }).then(response => response.json())
+        .then(data => {
+          console.log('Order sent to server successfully:', data);
         })
-      }).catch(() => {});
+        .catch(error => {
+          console.error('Failed to send order to server:', error);
+        });
     } catch (error) {
-      // Silent fail - don't interrupt payment flow
+      console.error('Failed to send order:', error);
     }
 
     setShowConfirmImage(true);
