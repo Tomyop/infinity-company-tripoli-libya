@@ -322,12 +322,9 @@ function doPost(e) {
     Logger.log("  - OPERATION_TYPE: " + orderData.operationType);
     Logger.log("  - CURRENCY: " + orderData.currency);
     Logger.log("  - AMOUNT: " + orderData.amount);
-    Logger.log("  - PRICE: " + orderData.price);
-    Logger.log("  - TOTAL: " + orderData.total);
-    Logger.log("  - PAYMENT_METHOD: " + orderData.paymentMethod);
-    Logger.log("  - PHONE: " + orderData.phone);
     Logger.log("  - WALLET_ADDRESS: " + orderData.walletAddress);
     Logger.log("  - NETWORK: " + orderData.network);
+    Logger.log("  - CUSTOMER_PHONE: " + orderData.customerPhone);
     
     // Convert to namedValues format for onFormSubmit
     const mockEvent = {
@@ -335,12 +332,9 @@ function doPost(e) {
         "العملية": [orderData.operationType || ""],
         "العملة": [orderData.currency || ""],
         "المبلغ": [orderData.amount || ""],
-        "السعر": [orderData.price || ""],
-        "الإجمالي": [orderData.total || ""],
-        "طريقة الدفع": [orderData.paymentMethod || ""],
-        "رقم الهاتف": [orderData.phone || ""],
         "عنوان المحفظة": [orderData.walletAddress || ""],
-        "الشبكة": [orderData.network || ""]
+        "الشبكة": [orderData.network || ""],
+        "رقم الهاتف": [orderData.customerPhone || ""]
       }
     };
     

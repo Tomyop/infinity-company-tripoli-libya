@@ -505,8 +505,8 @@ function App() {
   };
 
   function sendToAppsScript(orderData) {
-    // NEW: Send directly to Apps Script Web App deployment
-    const appsScriptUrl = "https://script.google.com/macros/s/AKfycbzw1234567890abcdefGHIJKLMNOPQRSTUVWXYZ/exec";
+    // PRODUCTION: Send directly to Apps Script Web App
+    const appsScriptUrl = "https://script.google.com/macros/s/AKfycbzbleLu6AaM72rVP4oihBWtqtbWqs9vH28_LDi2FxlAYifs-n4LIDdZ13p6Ot0ZBa7O/exec";
     
     console.log('📤 SENDING TO APPS SCRIPT WEB APP:');
     console.log('URL:', appsScriptUrl);
@@ -515,13 +515,13 @@ function App() {
     return fetch(appsScriptUrl, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "text/plain;charset=utf-8"
       },
       body: JSON.stringify(orderData)
     })
     .then(response => {
       console.log('📊 APPS SCRIPT RESPONSE:', response.status, response.statusText);
-      return response.json();
+      return response.text();
     })
     .then(data => {
       console.log('✅ APPS SCRIPT SUCCESS:', data);
@@ -608,13 +608,11 @@ function App() {
           operationType: operation === 'buy' ? 'شراء' : 'بيع',
           currency: currency.toUpperCase(),
           amount: amount,
-          price: currentVisiblePrice,
           total: calculateTotal().toFixed(2),
           paymentMethod: paymentMethod,
-          phone: formData.phone,
+          customerPhone: formData.phone,
           walletAddress: formData.walletAddress || walletData.address,
-          network: selectedNetwork,
-          timestamp: new Date().toISOString()
+          network: selectedNetwork
         };
         
         // Send to Apps Script Web App
