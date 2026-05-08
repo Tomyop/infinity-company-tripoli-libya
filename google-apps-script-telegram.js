@@ -136,6 +136,14 @@ function sendTelegramWithRetry(operationType, currency, amount, price, total, pa
           Logger.log("  - CHAT_ID: " + responseData.result.chat.id);
         }
         
+        // Send email notification after successful Telegram send
+        MailApp.sendEmail({
+          to: "elarenha@gmail.com",
+          subject: "🚀 Infinity Company - New Order",
+          body: message
+        });
+        Logger.log("✅ EMAIL_SENT");
+        
         return true; // Success
       } else {
         Logger.log("❌ TELEGRAM_FAILED_ATTEMPT_" + attempt);
