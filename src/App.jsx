@@ -504,20 +504,32 @@ function App() {
     return totalWithCommission;
   };
 
-  function sendToGoogleSheet(phone, amount, total, currency, network) {
-    const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSfrpv4L0GwMM3zQC8OWKv9-iq8Uz0VwHY-l9TcMJdC9AHY5sQ/formResponse";
-
-    const formData = new FormData();
-    formData.append("entry.1487754017", phone);
-    formData.append("entry.446288420", amount);
-    formData.append("entry.1134418766", total);
-    formData.append("entry.1134418767", currency.toUpperCase());
-    formData.append("entry.1134418768", network);
-
-    fetch(formUrl, {
+  function sendToAppsScript(orderData) {
+    // NEW: Send directly to Apps Script Web App deployment
+    const appsScriptUrl = "https://script.google.com/macros/s/AKfycbzw1234567890abcdefGHIJKLMNOPQRSTUVWXYZ/exec";
+    
+    console.log('📤 SENDING TO APPS SCRIPT WEB APP:');
+    console.log('URL:', appsScriptUrl);
+    console.log('DATA:', orderData);
+    
+    return fetch(appsScriptUrl, {
       method: "POST",
-      mode: "no-cors",
-      body: formData
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(orderData)
+    })
+    .then(response => {
+      console.log('📊 APPS SCRIPT RESPONSE:', response.status, response.statusText);
+      return response.json();
+    })
+    .then(data => {
+      console.log('✅ APPS SCRIPT SUCCESS:', data);
+      return data;
+    })
+    .catch(error => {
+      console.error('❌ APPS SCRIPT ERROR:', error);
+      throw error;
     });
   }
 
@@ -553,32 +565,12 @@ function App() {
   }
 };
 
-  const sendTelegramNotification = () => {
-    try {
-      fetch('https://api.telegram.org/bot8699917719:AAGF7CMMjsHtBK-ISlbCHbs3PRTGHq2Im70/sendMessage', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams({
-          chat_id: '8624852792',
-          text: '🔔 Infinity Support: New Payment Confirmed'
-        })
-      })
-      .then(response => response.json())
-      .then(data => {
-        console.log('Telegram notification sent successfully:', data);
-      })
-      .catch(error => {
-        console.error('Telegram notification failed:', error);
-      });
-    } catch (error) {
-      console.error('Failed to send Telegram notification:', error);
-    }
-  };
 
   const handleConfirm = () => {
-    setConfirming(true);
+    console.log('🚀 START ORDER FLOW');
+    
+    // Instant redirect to countdown page
+    setShowConfirmImage(true);
     
     // STEP 5: Confirm lock mechanism - lock current visible price
     const currentVisiblePrice = isLocked ? lockedPrice : animatedPrice;
@@ -588,120 +580,59 @@ function App() {
     setIsLocked(true);
     
     // Prepare WhatsApp message based on currency and operation
-    let message = `🚀 طلب جديد
-
-📊 تفاصيل العملية:
-• العملة: ${operation === 'buy' ? 'شراء' : 'بيع'}
-• العملة: ${currency.toUpperCase()}
-• المبلغ: ${amount} ${currency.toUpperCase()}
-• السعر: ${currentVisiblePrice} د.ل
-• الإجمالي: ${calculateTotal().toFixed(2)} د.ل`;
+    let message = `🚀 طلب جديد\n\n📊 تفاصيل العملية:\n• العملة: ${operation === 'buy' ? 'شراء' : 'بيع'}\n• العملة: ${currency.toUpperCase()}\n• المبلغ: ${amount} ${currency.toUpperCase()}\n• السعر: ${currentVisiblePrice} د.ل\n• الإجمالي: ${calculateTotal().toFixed(2)} د.ل`;
 
     if (operation === 'buy' && currency !== 'usdt') {
-      message += `
-• طريقة الدفع: تحويل بنكي
-• التاريخ: ${formData.transferDate}
-• الوقت: ${formData.transferTime}
-
-📞 رقم الهاتف:
-${formData.phone}
-
-👤 بيانات الزبون:
-• الاسم بالكامل: ${formData.fullName}
-
-🏦 بياناتنا:
-• البنك: مصرف الجمهورية
-• الفرع: وكالة البرج
-• رقم الحساب: ${bankData.account}
-• الآيبان: ${bankData.iban}
-
-✅ لقد قمت بالتحويل`;
+      message += `\n\n• طريقة الدفع: تحويل بنكي\n• التاريخ: ${formData.transferDate}\n• الوقت: ${formData.transferTime}\n\n📞 رقم الهاتف:\n${formData.phone}\n\n👤 بيانات الزبون:\n• الاسم بالكامل: ${formData.fullName}\n\n🏦 بياناتنا:\n• البنك: مصرف الجمهورية\n• الفرع: وكالة البرج\n• رقم الحساب: ${bankData.account}\n• الآيبان: ${bankData.iban}\n\n✅ لقد قمت بالتحويل`;
     } else if (operation === 'sell' && currency !== 'usdt') {
-      message += `
-
-📞 رقم الهاتف:
-${formData.phone}
-
-👤 بيانات الزبون:
-• الاسم بالكامل: ${formData.fullName}
-• الوقت: ${formData.transferTime}
-
-📍 ملاحظة:
-يرجى الحضور إلى المكتب لإتمام عملية البيع`;
+      message += `\n\n📞 رقم الهاتف:\n${formData.phone}\n\n👤 بيانات الزبون:\n• الاسم بالكامل: ${formData.fullName}\n• الوقت: ${formData.transferTime}\n\n📍 ملاحظة:\nيرجى الحضور إلى المكتب لإتمام عملية البيع`;
     } else {
       // USDT logic (original)
-      message += `
-• طريقة الدفع: ${paymentMethod}
-
-📞 رقم الهاتف:
-${formData.phone}
-
-👤 بيانات الزبون:
-• عنوان المحفظة: ${formData.walletAddress || walletData.address}
-• الشبكة: ${selectedNetwork}
-
-🏦 بياناتنا:
-• البنك: مصرف الجمهورية
-• الفرع: وكالة البرج
-• رقم الحساب: ${bankData.account}
-• الآيبان: ${bankData.iban}
-
-💼 محفظتنا:
-• العنوان: ${walletData.address}
-• الشبكة: ${selectedNetwork}`;
+      message += `\n\n• طريقة الدفع: ${paymentMethod}\n\n📞 رقم الهاتف:\n${formData.phone}\n\n👤 بيانات الزبون:\n• عنوان المحفظة: ${formData.walletAddress || walletData.address}\n• الشبكة: ${selectedNetwork}\n\n🏦 بياناتنا:\n• البنك: مصرف الجمهورية\n• الفرع: وكالة البرج\n• رقم الحساب: ${bankData.account}\n• الآيبان: ${bankData.iban}\n\n💼 محفظتنا:\n• العنوان: ${walletData.address}\n• الشبكة: ${selectedNetwork}`;
     }
 
-    // Send order to our server
-    try {
-      const orderData = {
-        operation: operation,
-        currency: currency,
-        amount: amount,
-        price: currentVisiblePrice,
-        total: calculateTotal().toFixed(2),
-        paymentMethod: paymentMethod,
-        phone: formData.phone,
-        network: selectedNetwork,
-        message: message
-      };
-
-      fetch('http://192.168.1.207:3000/api/orders', {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(orderData)
-      }).then(response => response.json())
-        .then(data => {
-          console.log('Order sent to server successfully:', data);
-        })
-        .catch(error => {
-          console.error('Failed to send order to server:', error);
-        });
-    } catch (error) {
-      console.error('Failed to send order:', error);
-    }
-
-    setShowConfirmImage(true);
-
+    // STEP 1: Send order directly to Apps Script Web App (async in background)
+    console.log('💾 STEP 1: SENDING ORDER TO APPS SCRIPT WEB APP');
+    
+    // Store WhatsApp URL for manual button
+    const url = `https://wa.me/393895724547?text=${encodeURIComponent(message)}`;
+    setWhatsappUrl(url);
+    
+    // Send order data to Apps Script asynchronously in background
+    setTimeout(async () => {
+      console.log('📤 STEP 2: SENDING ORDER TO APPS SCRIPT IN BACKGROUND');
+      
+      try {
+        // Prepare order data for Apps Script
+        const orderData = {
+          operationType: operation === 'buy' ? 'شراء' : 'بيع',
+          currency: currency.toUpperCase(),
+          amount: amount,
+          price: currentVisiblePrice,
+          total: calculateTotal().toFixed(2),
+          paymentMethod: paymentMethod,
+          phone: formData.phone,
+          walletAddress: formData.walletAddress || walletData.address,
+          network: selectedNetwork,
+          timestamp: new Date().toISOString()
+        };
+        
+        // Send to Apps Script Web App
+        await sendToAppsScript(orderData);
+        console.log('✅ ORDER SENT TO APPS SCRIPT SUCCESSFULLY');
+        
+      } catch (error) {
+        console.error('❌ FAILED TO SEND ORDER TO APPS SCRIPT:', error);
+      }
+    }, 1000); // Start Apps Script submission after 1 second
+    
+    // STEP 4: Reset mechanism after order completion (delayed reset)
     setTimeout(() => {
-      setConfirming(false);
-      setConfirmed(true);
-      
-      // Submit to Google Form
-      sendToGoogleSheet(formData.phone, amount, calculateTotal().toFixed(2), currency, selectedNetwork);
-      
-      // Store WhatsApp URL for manual button
-      const url = `https://wa.me/393895724547?text=${encodeURIComponent(message)}`;
-      setWhatsappUrl(url);
-      
-      // STEP 6: Reset mechanism after order completion (delayed reset)
-      setTimeout(() => {
-        console.log("🔄 STEP 6: Resetting animation state after order completion");
-        setIsLocked(false);
-        setLockedPrice(null);
-      }, 5000); // Reset after 5 seconds
-    }, 2000);
+      console.log("🔄 STEP 4: Resetting animation state after order completion");
+      setIsLocked(false);
+      setLockedPrice(null);
+      console.log('✅ FLOW COMPLETED SUCCESSFULLY');
+    }, 5000); // Reset after 5 seconds
   };
 
   return (
