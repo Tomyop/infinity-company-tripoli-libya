@@ -595,7 +595,7 @@ function App() {
     console.log('💾 STEP 1: SENDING ORDER TO APPS SCRIPT WEB APP');
     
     // Store WhatsApp URL for manual button
-    const url = `https://wa.me/393895724547?text=${encodeURIComponent(message)}`;
+    const url = `https://wa.me/218920000000?text=${encodeURIComponent(message)}`;
     setWhatsappUrl(url);
     
     // Send order data to Apps Script asynchronously in background
@@ -784,7 +784,7 @@ function App() {
               
               <p><strong>12) التعديلات</strong><br/>- يمكن تعديل هذه الشروط في أي وقت.<br/>- استمرار الاستخدام يعني الموافقة.</p>
               
-              <p><strong>13) التواصل</strong><br/>واتساب/هاتف: 00393895724547</p>
+              <p><strong>13) التواصل</strong><br/>واتساب/هاتف: 00218920000000</p>
               
               <p>باستخدامك للتطبيق، فإنك توافق على هذه الشروط.</p>
             </div>
@@ -3135,7 +3135,7 @@ function App() {
         
         {/* Floating WhatsApp Button */}
         <a
-        href="https://wa.me/393895724547"
+        href="https://wa.me/218920000000"
         target="_blank"
         rel="noopener noreferrer"
         style={{

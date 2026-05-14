@@ -34,7 +34,7 @@ const Draw = () => {
 الشبكة: TRC20
 تم الدفع: 1 USDT`;
 
-    const whatsappUrl = `https://wa.me/393895724547?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/218920000000?text=${encodeURIComponent(message)}`;
     window.location.href = whatsappUrl;
   };
 
